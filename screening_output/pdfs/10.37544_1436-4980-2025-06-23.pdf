@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html class="no-js no-ready-no-scroll" lang="de" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs - VDI Verlag eLibrary</title>
+            <meta name="description" content="Wissensbewahrung ist eine Herausforderung für Unternehmen. Da Wissen zumeist als Text kodiert ist, bieten große Sprachmodelle eine vielversprechende Lösun…">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+            <meta name="robots" content="noindex">
+        <meta name="_globalsign-domain-verification" content="FD76nQopxEhzS6r3dnROXTPGwKUuZ6bIufkeHAHjZ1">
+
+            <link rel="canonical" href="https://elibrary.vdi-verlag.de/de/document/view/detail/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270">
+                            <link rel="alternate" hreflang="de" href="https://elibrary.vdi-verlag.de/de/document/view/detail/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270">
+                    <link rel="alternate" hreflang="en" href="https://elibrary.vdi-verlag.de/en/document/view/detail/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270">
+                <link rel="icon" type="image/x-icon" href="/img/vdiverlag/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/vdiverlag/favicon.ico">
+    <link href="/build/vdiverlag.css?20230119" rel="stylesheet">
+
+            <script nonce="iEFWkSyq6yeavKz15cEA" id="Cookiebot" src="https://consent.cookiebot.eu/uc.js" data-cbid="621ad0a4-6fba-4669-9fcb-b7e0f73c871c"></script>
+    
+    
+    <script nonce="iEFWkSyq6yeavKz15cEA" type="text/plain" data-cookieconsent="statistics">
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
+        n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NLG38Q4');
+    </script>
+
+
+    <script nonce="iEFWkSyq6yeavKz15cEA">(function (H) {
+            H.className = H.className.replace(/\bno-js\b/, 'js')
+        })(document.documentElement)</script>
+                        <meta name="citation_title" content="Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs" >
+                    <meta name="citation_publication_date" content="2025/06/01" >
+                    <meta name="citation_online_date" content="2025/06/01" >
+                    <meta name="citation_author" content="Martin Schmauder" >
+                    <meta name="citation_author" content="Gritt Ott" >
+                    <meta name="citation_author" content="Erik Sch&ouml;nw&auml;lder" >
+                    <meta name="citation_author" content="Martin Hahmann" >
+                    <meta name="citation_pdf_url" content="https://elibrary.vdi-verlag.de/10.37544/1436-4980-2025-06-23.pdf" >
+                    <meta name="citation_issn" content="1436-4980" >
+                    <meta name="citation_journal_title" content="wt Werkstattstechnik online" >
+                    <meta name="citation_volume" content="115" >
+                    <meta name="citation_issue" content="06" >
+                    <meta name="citation_firstpage" content="389" >
+                    <meta name="citation_lastpage" content="396" >
+                    <meta name="citation_publisher" content="VDI Fachmedien GmbH &amp; Co. KG" >
+                    <meta name="citation_doi" content="10.37544/1436-4980-2025-06-23" >
+                    <meta name="citation_language" content="de" >
+            
+    
+<meta property="og:title" content="Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs - VDI Verlag eLibrary" >
+<meta property="og:image" content="/build/images/og-vdiverlag.jpg" >
+    <meta property="og:description" content="Wissensbewahrung ist eine Herausforderung für Unternehmen. Da Wissen zumeist als Text kodiert ist, bieten große Sprachmodelle eine vielversprechende Lösun…" >
+
+            <meta name="elib:doi:self" content="10.37544/1436-4980-2025-06-23">
+            <meta name="elib:doi:parent" content="10.37544/1436-4980-2025-06">
+    
+    <meta name="tdm-reservation" content="1">
+    <meta name="tdm-policy" content="https://elibrary.vdi-verlag.de/de/tdm">
+    <link rel="manifest" href="/de/manifest.json">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap/vdiverlag/sitemap.xml">
+    <meta name="google-site-verification" content="uYSnfxFpBCaJvfmc2u6CXeJXDTs_Wt8923OXUt72_bI"/>    <meta name="google-site-verification" content="YqrvKCcz8nJOt2z4SpJapYM27MsV9X4iT3IDGs534rg"/></head>
+
+<body class="vdiverlag">
+        
+    
+    <header class="pl-pdf__navbar">
+    <a class="screen-reader-text skip-link" href="#content">Direkt zum Inhalt</a>
+    <div class="pl-pdf__navbar-container container">
+        <div class="pl-pdf__navbar-left-wrapper">
+                        <a href="/de/" class="pl-brand"
+               title="Zurück zur Startseite">
+                <img src="/build/images/vdiverlag.svg" class="pl-brand__logo" alt=" VDI Verlag eLibrary">
+            </a>
+            <div class="pl-pdf__navbar-chapter pl-pdf__navbar-chapter--desktop">
+                wt Werkstattstechnik online / Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs
+            </div>
+            <div class="pl-pdf__navbar-chapter pl-pdf__navbar-chapter--mobile js-pdf-show-contents">
+                wt Werkstattstechnik online / Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs
+                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.47 9.03l1.06-1.06L12 14.44l6.47-6.47 1.06 1.06L12 16.56 4.47 9.03z"/>
+</svg>
+</span>
+            </div>
+        </div>
+
+        <div class="pl-pdf__navbar-right-wrapper">
+            <ul class="pl-pdf__navbar-navigation">
+                <li>
+                                        <a  href="/de/document/view/pdf/uuid/d7e0ca60-2920-333e-811e-b3043498bd34?page=1"                        class="pl-pdf__navbar-navigation-button"
+                        title="Letzter Abschnitt"
+                        aria-label="Letzter Abschnitt">
+                        <span class="pl-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.47 4.47l1.06 1.06L6.06 12l6.47 6.47-1.06 1.06L3.94 12l7.53-7.53z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M5 11.25h14v1.5H5v-1.5z"/>
+</svg>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                                        <a  href="/de/document/view/pdf/uuid/180e5383-97ca-3b54-aa09-2a7955cf5629?page=1"                        class="pl-pdf__navbar-navigation-button"
+                        title="Nächster Abschnitt"
+                        aria-label="Nächster Abschnitt">
+                        <span class="pl-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.53 19.53l-1.06-1.06L17.94 12l-6.47-6.47 1.06-1.06L20.06 12l-7.53 7.53z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M19 12.75H5v-1.5h14v1.5z"/>
+</svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <a href="/de/document/view/detail/uuid/2e546126-beb7-3c05-b994-ed5cec3939f0" class="pl-pdf__close" title="Lesemodus verlassen" aria-label="Lesemodus verlassen">
+                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.47 18.47l14-14 1.06 1.06-14 14-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.47 19.53l-14-14 1.06-1.06 14 14-1.06 1.06z"/>
+</svg>
+</span>
+            </a>
+        </div>
+    </div>
+</header>
+<div class="pl-spacer" aria-hidden="true"></div>
+
+    <div class="pl-pdf">
+        
+
+
+<nav class="pl-pdf__sidebar js-pdf-sidebar" aria-label="PDF Navigation">
+    <ul class="pl-pdf__sidebar-nav">
+        <li class="pl-pdf__sidebar-item js-pdf-sidebar-item"
+            aria-label="Auflistung ganzer Dokumentenkapitel">
+            <button class="pl-pdf__sidebar-button js-pdf-button js-pdf-contents js-pdf-open-initially lg-open"
+                    type="button"
+                    data-track-url="/de/useraction?action=view_document_details&docid=78028"
+                    aria-hidden="true">
+                <span class="pl-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M21 7.75H7v-1.5h14v1.5zm-14 3.5h14v1.5H7v-1.5zm0 5h14v1.5H7v-1.5zm-1-8.5H4v-1.5h2v1.5zm-2 3.5h2v1.5H4v-1.5zm0 5h2v1.5H4v-1.5z"/>
+</svg>
+                </span>
+            </button>
+            <div class="pl-pdf__sidebar-submenu js-pdf-submenu js-pdf-submenu-contents lg-open"
+                 aria-hidden="true">
+                <div class="pl-pdf__sidebar-submenu-header" aria-hidden="true">
+                    <h3>
+                        Inhalt
+                        
+                    </h3>
+                    <button class="pl-pdf__sidebar-submenu-close js-sidebar-submenu-close" aria-label="Schließe Subnavigation">
+                        <span class="pl-icon pl-icon--small mobile" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3 5.5l5 5 5-5H3z"/>
+</svg>
+                        </span>
+                        <span class="pl-icon desktop">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.47 18.47l14-14 1.06 1.06-14 14-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.47 19.53l-14-14 1.06-1.06 14 14-1.06 1.06z"/>
+</svg>
+                        </span>
+                    </button>
+                </div>
+
+                <ul class="pl-contents">
+                    <li class="pl-contents__header">
+                        <div class="pl-contents__wrapper">
+                            <span class="pl-contents__header-item">Kapitel
+                                <span class="pl-contents__header-action"><a href="#" class="js-contents-expand-all">Ausklappen</a> | <a href="#" class="js-contents-collapse-all">Einklappen</a></span>
+                            </span>
+                            <span class="pl-contents__authors">Autoren</span>
+                            <span class="pl-contents__pages">Seiten</span>
+                            <span class="pl-contents__details"></span>
+                        </div>
+                    </li>
+                                                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-1"
+        data-dokid="78025"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Titelei/Inhaltsverzeichnis&amp;quot;"
+        data-page-from="1"
+        data-page-to="5"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/47540937-60fc-3a52-95bc-823df7f623cc?page=1">
+                                    <span class="pl-contents__pages">1 - 5</span>
+                Titelei/Inhaltsverzeichnis                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-6"
+        data-dokid="78026"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Titelthema Aufsatz&amp;quot;"
+        data-page-from="372"
+        data-page-to="534"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/6ba94cbd-8b44-3a99-8270-e7f15f0635bc?page=1">
+                                    <span class="pl-contents__pages">372 - 534</span>
+                Titelthema Aufsatz                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                            <button class="js-contents-expand pl-contents__expand open" aria-expanded="true"
+                        aria-label="Unterkapitel von &quot;Titelthema Aufsatz&quot; ausklappen"></button>
+                    </div>
+
+                    <ul class="js-contents-list pl-contents__list pl-contents__list--lvl2 open" aria-expanded="true">
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-6"
+        data-dokid="78026"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Produktiv und zufrieden mit KI-basierter Assistenz?/Productive and satisfied with AI-based assistance? - Human-centered design and evaluation of digitalized work in production&amp;quot;"
+        data-page-from="372"
+        data-page-to="380"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/6ba94cbd-8b44-3a99-8270-e7f15f0635bc?page=1">
+                                    <span class="pl-contents__pages">372 - 380</span>
+                Produktiv und zufrieden mit KI-basierter Assistenz?/Productive and satisfied with AI-based assistance? - Human-centered design and evaluation of digitalized work in production                    <span class="pl-contents__authors" title="Fabian Willemsen, Michael Kranz, Niklas Steireif, Eric Bunse, Susanne Mütze-Niewöhner, Verena Nitsch ">Fabian Willemsen, Michael Kranz, Niklas Steireif, Eric Bunse, Susanne Mütze-Niewöhner, Verena Nitsch</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-15"
+        data-dokid="78027"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Resilienz in Wertschöpfungsnetzwerken/Resilience in value creation networks&amp;quot;"
+        data-page-from="381"
+        data-page-to="388"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/d7e0ca60-2920-333e-811e-b3043498bd34?page=1">
+                                    <span class="pl-contents__pages">381 - 388</span>
+                Resilienz in Wertschöpfungsnetzwerken/Resilience in value creation networks                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-23"
+        data-dokid="78028"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs&amp;quot;"
+        data-page-from="389"
+        data-page-to="396"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link active access" href="/de/document/view/pdf/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270?page=1">
+                                    <span class="pl-contents__pages">389 - 396</span>
+                Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs                    <span class="pl-contents__authors" title="Martin Schmauder, Gritt Ott, Erik Schönwälder, Martin Hahmann ">Martin Schmauder, Gritt Ott, Erik Schönwälder, Martin Hahmann</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-31"
+        data-dokid="78029"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Neuroarbeitswissenschaft: Gehirn und Arbeit vereint/Neuroergonomics: Uniting brain and work&amp;quot;"
+        data-page-from="397"
+        data-page-to="403"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/180e5383-97ca-3b54-aa09-2a7955cf5629?page=1">
+                                    <span class="pl-contents__pages">397 - 403</span>
+                Neuroarbeitswissenschaft: Gehirn und Arbeit vereint/Neuroergonomics: Uniting brain and work                    <span class="pl-contents__authors" title="Mathias Vukelić, Nektaria Tagalidou, Katharina Hölzle ">Mathias Vukelić, Nektaria Tagalidou, Katharina Hölzle</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-38"
+        data-dokid="78030"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Relevanz der Arbeitsforschung in der digitalen Transformation/Relevance of work science in the digital transformation – Inclusive logic as a sustainable paradigm of work design&amp;quot;"
+        data-page-from="404"
+        data-page-to="410"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/70cb27b7-ecb8-3f50-8b20-119101d87497?page=1">
+                                    <span class="pl-contents__pages">404 - 410</span>
+                Relevanz der Arbeitsforschung in der digitalen Transformation/Relevance of work science in the digital transformation – Inclusive logic as a sustainable paradigm of work design                    <span class="pl-contents__authors" title="Martin Braun ">Martin Braun</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-45"
+        data-dokid="78031"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Mensch und Roboter Hand in Hand/Humans and robots teaming up – Interaction design patterns for enhancing the communication skills of autonomous robots&amp;quot;"
+        data-page-from="411"
+        data-page-to="418"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/8a4ac23d-4f6c-3cf6-8914-a7e5e97a56b2?page=1">
+                                    <span class="pl-contents__pages">411 - 418</span>
+                Mensch und Roboter Hand in Hand/Humans and robots teaming up – Interaction design patterns for enhancing the communication skills of autonomous robots                    <span class="pl-contents__authors" title="Kathrin Pollmann, Selina Layer, Katharina Hölzle ">Kathrin Pollmann, Selina Layer, Katharina Hölzle</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-53"
+        data-dokid="78032"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Transformation zur KI-gestützten Produktion/Transforming to AI-based manufacturing: Challenges and success factors in technology management&amp;quot;"
+        data-page-from="419"
+        data-page-to="425"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/fabbe7ff-f196-3c7f-a669-a0457a2a0df0?page=1">
+                                    <span class="pl-contents__pages">419 - 425</span>
+                Transformation zur KI-gestützten Produktion/Transforming to AI-based manufacturing: Challenges and success factors in technology management                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-60"
+        data-dokid="78033"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Wie radikale Transformationen im Produktionsumfeld gelingen/How to set up radical transformations in the production environment – An analytical and empirical analysis of success factors&amp;quot;"
+        data-page-from="426"
+        data-page-to="433"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/27c2e89d-6fa5-3de6-b5d2-981ebf142db1?page=1">
+                                    <span class="pl-contents__pages">426 - 433</span>
+                Wie radikale Transformationen im Produktionsumfeld gelingen/How to set up radical transformations in the production environment – An analytical and empirical analysis of success factors                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-68"
+        data-dokid="78034"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Wirksam lernen mit agilem Sprintlernen/Effective learning with Agile Sprintlearning – Practice-led discussion of the requirements and solutions for sustainable learning&amp;quot;"
+        data-page-from="434"
+        data-page-to="441"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/b2e58c40-9073-3aa7-893b-72874ee7c964?page=1">
+                                    <span class="pl-contents__pages">434 - 441</span>
+                Wirksam lernen mit agilem Sprintlernen/Effective learning with Agile Sprintlearning – Practice-led discussion of the requirements and solutions for sustainable learning                    <span class="pl-contents__authors" title="Gabriele Korge, Karin Hamann ">Gabriele Korge, Karin Hamann</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-76"
+        data-dokid="78035"
+        aria-label="Zeige Details zum Kapitel &amp;quot; KI nutzen, Know-how schützen: Strategien für sichere KI/How to use AI and protect know-how: Strategies for secure AI&amp;quot;"
+        data-page-from="442"
+        data-page-to="449"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/c67f999e-09aa-347c-b19e-a67c028ef638?page=1">
+                                    <span class="pl-contents__pages">442 - 449</span>
+                KI nutzen, Know-how schützen: Strategien für sichere KI/How to use AI and protect know-how: Strategies for secure AI                    <span class="pl-contents__authors" title="Erik-Felix Tinsel, Oliver Riedel ">Erik-Felix Tinsel, Oliver Riedel</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-84"
+        data-dokid="78036"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Digital Twins: Herausforderungen und Maßnahmen/Digital twins: challenges and measures – From theory to practice: successfully implementing digital twins in industry&amp;quot;"
+        data-page-from="450"
+        data-page-to="456"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/74e474c0-0dbf-33f4-912a-9e4b2b3d58c3?page=1">
+                                    <span class="pl-contents__pages">450 - 456</span>
+                Digital Twins: Herausforderungen und Maßnahmen/Digital twins: challenges and measures – From theory to practice: successfully implementing digital twins in industry                    <span class="pl-contents__authors" title="Christian Kober ">Christian Kober</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-91"
+        data-dokid="78037"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Software-defined Value Networks/Software-defined value networks – Analyzing the capacity for using the asset administration shell along value chains&amp;quot;"
+        data-page-from="457"
+        data-page-to="465"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/284c85cc-1f07-35a7-8da1-635aaf742831?page=1">
+                                    <span class="pl-contents__pages">457 - 465</span>
+                Software-defined Value Networks/Software-defined value networks – Analyzing the capacity for using the asset administration shell along value chains                    <span class="pl-contents__authors" title="David Dietrich, Armin Lechler, Alexander Verl, Martin Musser ">David Dietrich, Armin Lechler, Alexander Verl, Martin Musser</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-100"
+        data-dokid="78038"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Empathische Montageassistenten in der Produktion/Empathic assistance for manual assembly&amp;quot;"
+        data-page-from="466"
+        data-page-to="472"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/ceaf3409-99a5-397a-95d6-7b068e7e2e60?page=1">
+                                    <span class="pl-contents__pages">466 - 472</span>
+                Empathische Montageassistenten in der Produktion/Empathic assistance for manual assembly                    <span class="pl-contents__authors" title="Christian Oswaldo Saba Gayoso, Matthias Lück, Joachim Lentes, Katharina Hölzle ">Christian Oswaldo Saba Gayoso, Matthias Lück, Joachim Lentes, Katharina Hölzle</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-107"
+        data-dokid="78039"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Flexible Wertschöpfung mit MaaS/Flexible value creation by using MaaS – Applicying networked manufacturing services to create sustainability and resilience in the production system&amp;quot;"
+        data-page-from="473"
+        data-page-to="481"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/c05a9e13-d749-3f8f-ba46-af6da1a3ca66?page=1">
+                                    <span class="pl-contents__pages">473 - 481</span>
+                Flexible Wertschöpfung mit MaaS/Flexible value creation by using MaaS – Applicying networked manufacturing services to create sustainability and resilience in the production system                    <span class="pl-contents__authors" title="Michael M. Hertwig, Joachim Lentes, Thomas Komenda ">Michael M. Hertwig, Joachim Lentes, Thomas Komenda</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-116"
+        data-dokid="78040"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Hochauflösende Kollisionserkennung in Echtzeit/High resolution collision detection in real-time - Design of bounding volumes and algorithms for virtual commissioning&amp;quot;"
+        data-page-from="482"
+        data-page-to="487"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/5ee2d7e2-e3ee-3a42-9265-e94c02d21ab2?page=1">
+                                    <span class="pl-contents__pages">482 - 487</span>
+                Hochauflösende Kollisionserkennung in Echtzeit/High resolution collision detection in real-time - Design of bounding volumes and algorithms for virtual commissioning                    <span class="pl-contents__authors" title="Lars Klingel, Alexander Heine, Alexander Verl, Peter Kocsis, Christian Scheifele ">Lars Klingel, Alexander Heine, Alexander Verl, Peter Kocsis, Christian Scheifele</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-122"
+        data-dokid="78041"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Autonome mobile Roboter: Zukunft der Bau-Fertigung/Autonomous mobile robot: Future of manufacturing in construction&amp;quot;"
+        data-page-from="488"
+        data-page-to="497"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/11cb0cc8-e5a5-397e-b8b9-bb2b88ec5bf0?page=1">
+                                    <span class="pl-contents__pages">488 - 497</span>
+                Autonome mobile Roboter: Zukunft der Bau-Fertigung/Autonomous mobile robot: Future of manufacturing in construction                    <span class="pl-contents__authors" title="Siddieq Mansour, Armin Lechler, Alexander Verl ">Siddieq Mansour, Armin Lechler, Alexander Verl</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-132"
+        data-dokid="78042"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Modellbasierte Kopplung von Produkt und Produktion/Model-based coupling of product and production&amp;quot;"
+        data-page-from="498"
+        data-page-to="506"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/62859e47-53f1-3ed0-849a-aa7cde7bde97?page=1">
+                                    <span class="pl-contents__pages">498 - 506</span>
+                Modellbasierte Kopplung von Produkt und Produktion/Model-based coupling of product and production                    <span class="pl-contents__authors empty"></span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-141"
+        data-dokid="78043"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Durchgängige virtuelle Inbetriebnahme/Continuous virtual commissioning – Challenges and solution approaches for the continuous engineering of production systems&amp;quot;"
+        data-page-from="507"
+        data-page-to="516"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/3a47de6c-e773-3fc5-b41d-9c47c823cc50?page=1">
+                                    <span class="pl-contents__pages">507 - 516</span>
+                Durchgängige virtuelle Inbetriebnahme/Continuous virtual commissioning – Challenges and solution approaches for the continuous engineering of production systems                    <span class="pl-contents__authors" title="Simon Nowinski, Lars Klingel, Daniel Littfinski, Alexander Verl, Christian Eble ">Simon Nowinski, Lars Klingel, Daniel Littfinski, Alexander Verl, Christian Eble</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-151"
+        data-dokid="78044"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Verbindung von BIM und Simulation/Linking BIM and simulation - Motivation and existing challenges in factory planning&amp;quot;"
+        data-page-from="517"
+        data-page-to="525"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/db909fbc-d93a-31ba-86c0-351f44b58719?page=1">
+                                    <span class="pl-contents__pages">517 - 525</span>
+                Verbindung von BIM und Simulation/Linking BIM and simulation - Motivation and existing challenges in factory planning                    <span class="pl-contents__authors" title="F. Simon Schäfer, Bernd Buning, Thomas Krüger, Fabian Bermpohl, Marc Münnich ">F. Simon Schäfer, Bernd Buning, Thomas Krüger, Fabian Bermpohl, Marc Münnich</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                                                        <li class="pl-contents__item pl-contents__item--lvl1 js-contents-item highlighted access"
+        data-doi="10.37544/1436-4980-2025-06-160"
+        data-dokid="78045"
+        aria-label="Zeige Details zum Kapitel &amp;quot; Rekonfiguration variantenreicher Produkte/Reconfiguration of variant-rich products – Industrial update factories in the automotive circular economy&amp;quot;"
+        data-page-from="526"
+        data-page-to="534"
+    >
+        <div class="pl-contents__wrapper">
+            <a class="pl-contents__link access" href="/de/document/view/pdf/uuid/9093fa85-fc17-3b57-910d-0f49661010c5?page=1">
+                                    <span class="pl-contents__pages">526 - 534</span>
+                Rekonfiguration variantenreicher Produkte/Reconfiguration of variant-rich products – Industrial update factories in the automotive circular economy                    <span class="pl-contents__authors" title="Thorsten Schmidt, Niels Demke, Frank Mantwill ">Thorsten Schmidt, Niels Demke, Frank Mantwill</span>
+                </a>
+
+                    </div>
+
+        
+    </li>
+
+                            </ul>
+        
+    </li>
+
+                                    </ul>
+            </div>
+        </li>
+        <li class="pl-pdf__sidebar-item js-pdf-sidebar-item"
+            aria-label="Kapitel durchsuchen">
+            <button class="pl-pdf__sidebar-button js-pdf-button js-pdf-search"
+                    type="button"
+                    aria-hidden="true">
+                <span class="pl-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 14.5a5 5 0 100-10 5 5 0 000 10zm0 1.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M14.53 13.47l7 7-1.06 1.06-7-7 1.06-1.06z"/>
+</svg>
+                </span>
+            </button>
+            <div class="pl-pdf__sidebar-submenu js-pdf-submenu js-pdf-submenu-search">
+                <div class="pl-document-search">
+    <form class="pl-document-search__form pl-form" action="/de/document/view/detail/uuid/2e546126-beb7-3c05-b994-ed5cec3939f0">
+        <input class="pl-document-search__input pl-form__input" aria-label="Werk durchsuchen" required type="search" name="q" id="document-search-term" value="" placeholder="Werk durchsuchen">
+        <input type="hidden" name="page" value="1">
+        <button class="pl-document-search__input-icon pl-document-search__input-icon--search"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 14.5a5 5 0 100-10 5 5 0 000 10zm0 1.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M14.53 13.47l7 7-1.06 1.06-7-7 1.06-1.06z"/>
+</svg>
+</button>
+        <button class="pl-document-search__input-icon pl-document-search__input-icon--clear js-document-search-clear" type="button" data-target="document-search-term"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.47 18.47l14-14 1.06 1.06-14 14-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.47 19.53l-14-14 1.06-1.06 14 14-1.06 1.06z"/>
+</svg>
+</button>
+        <input type="submit" hidden>
+    </form>
+    <div class="pl-document-search__hitlist">
+                    <div class="pl-document-search__status">
+                <h4>Durchsuchen Sie das Werk</h4>
+                <span>Geben Sie ein Keyword in die Suchleiste ein</span>
+            </div>
+            </div>
+</div>
+            </div>
+        </li>
+        <li class="pl-pdf__sidebar-item js-pdf-sidebar-item"
+            aria-label="Info">
+            <button class="pl-pdf__sidebar-button js-pdf-button js-pdf-info"
+                    type="button"
+                    data-track-url="/de/useraction?action=view_document_abstract&docid=78028"
+                    aria-hidden="true">
+                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5a8.5 8.5 0 100 17 8.5 8.5 0 000-17zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.75 10.5v6h-1.5v-6h1.5zm0-3V9h-1.5V7.5h1.5z"/>
+</svg>
+</span>
+            </button>
+            <div class="pl-pdf__sidebar-submenu js-pdf-submenu js-pdf-submenu-info">
+                
+<div class="pl-abstract">
+    <div class="pl-abstract__status">
+                    <a href="https://creativecommons.org/licenses/by/4.0/" class="pl-status pl-status--link pl-status--cc">
+                <span class="pl-status__icon pl-status__icon--license"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 20.5a8.5 8.5 0 100-17 8.5 8.5 0 000 17zm0 1.5c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+  <path d="M10.512 11.06c-.253-.526-.633-.79-1.14-.79-.895 0-1.343.574-1.343 1.72 0 1.147.448 1.72 1.343 1.72.592 0 1.014-.28 1.268-.839l1.241.63C11.289 14.5 10.401 15 9.218 15c-.913 0-1.644-.266-2.194-.798S6.2 12.936 6.2 12c0-.92.283-1.649.85-2.19C7.616 9.27 8.322 9 9.167 9c1.252 0 2.148.469 2.69 1.406l-1.345.654zm5.841 0c-.254-.526-.626-.79-1.117-.79-.914 0-1.37.574-1.37 1.72 0 1.147.456 1.72 1.37 1.72.592 0 1.007-.28 1.244-.839l1.269.63C17.159 14.5 16.272 15 15.09 15c-.912 0-1.641-.266-2.19-.798-.548-.532-.823-1.266-.823-2.202 0-.92.28-1.649.836-2.19.557-.54 1.265-.81 2.127-.81 1.249 0 2.143.469 2.683 1.406l-1.37.654z"/>
+</svg>
+</span>
+                CC-BY
+            </a>
+        
+                                                                    <span class="pl-status pl-status--available" title="Vollzugriff">
+        <span class="pl-status__icon pl-status__icon--available">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 17.125a1.75 1.75 0 100-3.5 1.75 1.75 0 000 3.5z" />
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 6.79c0-2.487 1.998-4.54 4.5-4.54s4.5 2.053 4.5 4.54v1.96h1a2 2 0 012 2V20a2 2 0 01-2 2h-11a2 2 0 01-2-2v-9.25a2 2 0 012-2H15V6.79c0-1.677-1.345-3.04-3-3.04S9 5.113 9 6.79H7.5zm-1 3.46h11a.5.5 0 01.5.5V20a.5.5 0 01-.5.5h-11A.5.5 0 016 20v-9.25a.5.5 0 01.5-.5z" />
+</svg>
+        
+        </span>
+        <span>
+            Vollzugriff
+        </span>
+    </span>
+
+    </div>
+
+            <div class="pl-abstract__topline">
+            <i>
+                                    wt Werkstattstechnik online
+                    
+                                ,
+                    Seite 389 - 396
+                            </i>
+        </div>
+    
+    <h2 class="pl-abstract__headline">
+        Aufbau eines Retrieval-Augmented-Generation-Systems/Design of a Retrieval-Augmented Generation (RAG) system for knowledge retention in SMEs
+    </h2>
+
+            <h3>Autoren</h3>
+        <div class="pl-tag__row">
+
+            
+                                                <a class="pl-tag pl-tag--ghost pl-tooltip--tag" href="/de/search/?slocal=0&page-search-location=eLibrary&q=&qtt=&qa=Martin%20Schmauder&qIdent=&qReihe=&qjv=&qjb=" data-tippy-content="Martin Schmauder">
+                        <span class="pl-tag__icon"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 8a2.666 2.666 0 100-5.333A2.666 2.666 0 108 8z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13 13.333H3V13a4 4 0 014-4h2a4 4 0 014 4v.333z"/>
+</svg>
+</span>
+                        <span>Martin Schmauder</span>
+                    </a>
+                                    <a class="pl-tag pl-tag--ghost pl-tooltip--tag" href="/de/search/?slocal=0&page-search-location=eLibrary&q=&qtt=&qa=Gritt%20Ott&qIdent=&qReihe=&qjv=&qjb=" data-tippy-content="Gritt Ott">
+                        <span class="pl-tag__icon"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 8a2.666 2.666 0 100-5.333A2.666 2.666 0 108 8z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13 13.333H3V13a4 4 0 014-4h2a4 4 0 014 4v.333z"/>
+</svg>
+</span>
+                        <span>Gritt Ott</span>
+                    </a>
+                                    <a class="pl-tag pl-tag--ghost pl-tooltip--tag" href="/de/search/?slocal=0&page-search-location=eLibrary&q=&qtt=&qa=Erik%20Sch%C3%B6nw%C3%A4lder&qIdent=&qReihe=&qjv=&qjb=" data-tippy-content="Erik Schönwälder">
+                        <span class="pl-tag__icon"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 8a2.666 2.666 0 100-5.333A2.666 2.666 0 108 8z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13 13.333H3V13a4 4 0 014-4h2a4 4 0 014 4v.333z"/>
+</svg>
+</span>
+                        <span>Erik Schönwälder</span>
+                    </a>
+                                    <a class="pl-tag pl-tag--ghost pl-tooltip--tag" href="/de/search/?slocal=0&page-search-location=eLibrary&q=&qtt=&qa=Martin%20Hahmann&qIdent=&qReihe=&qjv=&qjb=" data-tippy-content="Martin Hahmann">
+                        <span class="pl-tag__icon"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 8a2.666 2.666 0 100-5.333A2.666 2.666 0 108 8z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13 13.333H3V13a4 4 0 014-4h2a4 4 0 014 4v.333z"/>
+</svg>
+</span>
+                        <span>Martin Hahmann</span>
+                    </a>
+                            
+            
+            
+                    </div>
+    
+    <h3>DOI</h3>
+    <ul class="pl-abstract__link-list">
+                                    <li>
+                    <a href="https://doi.org/10.37544/1436-4980-2025-06-23" title="https://doi.org/10.37544/1436-4980-2025-06-23">
+                        doi.org/10.37544/1436-4980-2025-06-23
+                    </a>
+                </li>
+                                        <li>
+                    ISSN print:&nbsp;1436-4980
+                </li>
+                                        <li>
+                    ISSN online:&nbsp;1436-4980
+                </li>
+                        </ul>
+
+                                    <div class="abstract-container" data-abstract-id="">
+                                <h3>
+                                            Zusammenfassung                                                                                                                                    </h3>
+                <p>Wissensbewahrung ist eine Herausforderung für Unternehmen. Da Wissen zumeist als Text kodiert ist, bieten große Sprachmodelle eine vielversprechende Lösung für Erhalt und Nutzung durch ein System, das auf dem Konzept der Retrieval-Augmented Generation (RAG) basiert. Praxisgeeignete Methoden zur Wissensexplikation werden mit lokal ausgeführten Sprachmodellen und traditionellen Retrieval-Algorithmen kombiniert. Der Beitrag zeigt das Lösungskonzept sowie Herausforderungen und erfolgsversprechende Umsetzungsstrategien.</p>
+            </div>
+                                <div class="abstract-container" data-abstract-id="">
+                                <h3>
+                                                                    Abstract                                                                                                            </h3>
+                <p>Knowledge retention is challenging for companies. Since most knowledge is encoded as text, large language models offer a promising solution for preservation and utilization. A system based on the approach of retrieval augmented generation has been developed. Practical methods for knowledge explication are combined with small, locally executed language models and traditional retrieval algorithms. The article shows the solution approach as well as challenges and promising strategies for implementation.</p>
+            </div>
+                </div>
+            </div>
+        </li>
+        <li class="pl-pdf__sidebar-item js-pdf-sidebar-item"
+            aria-label="Teilen">
+            <button class="pl-pdf__sidebar-button js-pdf-button js-pdf-share" type="button" aria-hidden="true">
+                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M17 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 9a3 3 0 100-6 3 3 0 000 6zm0 10.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0 1.5a3 3 0 100-6 3 3 0 000 6zM7 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM7 15a3 3 0 100-6 3 3 0 000 6z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M15.128 17.651l-7-4 .744-1.302 7 4-.744 1.302zm-7-7.302l7-4 .744 1.302-7 4-.744-1.302z"/>
+</svg>
+</span>
+            </button>
+            <div class="pl-pdf__sidebar-submenu js-pdf-submenu" aria-hidden="true">
+                <div class="pl-pdf__sidebar-submenu-header">
+                    <h3>
+                        Teilen
+                        
+                    </h3>
+                    <button class="pl-pdf__sidebar-submenu-close js-sidebar-submenu-close" aria-label="Schließe Subnavigation">
+                        <span class="pl-icon pl-icon--small mobile"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3 5.5l5 5 5-5H3z"/>
+</svg>
+</span>
+                        <span class="pl-icon desktop"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.47 18.47l14-14 1.06 1.06-14 14-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.47 19.53l-14-14 1.06-1.06 14 14-1.06 1.06z"/>
+</svg>
+</span>
+                    </button>
+                </div>
+                <ul class="pl-pdf__share-menu">
+                                                                <li class="pl-pdf__share-item">
+                            <a href="/document/download/pdf/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270"
+                               class="pl-pdf__share-button"
+                               target="_blank">
+                                Download&nbsp;PDF
+                                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 3.5h-13v17h15v-15L21 7v15H3V2h13l1.5 1.5z"/>
+  <path d="M16 7h5l-5-5v5z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.47 14.03l1.06-1.06L12 16.44l3.47-3.47 1.06 1.06L12 18.56l-4.53-4.53z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.25 17.5v-9h1.5v9h-1.5z"/>
+</svg>
+</span>
+                            </a>
+                        </li>
+                                        <div class="pl-pdf__share-item pl-dropdown-select js-select show-on-desktop-flex">
+                        <button class="pl-dropdown-select__button js-select-toggle">
+                            <span class="pl-dropdown-select__button-text">
+                                <span class="pl-dropdown-select__button-icon-big">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 5.25h7.1v7.7c0 3.178-2.541 5.8-5.69 5.8h-.75v-4.294h.75c.742 0 1.372-.582 1.45-1.348H3.75V5.25zm1.5 1.5v4.858h2.867v1.341c0 1.378-.924 2.57-2.207 2.91v1.321c1.94-.364 3.44-2.115 3.44-4.23v-6.2h-4.1zm7.9-1.5h7.1v7.7c0 3.178-2.541 5.8-5.69 5.8h-.75v-4.294h.75c.742 0 1.372-.582 1.45-1.348h-2.86V5.25zm1.5 1.5v4.858h2.867v1.341c0 1.378-.924 2.57-2.207 2.91v1.321c1.94-.364 3.44-2.115 3.44-4.23v-6.2h-4.1z"/>
+</svg>
+                                </span>
+                                Download Zitation
+                            </span>
+                            <span class="pl-icon pl-icon--small">
+                                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.47 6.53l1.06-1.06L8 9.94l4.47-4.47 1.06 1.06L8 12.06 2.47 6.53z"/>
+</svg>
+                            </span>
+                        </button>
+
+                        <ul class="pl-dropdown-select__dropdown"
+                            tabindex="-1"
+                            role="listbox">
+                            <li class="pl-dropdown-select__option" role="option">
+                                <a href="/de/citation/download/ris/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270"
+                                   class="pl-pdf__share-button">
+                                    RIS
+                                </a>
+                            </li>
+                            <li class="pl-dropdown-select__option" role="option">
+                                <a href="/de/citation/download/bib/uuid/b20f063c-39d2-3d81-81c7-fe6f37978270"
+                                   class="pl-pdf__share-button">
+                                    BibTeX
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                                            <li class="pl-pdf__share-item">
+                            <a href="https://doi.org/10.37544/1436-4980-2025-06-23" class="pl-pdf__share-button js-copy-doi-to-clipboard" data-doi="https://doi.org/10.37544/1436-4980-2025-06-23"
+                               data-copy-message="DOI-Link wurde in Zwischenablage kopiert"
+                               data-error-message="DOI-Link konnte nicht in die Zwischenablage kopiert werden">
+                                <span class="doi-copy">DOI-Link in die Zwischenablage</span>
+                                <span class="doi-link hide">doi.org/10.37544/1436-4980-2025-06-23</span>
+                                <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 11.25h8v1.5H8v-1.5z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9 8.5H16a3.5 3.5 0 110 7h-3.1V17H16a5 5 0 000-10h-3.1v1.5zm-1.8 0V7H8a5 5 0 000 10h3.1v-1.5H8a3.5 3.5 0 110-7h3.1z"/>
+</svg>
+</span>
+                            </a>
+                        </li>
+                                        <li class="pl-pdf__share-item">
+                        <button data-modal="#modal-share-document" class="pl-pdf__share-button js-modal-trigger">
+                            Per E-Mail teilen <span class="pl-icon"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13.155 5.347l8.067 6.274-8.067 6.274v-3.248c-.618.02-1.583.09-2.707.31-1.873.365-4.127 1.137-5.956 2.729l-2.046 1.781.84-2.58c1.611-4.938 6.442-7.16 9.869-8.118V5.347zm1.5 3.066V9.93l-.567.142c-2.657.67-6.083 2.07-8.109 4.824 1.44-.737 2.914-1.164 4.18-1.412 2.022-.395 3.58-.346 3.78-.337l.716.034v1.647l4.123-3.207-4.123-3.208z"/>
+</svg>
+</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </li>
+            </ul>
+    <button class="pl-pdf__sidebar-toggle js-pdf-sidebar-toggle" aria-hidden="true">
+        <span class="pl-icon pl-icon--small"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+  <path d="M5.5 13l5-5-5-5v10z"/>
+</svg>
+</span>
+    </button>
+</nav>
+
+        <main class="pl-pdf__container" id="content">
+            <iframe class="pl-pdf__iframe js-iframe-download-tracking"
+                src="/de/10.37544/1436-4980-2025-06-23.pdf.html?page=1"
+                allowfullscreen="allowfullscreen"
+                data-download-track-url="/de/useraction?action=download_pdf&docid=78028">
+        </iframe>
+        <div class="pl-pdf__video-wrapper js-pdf-video-iframe">
+            <button class="pl-pdf__video-close pl-button pl-button--ghost-white js-pdf-video-close">Video schließen</button>
+            <iframe class="pl-pdf__video-iframe"
+                    frameborder="0"
+                    allow="autoplay; picture-in-picture"
+                    allowfullscreen="allowfullscreen">
+            </iframe>
+        </div>
+    </main>
+    </div>
+
+    <footer class="pl-footer pl-footer--pdf-footer">
+    <div class="pl-footer__top">
+        <div class="pl-footer__container pl-container">
+
+            <a href="/de/" class="pl-brand small"
+   title="Zurück zur Startseite">
+    <img src="/build/images/vdiverlag.svg" class="pl-brand__logo" alt="Zur Startseite der VDI Verlag eLibrary">
+</a>
+            <nav class="pl-footer-menu">
+                <ul class="pl-footer-menu__list">
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/kontakt" class="pl-footer-menu__link">Kontakt</a>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/about" class="pl-footer-menu__link">Über uns</a>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <button data-modal="#modal-feedback" class="pl-footer-menu__link js-modal-trigger">Feedback</button>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/datenschutz" class="pl-footer-menu__link">Datenschutz</a>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <button class="pl-footer-menu__link js--open-cookie-modal">Cookies & Tracking</button>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/faq" class="pl-footer-menu__link">FAQ</a>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/agb" class="pl-footer-menu__link">Nutzungsbedingungen</a>
+                    </li>
+                    <li class="pl-footer-menu__item">
+                        <a href="/de/page/impressum" class="pl-footer-menu__link">Impressum</a>
+                    </li>
+                                            <li class="pl-footer-menu__item">
+                            <a href="/de/page/accessibility" class="pl-footer-menu__link">Accessibility</a>
+                        </li>
+                                    </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="pl-footer__bottom">
+        <div class="pl-footer__container pl-container">
+            <span class="pl-footer__copyright">
+                © 2025
+                                    VDI Verlag
+                            </span>
+
+            <span class="pl-cooperation">
+    </span>
+        </div>
+    </div>
+
+    <script nonce="iEFWkSyq6yeavKz15cEA">
+            window.trackingData = "\u007B\u0022viewitemmethod\u0022\u003A\u007B\u0022item\u0022\u003A\u007B\u0022item_id\u0022\u003A\u002210.37544\\\/1436\u002D4980\u002D2025\u002D06\u002D23\u0022,\u0022item_name\u0022\u003A\u0022Aufbau\u0020eines\u0020Retrieval\u002DAugmented\u002DGeneration\u002DSystems\\\/Design\u0020of\u0020a\u0020Retrieval\u002DAugmented\u0020Generation\u0020\u0028RAG\u0029\u0020system\u0020for\u0020knowledge\u0020retention\u0020in\u0020SMEs\u0022,\u0022item_brand\u0022\u003A\u0022vdifachmedien\u0022,\u0022item_variant\u0022\u003A\u0022Jahrgang\u0020115\u0020\u00282025\u0029\u0022,\u0022author\u0022\u003A\u0022Martin\u0020Schmauder,\u0020Gritt\u0020Ott,\u0020Erik\u0020Sch\\u00f6nw\\u00e4lder,\u0020Martin\u0020Hahmann\u0022,\u0022dokumenttyp_id\u0022\u003A\u0022zs\u0022,\u0022volume_booklet\u0022\u003A\u0022Heft\u002006\u0022,\u0022series_journal_editions\u0022\u003A\u0022Alle\u0020Ausgaben\u003A\u0020wt\u0020Werkstattstechnik\u0020online\u0022,\u0022publication_year\u0022\u003A2025,\u0022access_status\u0022\u003A\u0022full\u0022,\u0022item_id_online\u0022\u003A\u00221436\u002D4980\u0022\u007D\u007D\u007D";
+        window.trackingUserData = "\u007B\u0022userLoggedIn\u0022\u003Afalse,\u0022loginType\u0022\u003Afalse,\u0022customerNetwork\u0022\u003Afalse\u007D";
+</script>
+
+</footer>
+
+    <div class="pl-modal js-modal small pl-modal--has-recaptcha"
+     id="modal-share-document"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="modal-share-document-title"
+     aria-hidden="true"
+     data-form-url="/de/share-document/form"
+>
+    <div class="pl-modal__container">
+        <div class="pl-modal__close js-modal-close">
+            <button type="button" class="pl-modal__close-button" aria-label="Schließen">
+            <span class="pl-icon pl-icon--small">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.47 12.47l10-10 1.06 1.06-10 10-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.47 13.53l-10-10 1.06-1.06 10 10-1.06 1.06z"/>
+</svg>
+            </span>
+            </button>
+        </div>
+        <h3 id="modal-share-document-title">
+            Per E-Mail teilen
+        </h3>
+        <div class="js-modal-form">
+        </div>
+    </div>
+</div>
+    <div class="pl-modal js-modal small pl-modal--copyright-consent"
+     id="modal-copyright-consent"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="modal-copyright-consent-title"
+     aria-hidden="true"
+     data-buttontext="Gelesen und Einverstanden"
+     data-buttonclass="pl-button--copyright-consent"
+>
+    <div class="pl-modal__container">
+        <div class="pl-modal__close js-modal-close">
+            <button type="button" class="pl-modal__close-button" aria-label="Schließen">
+            <span class="pl-icon pl-icon--small">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.47 12.47l10-10 1.06 1.06-10 10-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.47 13.53l-10-10 1.06-1.06 10 10-1.06 1.06z"/>
+</svg>
+            </span>
+            </button>
+        </div>
+        <h3 id="modal-copyright-consent-title">
+            Dieses Werk ist urheber&shy;rechtlich geschützt
+        </h3>
+        <p>
+            <strong>Hinweis</strong>: Dieses Werk ist urheberrechtlich geschützt und darf nur nach den Vorgaben der <a target="_blank" href="/de/page/agb">Nutzungs- und Lizenzvereinbarung (https://elibrary.vdi-verlag.de)</a> genutzt werden. Jede darüber hinaus gehende Nutzung des Werkes ist ausdrücklich untersagt und wird verfolgt.
+        </p>
+    </div>
+</div>
+    <div class="pl-modal js-modal"
+     id="modal-recaptcha-consent"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="modal-recaptcha-consent-title"
+     aria-hidden="true"
+>
+    <div class="pl-modal__container">
+        <div class="pl-modal__close js-modal-close">
+            <button type="button" class="pl-modal__close-button" aria-label="Schließen">
+            <span class="pl-icon pl-icon--small">
+                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.47 12.47l10-10 1.06 1.06-10 10-1.06-1.06z"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.47 13.53l-10-10 1.06-1.06 10 10-1.06 1.06z"/>
+</svg>
+            </span>
+            </button>
+        </div>
+        <h3 id="modal-recaptcha-consent-title">Cookies erforderlich!</h3>
+        <p>Zum Schutz vor Spam ist dieses Formular durch Google Recaptcha abgesichert. Bitte <button class="js--open-cookie-modal pl-button--link">erlauben Sie Marketing-Cookies</button>, um Google Recaptcha zu aktivieren und dieses Formular zu benutzen.</p>
+        <button class="pl-button js--open-cookie-modal" aria-label="Cookie-Einstellungen öffnen">Cookie-Einstellungen öffnen</button>
+    </div>
+</div>
+    <div class="js-loading-indicator pl-loading-indicator" aria-hidden="true">
+    <div class="pl-spinner-wrapper">
+        <div class="pl-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                    </div>
+        <p>Lade Inhalte, bitte warten…</p>
+    </div>
+</div>
+    
+    
+    <script nonce="iEFWkSyq6yeavKz15cEA" src="/build/runtime.js"></script>
+<script nonce="iEFWkSyq6yeavKz15cEA" src="/build/vdiverlag.js"></script>
+<script nonce="iEFWkSyq6yeavKz15cEA" src="/build/pdf.js"></script>
+
+<script nonce="iEFWkSyq6yeavKz15cEA">
+    HAS_EXTERNAL_REFERER = 0;
+    HAS_ACCESS = 1;
+    DOK_ID = 78028;
+    HAUPT_DOK_ID = 78024;
+    NONCE_SCRIPT = "iEFWkSyq6yeavKz15cEA";
+    RECAPTCHA_SITEKEY = "6Lfjx_wZAAAAAOUD3SIu1FoaYKZo4zw8MsIBt4W2";
+    TRANS = {"aria":{"site_loaded":"Die Seite wurde erfolgreich geladen.","pdf_loaded":"PDF wurde erfolgreich geladen.","pdf_failed_to_load":"PDF konnte nicht geladen werden."},"form":{"general_success":"Ihre Daten wurden erfolgreich abgeschickt!","general_error":"Beim Verarbeiten der Daten ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder wenden Sie sich an unseren Support."}};
+    BRAND_ID = "vdiverlag";
+    CURRENT_ENVIRONMENT_IS_PUBLIC = "1";
+</script>
+</body>
+</html>

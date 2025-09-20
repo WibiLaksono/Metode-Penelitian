@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#" class=" fs-16 gap-16">
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="We propose a novel Retrieval Augmented Generation (RAG) framework for dynamic document tagging and query driven retrieval. Our system integrates a large language model (LLM) with an explicit memory of documents to generate semantic tags for each document and uses these tags to improve retrieval accuracy (Zhou et al., 2024; Li et al., 2024). A query tag feedback loop is then formalized to iteratively refine document annotations based on user queries and present a modular architecture that separates document preprocessing tag generation, storage and retrieval (Sharma et al., 2024). To evaluate such systems, we introduce a synthetic multi domain benchmark containing documents from scientific (ArXiv), governmental, and legal sources, along with ground truth tags and query pools (Kim et al., 2024; Lin et al., 2024). We also define a new Query to Tag Matching Score (Q2T), measuring the semantic alignment between queries and generated tags. Experiments on our benchmark and real world corpora show that dynamic tagging significantly improves recall and annotation quality over static baselines. We include ablation studies isolating the effects of each component and evaluate across multiple domains (e.g. PDFs, filings, rulings). Finally, we discuss ethical implications such as annotation bias and hallucinations, and outline mitigation strategies (Tokunaga et al., 2024). This work provides a rigorous foundation and evaluation framework for adaptive RAG systems in document understanding." />
+<meta name="abstract" content="We propose a novel Retrieval Augmented Generation (RAG) framework for dynamic document tagging and query driven retrieval. Our system integrates a large language model (LLM) with an explicit memory of documents to generate semantic tags for each document and uses these tags to improve retrieval accuracy (Zhou et al., 2024; Li et al., 2024). A query tag feedback loop is then formalized to iteratively refine document annotations based on user queries and present a modular architecture that separates document preprocessing tag generation, storage and retrieval (Sharma et al., 2024). To evaluate such systems, we introduce a synthetic multi domain benchmark containing documents from scientific (ArXiv), governmental, and legal sources, along with ground truth tags and query pools (Kim et al., 2024; Lin et al., 2024). We also define a new Query to Tag Matching Score (Q2T), measuring the semantic alignment between queries and generated tags. Experiments on our benchmark and real world corpora show that dynamic tagging significantly improves recall and annotation quality over static baselines. We include ablation studies isolating the effects of each component and evaluate across multiple domains (e.g. PDFs, filings, rulings). Finally, we discuss ethical implications such as annotation bias and hallucinations, and outline mitigation strategies (Tokunaga et al., 2024). This work provides a rigorous foundation and evaluation framework for adaptive RAG systems in document understanding." />
+<meta name="keywords" content="RAG,Retrieval Augmented Generation,Dynamic document tagging,Query driven retrieval" />
+<link rel="canonical" href="https://journalijsra.com/content/retrieval-augmented-generation-system-dynamic-document-tagging-and-query-driven-retrieval" />
+<meta name="robots" content="index, follow" />
+<link rel="shortlink" href="https://journalijsra.com/node/1587" />
+<meta name="original-source" content="https://journalijsra.com" />
+<meta name="citation_title" content="Retrieval augmented generation system for dynamic document tagging and query-driven retrieval" />
+<meta name="citation_author" content="Surya Kuchibhotla" />
+<meta name="citation_author" content="Sri Kuchibhotla" />
+<meta name="citation_publication_date" content="2025" />
+<meta name="citation_journal_title" content="International Journal of Science and Research Archive" />
+<meta name="citation_issn" content="2582-8185" />
+<meta name="citation_volume" content="16" />
+<meta name="citation_issue" content="1" />
+<meta name="citation_firstpage" content="1452" />
+<meta name="citation_lastpage" content="1462" />
+<meta name="citation_doi" content="10.30574/ijsra.2025.16.1.2156" />
+<meta name="citation_keyword" content="RAG" />
+<meta name="citation_keyword" content="Retrieval Augmented Generation" />
+<meta name="citation_keyword" content="Dynamic document tagging" />
+<meta name="citation_keyword" content="Query driven retrieval" />
+<meta name="citation_abstract_url" content="https://journalijsra.com/content/retrieval-augmented-generation-system-dynamic-document-tagging-and-query-driven-retrieval" />
+<meta name="citation_doi_url" content="https://doi.org/10.30574/ijsra.2025.16.1.2156" />
+<meta name="dcterms.title" content="Retrieval augmented generation system for dynamic document tagging and query-driven retrieval" />
+<meta name="dcterms.creator" content="Surya Kuchibhotla" />
+<meta name="dcterms.creator" content="Sri Kuchibhotla" />
+<meta name="dcterms.subject" content="RAG" />
+<meta name="dcterms.subject" content="Retrieval Augmented Generation" />
+<meta name="dcterms.subject" content="Dynamic document tagging" />
+<meta name="dcterms.subject" content="Query driven retrieval" />
+<meta name="dcterms.description" content="We propose a novel Retrieval Augmented Generation (RAG) framework for dynamic document tagging and query driven retrieval. Our system integrates a large language model (LLM) with an explicit memory of documents to generate semantic tags for each document and uses these tags to improve retrieval accuracy (Zhou et al., 2024; Li et al., 2024). A query tag feedback loop is then formalized to iteratively refine document annotations based on user queries and present a modular architecture that separates document preprocessing tag generation, storage and retrieval (Sharma et al., 2024). To evaluate such systems, we introduce a synthetic multi domain benchmark containing documents from scientific (ArXiv), governmental, and legal sources, along with ground truth tags and query pools (Kim et al., 2024; Lin et al., 2024). We also define a new Query to Tag Matching Score (Q2T), measuring the semantic alignment between queries and generated tags. Experiments on our benchmark and real world corpora show that dynamic tagging significantly improves recall and annotation quality over static baselines. We include ablation studies isolating the effects of each component and evaluate across multiple domains (e.g. PDFs, filings, rulings). Finally, we discuss ethical implications such as annotation bias and hallucinations, and outline mitigation strategies (Tokunaga et al., 2024). This work provides a rigorous foundation and evaluation framework for adaptive RAG systems in document understanding." />
+<meta name="dcterms.date" content="2025" />
+<meta name="dcterms.type" content="Review Article" />
+<meta name="dcterms.format" content="text/html" />
+<meta name="dcterms.identifier" content="https://doi.org/10.30574/ijsra.2025.16.1.2156" />
+<meta name="dcterms.source" content="International Journal of Science and Research Archive" />
+<meta name="dcterms.rights" content="Copyrights to International Journal of Science and Research Archive" />
+<meta name="dcterms.abstract" content="We propose a novel Retrieval Augmented Generation (RAG) framework for dynamic document tagging and query driven retrieval. Our system integrates a large language model (LLM) with an explicit memory of documents to generate semantic tags for each document and uses these tags to improve retrieval accuracy (Zhou et al., 2024; Li et al., 2024). A query tag feedback loop is then formalized to iteratively refine document annotations based on user queries and present a modular architecture that separates document preprocessing tag generation, storage and retrieval (Sharma et al., 2024). To evaluate such systems, we introduce a synthetic multi domain benchmark containing documents from scientific (ArXiv), governmental, and legal sources, along with ground truth tags and query pools (Kim et al., 2024; Lin et al., 2024). We also define a new Query to Tag Matching Score (Q2T), measuring the semantic alignment between queries and generated tags. Experiments on our benchmark and real world corpora show that dynamic tagging significantly improves recall and annotation quality over static baselines. We include ablation studies isolating the effects of each component and evaluate across multiple domains (e.g. PDFs, filings, rulings). Finally, we discuss ethical implications such as annotation bias and hallucinations, and outline mitigation strategies (Tokunaga et al., 2024). This work provides a rigorous foundation and evaluation framework for adaptive RAG systems in document understanding." />
+<meta name="dcterms.issued" content="2025" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/sites/default/files/IJSRA%20logo_0.png" type="image/png" />
+<script>window.a2a_config=window.a2a_config||{};a2a_config.callbacks=[];a2a_config.overlays=[];a2a_config.templates={};</script>
+
+    <title>Retrieval augmented generation system for dynamic document tagging and query-driven retrieval</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_WgZ_Eqk6oBAVHlnUTmovEFW3evPW3Oj-_iw7AFHLYy4.css?delta=0&amp;language=en&amp;theme=solo&amp;include=eJx9kFGKwzAMRC8UNbD71dMY2VaMG0cKHpXS29fL5iPtwoI0SOJJA-Kc3VifMx_FZemmPjEgHqreJLn1OQGXkWGxHoqodG5h5yJhUF61_MdX4C5T5LQGtxH7fKpDTaYTnnDZxhwywZrNP0KlWeR2Gmyi91MLW5xQ20rSpLCmY_nxTcP7BKYhfWiWTL9W5Bzxx4piF153q-ogRLpevz7c34hNP4jj9ibA-A0oc19fCXWHVw" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_BkQDABlJym0VgYybYvRixtvnX5SitWDkJ7vNMfJDZJo.css?delta=1&amp;language=en&amp;theme=solo&amp;include=eJx9kFGKwzAMRC8UNbD71dMY2VaMG0cKHpXS29fL5iPtwoI0SOJJA-Kc3VifMx_FZemmPjEgHqreJLn1OQGXkWGxHoqodG5h5yJhUF61_MdX4C5T5LQGtxH7fKpDTaYTnnDZxhwywZrNP0KlWeR2Gmyi91MLW5xQ20rSpLCmY_nxTcP7BKYhfWiWTL9W5Bzxx4piF153q-ogRLpevz7c34hNP4jj9ibA-A0oc19fCXWHVw" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_UejKLP6JMRKC7a5h4Y6b8dzRoQp4OgYa1646BOLNhDs.css?delta=2&amp;language=en&amp;theme=solo&amp;include=eJx9kFGKwzAMRC8UNbD71dMY2VaMG0cKHpXS29fL5iPtwoI0SOJJA-Kc3VifMx_FZemmPjEgHqreJLn1OQGXkWGxHoqodG5h5yJhUF61_MdX4C5T5LQGtxH7fKpDTaYTnnDZxhwywZrNP0KlWeR2Gmyi91MLW5xQ20rSpLCmY_nxTcP7BKYhfWiWTL9W5Bzxx4piF153q-ogRLpevz7c34hNP4jj9ibA-A0oc19fCXWHVw" />
+
+    
+  </head>
+  <body class="path-node-1587 path-node page-node-type-article-issue">
+                    
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+<!-- Start: Page Wrapper -->
+
+
+<div id="page-wrapper" class="page-wrapper sw-1280 sb-992 mn-992 title-l-36 title-s-24 solo__fade-in solo__bc-scroll"  style="--r-lk:#181ed8;--r-lk-h:#d81851">
+
+            
+    
+  
+    
+          <!-- Start: Header -->
+    <header id="header" class="solo-outer lone header" role="banner" aria-label="Site header">
+      <div id="header-inner" class="solo-inner solo-col solo-col-1 header-inner">
+
+        
+        
+                  <a id="header-content" tabindex="-1"></a>
+              
+<section id="block-solo-branding" class="solo-clear solo-block block-system block-system-branding-block">
+  
+    
+  
+<div class="branding-wrapper">
+    <div class="branding-first">
+      <a class="site-logo" href="/" title="Home" rel="Home">
+      <img src="/sites/default/files/IJSRA%20logo.png" class="site-logo-img" alt="Home" />
+    </a>
+  
+    </div>
+  
+    <div class="branding-second site-name-outer site-slogan-outer">
+          <div class="site-name">
+        <a class="site-name-link" href="/" title="Home" rel="Home">
+        International Journal of Science and Research Archive
+      </a>
+      </div>
+    
+          <div class="site-slogan">International, Peer reviewed, Open access Journal ISSN Approved Journal No. 2582-8185</div>
+      </div>
+  
+</div>
+</section>
+
+
+        
+      </div>
+    </header>
+    <!-- End: Header -->
+    
+      <!-- Start: Primary Menu -->
+    <div id="primary-menu" class="solo-outer lone main-navigation-wrapper primary-menu has-border" role="navigation" aria-label="Main Navigation">
+      <div id="primary-menu-inner" class="solo-inner solo-col solo-col-1 primary-menu-inner">
+        <a id="main-navigation-content" tabindex="-1"></a>
+            <nav  id="block-solo-main-menu" class="block block-menu navigation menu--main" aria-labelledby="block-solo-main-menu-menu" role="navigation">
+            
+  <h2 class="visually-hidden block__title" id="block-solo-main-menu-menu">Main navigation</h2>
+  
+        
+
+
+<div class="solo-clear solo-menu navigation-responsive navigation-primary-responsive navigation-responsive-hover">
+
+  
+  <div class="mobile-nav hamburger-icon solo-block">
+    <button class="solo-button-menu mobile-menubar-toggler-button" data-drupal-selector="mobile-menubar-toggler-button" tabindex='-1' aria-label="Open or Close horizontal Main Menu" aria-expanded="false">
+      <span>
+          <svg width="60" height="40" viewbox="0 0 60 40">
+    <g stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor" class="svg-stroke">
+      <path id="svg-top" d="M10,10 L50,10 Z"></path>
+      <path id="svg-middle" d="M10,20 L50,20 Z"></path>
+      <path id="svg-bottom" d="M10,30 L50,30 Z"></path>
+    </g>
+  </svg>
+
+
+
+
+
+
+      </span>
+      <span class="visually-hidden">Open or Close horizontal Main Menu</span>
+    </button>
+  </div>
+
+
+
+
+
+
+
+    <ul class="navigation__menubar navigation__responsive navigation__primary navigation__menubar-main"  id="main-menubar" role="menubar">
+  
+        
+                      
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item link-only" role='none'>
+        <a href="/" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1" data-drupal-link-system-path="&lt;front&gt;">        <span class="menu__url-title">Home</span>
+      </a>
+    
+        </li>
+    
+                      
+                
+    
+    
+            
+            <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item has-sub__menu button-only" role='none'>
+                    <button class="ds-link dropdown-toggler dropdown-toggler-parent "  data-drupal-selector="main-sub-menu-2" role="menuitem" aria-controls="main-sub-menu-2" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+            <span class="menu__url-title-disabled">About Us</span>
+            <span class="visually-hidden">About Us sub-navigation</span>
+            <span class="toggler-icon dropdown-arrow">  <svg aria-hidden="true" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel" fill="none" stroke="currentColor" class="svg-stroke">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
+
+</span>
+        </button>
+    
+    
+                
+
+
+
+
+
+
+    <ul class="sub__menu sub__menu-main" id="main-sub-menu-2" tabindex="-1"  id="main-submenu--2" role="menu" tabindex="-1" aria-hidden="true">
+  
+        
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/about-journal" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Journal Information</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/indexing" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Abstracting and Indexing</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/editorial-board" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Editorial Board Members</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/list-reviewers" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Reviewer Panel</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/journal-policies" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Journal Policies</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/ijsra-crossmark-policy" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">IJSRA CrossMark Policy</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/publication-ethics" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Publication Ethics</span>
+      </a>
+    
+        </li>
+      </ul>
+ 
+        </li>
+    
+                      
+                
+    
+    
+            
+            <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item has-sub__menu button-only" role='none'>
+                    <button class="ds-link dropdown-toggler dropdown-toggler-parent "  data-drupal-selector="main-sub-menu-3--2" role="menuitem" aria-controls="main-sub-menu-3--2" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+            <span class="menu__url-title-disabled">Author&#039;s Guidelines</span>
+            <span class="visually-hidden">Author&#039;s Guidelines sub-navigation</span>
+            <span class="toggler-icon dropdown-arrow">  <svg aria-hidden="true" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel" fill="none" stroke="currentColor" class="svg-stroke">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
+
+</span>
+        </button>
+    
+    
+                
+
+
+
+
+
+
+    <ul class="sub__menu sub__menu-main" id="main-sub-menu-3--2" tabindex="-1"  id="main-submenu--3" role="menu" tabindex="-1" aria-hidden="true">
+  
+        
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/instructions-authors" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Instructions for Authors</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/article-processing-charges" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Article processing fee</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/track-manuscript-status" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Track Manuscript Status</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/get-publication-certificate" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Get Publication Certificate</span>
+      </a>
+    
+        </li>
+      </ul>
+ 
+        </li>
+    
+                      
+                
+    
+    
+            
+            <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item has-sub__menu button-only" role='none'>
+                    <button class="ds-link dropdown-toggler dropdown-toggler-parent "  data-drupal-selector="main-sub-menu-4--3" role="menuitem" aria-controls="main-sub-menu-4--3" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+            <span class="menu__url-title-disabled">View Articles</span>
+            <span class="visually-hidden">View Articles sub-navigation</span>
+            <span class="toggler-icon dropdown-arrow">  <svg aria-hidden="true" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel" fill="none" stroke="currentColor" class="svg-stroke">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
+
+</span>
+        </button>
+    
+    
+                
+
+
+
+
+
+
+    <ul class="sub__menu sub__menu-main" id="main-sub-menu-4--3" tabindex="-1"  id="main-submenu--4" role="menu" tabindex="-1" aria-hidden="true">
+  
+        
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="/ArchiveIssue-2025-Vol16-Issue2" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1" data-drupal-link-system-path="ArchiveIssue-2025-Vol16-Issue2">        <span class="menu__url-title">Current Issue</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="/ArchiveIssue-2025-Vol16-Issue3" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1" data-drupal-link-system-path="ArchiveIssue-2025-Vol16-Issue3">        <span class="menu__url-title">Issue in Progress</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/archive" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Past Issues</span>
+      </a>
+    
+        </li>
+      </ul>
+ 
+        </li>
+    
+                      
+                
+    
+    
+            
+            <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item has-sub__menu button-only" role='none'>
+                    <button class="ds-link dropdown-toggler dropdown-toggler-parent "  data-drupal-selector="main-sub-menu-5--2" role="menuitem" aria-controls="main-sub-menu-5--2" aria-haspopup="true" aria-expanded="false" tabindex="-1">
+            <span class="menu__url-title-disabled">Join Us</span>
+            <span class="visually-hidden">Join Us sub-navigation</span>
+            <span class="toggler-icon dropdown-arrow">  <svg aria-hidden="true" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel" fill="none" stroke="currentColor" class="svg-stroke">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
+
+</span>
+        </button>
+    
+    
+                
+
+
+
+
+
+
+    <ul class="sub__menu sub__menu-main" id="main-sub-menu-5--2" tabindex="-1"  id="main-submenu--5" role="menu" tabindex="-1" aria-hidden="true">
+  
+        
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/become-reviewer-panel-member" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Become a Reviewer panel member</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__submenu-item link-only" role='none'>
+        <a href="https://ijsra.net/content/join-editorial-board-member" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Join as Editorial Board Member</span>
+      </a>
+    
+        </li>
+      </ul>
+ 
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item link-only" role='none'>
+        <a href="https://ijsra.net/content/contact-us" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Contact us</span>
+      </a>
+    
+        </li>
+    
+            
+                
+    
+    
+            
+                         <li class="btn-animate nav__menu-item nav__menu-item-main nav__menubar-item link-only" role='none'>
+        <a href="https://ijsra.net/content/downloads" target="_blank" class="nav__menu-link nav__menu-link-main" role="menuitem" tabindex="-1">        <span class="menu__url-title">Downloads</span>
+      </a>
+    
+        </li>
+      </ul>
+ 
+</div>
+
+
+
+  </nav>
+
+
+      </div>
+    </div>
+    <!-- End: Primary Menu -->
+    
+          <!-- Start: Welcome Text -->
+              
+    <div id="welcome-text" class="solo-outer lone welcome-text" >
+      <div id="welcome-text-inner" class="solo-inner solo-col solo-col-1 welcome-text-inner">
+            
+<section id="block-solo-journalinformation" class="solo-clear solo-block block-block-content block-block-content413f16c6-1e04-4417-8525-c384e6411fc7">
+  
+    
+      
+            <div class="field field--name-field-block-content field--type-text-long field--label-hidden field__item"><p class="text-align-center" style="-webkit-text-stroke-width:0px;background-color:rgb(218, 240, 255);border-radius:5px;border-width:0px;color:rgb(0, 0, 0);font-family:Vollkorn, arial, serif;font-size:18px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:2.5em;margin:-10px 0px -5px;orphans:2;padding:5px 0px;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:top;white-space:normal;widows:2;word-spacing:0px;">ISSN Approved Journal<strong style="border-width:0px;font-weight:normal;margin:0px;padding:0px;vertical-align:baseline;"> </strong><span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span>&nbsp;<a style="border-width:0px;color:rgb(0, 116, 189);margin:0px;padding:0px;text-decoration:none;vertical-align:baseline;" href="https://ijsra.net/sites/default/files/IJSRA%20ISSN%20registration%20completed.pdf" target="_blank" data-cke-saved-href="https://ijsra.net/sites/default/files/IJSRA%20ISSN%20registration%20completed.pdf">eISSN: 2582-8185</a>&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span>&nbsp;<span style="border-width:0px;color:rgb(0, 100, 0);margin:0px;padding:0px;vertical-align:baseline;">CODEN: IJSRO2</span>&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span>&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">Impact Factor&nbsp;8.2</span> <span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span> <span style="border-width:0px;color:rgb(0, 100, 0);margin:0px;padding:0px;vertical-align:baseline;">Google Scholar and </span><a style="border-width:0px;color:rgb(0, 116, 189);margin:0px;padding:0px;text-decoration:none;vertical-align:baseline;" href="https://search.crossref.org/?q=2582-8185&amp;from_ui=yes" target="_blank" data-cke-saved-href="https://search.crossref.org/?q=2582-8185&amp;from_ui=yes"><span style="border-width:0px;color:rgb(0, 100, 0);margin:0px;padding:0px;vertical-align:baseline;">CrossRef Indexed</span></a></p><p class="text-align-center" style="-webkit-text-stroke-width:0px;background-color:rgb(218, 240, 255);border-radius:5px;border-width:0px;color:rgb(0, 0, 0);font-family:Vollkorn, arial, serif;font-size:18px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-weight:400;letter-spacing:normal;line-height:2.5em;margin:-10px 0px -5px;orphans:2;padding:5px 0px;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:top;white-space:normal;widows:2;word-spacing:0px;">Fast Publication within 48 hours&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span>&nbsp;Low Article Processing Charges&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span>&nbsp;Peer Reviewed and Referred Journal&nbsp;<span style="border-width:0px;color:rgb(178, 34, 34);margin:0px;padding:0px;vertical-align:baseline;">||</span><span style="border-width:0px;color:rgb(0, 0, 205);margin:0px;padding:0px;vertical-align:baseline;"> </span>Free Certificate</p></div>
+      
+  </section>
+
+<section id="block-solo-callforpaper-2" class="solo-clear solo-block block-block-content block-block-contente36d752b-e943-4b79-8480-aa2ca94d3137">
+  
+    
+      
+            <div class="field field--name-field-block-content field--type-text-long field--label-hidden field__item"><p class="text-align-center" style="-webkit-text-stroke-width:0px;background-color:rgb(212, 255, 229);border-radius:5px;border-width:0px;color:rgb(0, 0, 0);font-family:Vollkorn, arial, serif;font-size:18px;font-style:normal;font-variant-caps:normal;font-variant-ligatures:normal;letter-spacing:normal;line-height:40px;margin:10px 0px 5px;orphans:2;padding:5px 0px;text-decoration-color:initial;text-decoration-style:initial;text-decoration-thickness:initial;text-indent:0px;text-transform:none;vertical-align:top;white-space:normal;widows:2;word-spacing:0px;"><span style="border-width:0px;color:rgb(47, 79, 79);margin:0px;padding:0px;vertical-align:baseline;"><strong style="border-width:0px;margin:0px;padding:0px;vertical-align:baseline;">Research and review articles are invited for publication in&nbsp;</strong></span><span style="border-width:0px;color:rgb(128, 0, 128);margin:0px;padding:0px;vertical-align:baseline;"><strong style="border-width:0px;margin:0px;padding:0px;vertical-align:baseline;">September 2025 (Volume 16, Issue 3)</strong></span></p></div>
+      
+  </section>
+
+
+      </div>
+    </div>
+    <!-- End: Welcome Text -->
+        
+    
+
+
+      
+        <!-- Start: System Messages -->
+    <div id="system-messages" class="solo-outer lone system-messages" >
+      <div id="system-messages-inner" class="solo-inner solo-col solo-col-1 system-messages-inner">
+                <div data-drupal-messages-fallback class="hidden"></div>
+
+
+      </div>
+    </div>
+    <!-- End: System Messages -->
+  
+        <!-- Start: Page Title -->
+    <div id="page-title" class="solo-outer lone page-title"  style="--r-tx:#e01a1a;--r-h1:#b33786">
+      <div id="page-title-inner" class="solo-inner solo-col solo-col-1 fade-inner page-title-inner">
+            
+
+
+<div id="block-solo-page-title" class="block block-core block-page-title-block">
+  
+  
+  <h1 class="page-title-text">
+<span>Retrieval augmented generation system for dynamic document tagging and query-driven retrieval</span>
+</h1>
+
+
+  
+</div>
+
+
+      </div>
+    </div>
+    <!-- End: Page Title -->
+  
+        <!-- Start: Page Title -->
+    <div id="breadcrumb" class="solo-outer lone breadcrumb" >
+      <div id="breadcrumb-inner" class="solo-inner solo-col solo-col-1 fade-inner breadcrumb-inner">
+            
+<section id="block-solo-breadcrumbs" class="solo-clear solo-block block-system block-system-breadcrumb-block">
+  
+    
+      
+  <nav class="solo-block breadcrumb-nav" role="navigation" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+    <ul class="solo-ul solo-medium breadcrumb-menu">
+              <li>
+                                    <a class="btn-animate" href="/">Home</a>
+                                                      </li>
+          </ul>
+  </nav>
+
+
+
+  </section>
+
+
+      </div>
+    </div>
+    <!-- End: Page Title -->
+  
+  
+
+
+      
+
+
+
+
+  <!-- Start: Main -->
+  <div id="main-container" class="solo-outer multi main-container active-main-1" >
+    <div id="main-container-inner" class="solo-inner solo-col main-container-inner solo-col-1 left-main-right">
+      <!-- Start Main Container -->
+
+    
+          <!-- Start: Main Content -->
+      <div id="sidebar-box-main" class="region-outer main-box sidebar-box-main" role="main">
+        <div class="region-inner main-box-inner sidebar-box-main-inner fade-inner" >
+          <a id="main-content" tabindex="-1"></a>
+              
+<section id="block-solo-content" class="solo-clear solo-block block-system block-system-main-block">
+  
+    
+      
+<article class="node solo-clear node--type-article-issue node--view-mode-full">
+
+  <header class="solo-clear node__header header-is-empty">
+    
+        
+
+    
+  </header>
+
+  <div class="solo-clear node__content">
+    
+            <div class="field field--name-field-author-names-for-article field--type-text-long field--label-hidden field__item"><h3>Surya Kuchibhotla <sup>*</sup> and Sri Kuchibhotla</h3></div>
+      
+            <div class="field field--name-field-affiliation field--type-text-long field--label-hidden field__item"><p class="text-align-justify d-Affiliations" style="text-justify:inter-ideograph;"><span style="font-family:&quot;Arial&quot;,sans-serif;font-size:13.0pt;">Independent Researcher, Columbus, Ohio.</span></p></div>
+      
+            <div class="field field--name-field-type-of-article field--type-list-string field--label-hidden field__item">Review Article</div>
+      
+            <div class="field field--name-field-article-issue-details field--type-text-long field--label-hidden field__item"><div><a style="font-size:13.008px;" href="https://crossmark.crossref.org/dialog/?doi=10.30574/ijsra.2025.16.1.2156&amp;domain=pdf" target="_blank" data-target="crossmark"><span style="font-family:lucida sans unicode,lucida grande,sans-serif;font-size:14px;"><img style="border-style:hidden;float:right;" src="https://crossmark-cdn.crossref.org/widget/v2.0/logos/CROSSMARK_Color_horizontal.svg" alt width="200" height="43" loading="lazy"></span></a></div><p>International Journal of Science and Research Archive, 2025, 16(01), 1452-1462</p><p>Article&nbsp;DOI:&nbsp;10.30574/ijsra.2025.16.1.2156</p><p>DOI url:&nbsp;<a href="https://doi.org/10.30574/ijsra.2025.16.1.2156">https://doi.org/10.30574/ijsra.2025.16.1.2156</a></p></div>
+      
+  <div class="field field--name-field-publication-history field--type-text-long field--label-above">
+    <label class="field__label">Publication history</label>
+              <div class="field__item"><p class="text-align-justify f-publicationhistory" style="text-justify:inter-ideograph;"><span style="font-family:&quot;Arial&quot;,sans-serif;font-size:13.0pt;">Received on 11 June 2025; revised on 16 July 2025; accepted on 19 July 2025</span></p></div>
+          </div>
+
+  <div class="field field--name-field-abstract field--type-text-long field--label-above">
+    <label class="field__label">Abstract</label>
+              <div class="field__item"><p><span style="font-family:&quot;Arial&quot;,sans-serif;font-size:13.0pt;">We propose a novel Retrieval Augmented Generation (RAG) framework for dynamic document tagging and query driven retrieval. Our system integrates a large language model (LLM) with an explicit memory of documents to generate semantic tags for each document and uses these tags to improve retrieval accuracy (Zhou et al., 2024; Li et al., 2024). A query tag feedback loop is then formalized to iteratively refine document annotations based on user queries and present a modular architecture that separates document preprocessing tag generation, storage and retrieval (Sharma et al., 2024). To evaluate such systems, we introduce a synthetic multi domain benchmark containing documents from scientific (ArXiv), governmental, and legal sources, along with ground truth tags and query pools (Kim et al., 2024; Lin et al., 2024). We also define a new Query to Tag Matching Score (Q2T), measuring the semantic alignment between queries and generated tags. Experiments on our benchmark and real world corpora show that dynamic tagging significantly improves recall and annotation quality over static baselines. We include ablation studies isolating the effects of each component and evaluate across multiple domains (e.g. PDFs, filings, rulings). Finally, we discuss ethical implications such as annotation bias and hallucinations, and outline mitigation strategies (Tokunaga et al., 2024). This work provides a rigorous foundation and evaluation framework for adaptive RAG systems in document understanding.</span></p></div>
+          </div>
+
+  <div class="field field--name-field-keywords field--type-text-long field--label-above">
+    <label class="field__label">Keywords</label>
+              <div class="field__item"><p class="j-Keywords"><span style="font-family:&quot;Arial&quot;,sans-serif;font-size:13.0pt;font-weight:normal;">RAG; Retrieval Augmented Generation; Dynamic document tagging; Query driven retrieval</span></p></div>
+          </div>
+
+  <div class="field field--name-field-link-source-article field--type-link field--label-above">
+    <label class="field__label">Download Article PDF</label>
+              <div class="field__item"><a href="https://journalijsra.com/sites/default/files/fulltext_pdf/IJSRA-2025-2156.pdf">https://journalijsra.com/sites/default/files/fulltext_pdf/IJSRA-2025-2156.pdf</a></div>
+          </div>
+
+            <div class="field field--name-field-pdf-preview-iframe field--type-iframe field--label-hidden field__item"><div class="">
+      <h3 class="iframe_title">Preview Article PDF</h3>
+    <style type="text/css">iframe#iframe-field_pdf_preview_iframe-1587 {/*frameborder*/ border-width:0;/*scrolling*/ overflow:auto;}</style>
+  <iframe  width="100%" height="500" name="iframe-field_pdf_preview_iframe-1587" id="iframe-field_pdf_preview_iframe-1587" title="Preview Article PDF" allow="accelerometer;autoplay;camera;encrypted-media;geolocation;gyroscope;microphone;payment;picture-in-picture" src="https://journalijsra.com/sites/default/files/fulltext_pdf/IJSRA-2025-2156.pdf">
+    Your browser does not support iframes, but you can visit <a href="https://journalijsra.com/sites/default/files/fulltext_pdf/IJSRA-2025-2156.pdf">Preview Article PDF</a>
+  </iframe>
+</div>
+</div>
+      
+  <div class="field field--name-field-how-to-cite-this-article field--type-text-long field--label-above">
+    <label class="field__label">How to cite this article</label>
+              <div class="field__item"><p>Surya Kuchibhotla and Sri Kuchibhotla. <span style="font-family:&quot;Arial&quot;,sans-serif;font-size:13.0pt;">Retrieval augmented generation system for dynamic document tagging and query-driven retrieval. International Journal of Science and Research Archive, 2025, 16(01), 1452-1462. Article DOI: https://doi.org/10.30574/ijsra.2025.16.1.2156.</span></p></div>
+          </div>
+
+  <div class="field field--name-field-copyright-information field--type-text-long field--label-above">
+    <label class="field__label">Copyright information</label>
+              <div class="field__item"><p>Copyright © 2025 Author(s) retain the copyright of this article. This article is published under the terms of the Creative Commons Attribution Liscense 4.0</p></div>
+          </div>
+<span class="a2a_kit a2a_kit_size_32 addtoany_list" data-a2a-url="https://journalijsra.com/content/retrieval-augmented-generation-system-dynamic-document-tagging-and-query-driven-retrieval" data-a2a-title="Retrieval augmented generation system for dynamic document tagging and query-driven retrieval"><a class="a2a_dd addtoany_share" href="https://www.addtoany.com/share#url=https%3A%2F%2Fjournalijsra.com%2Fcontent%2Fretrieval-augmented-generation-system-dynamic-document-tagging-and-query-driven-retrieval&amp;title=Retrieval%20augmented%20generation%20system%20for%20dynamic%20document%20tagging%20and%20query-driven%20retrieval"></a><a class="a2a_button_facebook"></a><a class="a2a_button_mastodon"></a><a class="a2a_button_email"></a></span>
+
+  </div>
+
+</article>
+
+  </section>
+
+
+        </div>
+      </div>
+      <!-- End: Main Content -->
+    
+    
+      <!-- End: Main Container -->
+    </div>
+  </div>
+<!-- End: Main -->
+
+    
+
+
+      
+
+
+
+
+
+
+  <!-- Start: Bottom Container -->
+  <div id="bottom-container" class="solo-outer multi bottom-container active-bottom-1" >
+    <div id="bottom-container-inner" class="solo-inner solo-col bottom-container-inner solo-col-1">
+
+          <!-- Start: Bottom First -->
+      <div id="bottom-box-first" class="region-outer bottom-box bottom-box-first">
+        <div class="region-inner bottom-box-inner bottom-box-first-inner fade-inner" >
+              
+<section id="block-solo-forauthors" class="solo-clear solo-block block-block-content block-block-content047f1df1-1cae-4a82-9eb0-9bd739c46f98">
+  
+    
+      
+            <div class="field field--name-body field--type-text-with-summary field--label-hidden field__item"><p class="text-align-center"><span style="color:#800080;font-size:24px;"><strong>For Authors: Fast Publication of Research and Review Papers</strong></span></p><hr><p class="text-align-center"><span style="color:#008000;font-size:24px;"><strong>ISSN Approved Journal publication within 48 hrs in minimum fees USD 35, Impact Factor 8.2</strong></span></p><hr><p class="text-align-center"><a style="font-size:13.008px;font-weight:normal;" href="https://ijsra.net/content/instructions-authors" target="_blank"><img src="/sites/default/files/inline-images/Instructions%20for%20authors%20of%20IJSRA.png" data-entity-uuid="5116e03e-a3c8-4085-a693-5048ce969cd9" data-entity-type="file" alt width="175" height="159" loading="lazy"></a><span style="font-size:13.008px;font-weight:normal;"> &nbsp;</span><a style="font-size:13.008px;font-weight:normal;" href="https://ijsra.net/eform/submit/online-submission" target="_blank"><img src="/sites/default/files/inline-images/Submit%20Research%20Paper%20to%20IJSRA.png" data-entity-uuid="a3d013c6-1882-4865-92a4-318c9a1e3885" data-entity-type="file" alt="Submit Paper Online" width="175" height="159" loading="lazy"></a><span style="font-size:13.008px;font-weight:normal;"> &nbsp;</span><a style="font-size:13.008px;font-weight:normal;" href="https://ijsra.net/content/international-journals-low-publication-charges" target="_blank"><img src="/sites/default/files/inline-images/Low%20Article%20Processing%20charges%20at%20IJSRA.png" data-entity-uuid="0d337d2f-227a-4968-925b-a8be518eaa9c" data-entity-type="file" alt width="175" height="159" loading="lazy"></a><span style="font-size:13.008px;font-weight:normal;"> &nbsp;</span><a style="font-size:13.008px;font-weight:normal;" href="https://ijsra.net/content/archive" target="_blank"><img src="/sites/default/files/inline-images/View%20Published%20articles%20Issue%20of%20IJSRA.png" data-entity-uuid="97c9ec3c-bc00-4e4f-af2c-3c0bec4f7d97" data-entity-type="file" alt width="175" height="160" loading="lazy"></a> <a style="font-size:13.008px;font-weight:normal;text-decoration-line:underline;" href="https://ijsra.net/content/get-publication-certificate" target="_blank"><img src="/sites/default/files/inline-images/get%20publication%20certificate%20free%20of%20cost%20at%20IJSRA.png" data-entity-uuid="3e03bc35-100d-470d-b07b-799228dbc781" data-entity-type="file" alt width="177" height="161" loading="lazy"></a> <a style="font-size:13.008px;font-weight:normal;text-decoration-line:underline;" href="https://ijsra.net/content/indexing" target="_blank"><img src="/sites/default/files/inline-images/Indexing%20of%20articles%20at%20IJSRA.png" data-entity-uuid="2f3da762-824e-422c-85c0-d7436dffb237" data-entity-type="file" alt="Google Scholar Indexing" width="175" height="158" loading="lazy"></a> <a href="https://ijsra.net/content/peer-reviewed-journal-ijsra" target="_blank"><img src="/sites/default/files/inline-images/Peer%20Review%20Process%20of%20Journal%20IJSRA.png" data-entity-uuid="65b3c7f3-2842-404c-95e4-7b8c39881719" data-entity-type="file" alt="Peer Review Process" width="175" height="159" loading="lazy"></a> <a href="https://ijsra.net/content/join-editorial-board-member" target="_blank"><img src="/sites/default/files/inline-images/Join%20Editorial%20Board%20of%20Journal%20IJSRA.png" data-entity-uuid="d7b3f77f-3a8d-415e-b18d-d19a419bc465" data-entity-type="file" alt width="175" height="159" loading="lazy"></a></p></div>
+      
+  </section>
+
+
+        </div>
+      </div>
+      <!-- End: Bottom First -->
+    
+    
+    
+    
+    </div>
+  </div>
+  <!-- End: Bottom -->
+
+      
+    
+
+      
+        <!-- Start: Footer Menu -->
+    <div id="footer-menu" class="solo-outer lone footer-menu" >
+      <div id="footer-menu-inner" class="solo-inner solo-col solo-col-1 footer-menu-inner">
+
+    
+        <!-- Start: Bottom Menu -->
+                  <div class="solo-clear footer-menu-second fade-inner">
+            <a id="footer-content" tabindex="-1"></a>
+                <nav  id="block-solo-footer" class="block block-menu navigation menu--footer" aria-labelledby="block-solo-footer-menu" role="navigation">
+            
+  <h2 class="visually-hidden block__title" id="block-solo-footer-menu">Footer menu</h2>
+  
+        
+
+        <ul class="solo-footer-menu" role="menubar">
+                      <li class="solo-footer-menu__item" role="none">
+          <a href="/contact" role="menuitem" data-drupal-link-system-path="contact">Contact</a>
+                  </li>
+          </ul>
+  
+
+
+
+  </nav>
+
+
+          </div>
+          <!-- End: Bottom Menu -->
+              </div>
+    </div>
+    <!-- End: Footer Menu -->
+  
+
+
+        <!-- Start: Copyright -->
+    <div id="copyright" class="solo-outer lone copyright" >
+      <div id="copyright-inner" class="solo-inner solo-col copyright-inner solo-col-2">
+            <!-- Start: Copyright -->
+      <p class="copyright-first">
+                Copyright © 2025  International Journal of Science and Research Archive - All rights reserved
+      </p>
+      <!-- End: Copyright -->
+                      <!-- Start: Credit Link -->
+      <p class="copyright-second">
+        Developed &amp; Designed by <a href="https://journalijsra.com/" title="VS Infosolution" target="_blank">VS Infosolution</a>
+      </p>
+      <!-- End: Credit Link -->
+            </div>
+    </div>
+    <!-- End: Copyright -->
+  </div>
+<!-- End: Page Wrapper -->
+
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1587","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ajaxPageState":{"libraries":"eJx9kOFqwzAMhF8oamD71acxsq0YN44UfCqjbz-P7EfW0YJ9yL7vQBLn7Mb6mPm3uCzd1CcGxEPVmyS3PifgMm5YrIciKp1b2LlIGJRXLe_4CtxlipzW4DbOPp_qUJPpS_OGCdZs_hFKQ_rQLJnwgMtGzvFMlGaR278Pil143a2qgxDpev04MZvo_en5J7DpUwC2OKG2laRJYU1yNo_GNgHGekCZ-3rYX580NjIdwJgS8g03UpH4","theme":"solo","theme_token":null},"ajaxTrustedUrl":[],"back_to_top":{"back_to_top_button_trigger":100,"back_to_top_speed":1200,"back_to_top_prevent_on_mobile":false,"back_to_top_prevent_in_admin":false,"back_to_top_button_type":"image","back_to_top_button_text":"Back to top"},"user":{"uid":0,"permissionsHash":"0da4dcdbc1213baf73ce39d97a1debc9b327eca71ee43999a0bfd4e69a6a898d"}}</script>
+<script src="/sites/default/files/js/js_VTHnAhHDK0q9oJf2vK6KUEsgZl8E-Du2uKKX8YglDYg.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=solo&amp;include=eJxLTEkpyU_Mq9RPhDL00ory80p0khKTs-NL8oGoQB-JHZ9VrFOcn5OvDyJ003PykxJzkARyU_NKATVvH_o"></script>
+<script src="https://static.addtoany.com/menu/page.js" defer></script>
+<script src="/sites/default/files/js/js_Ltu4ejNJ5Bx6zhLeevGquDAgDKifIW8t0kSReDYVODY.js?scope=footer&amp;delta=2&amp;language=en&amp;theme=solo&amp;include=eJxLTEkpyU_Mq9RPhDL00ory80p0khKTs-NL8oGoQB-JHZ9VrFOcn5OvDyJ003PykxJzkARyU_NKATVvH_o"></script>
+
+  </body>
+</html>

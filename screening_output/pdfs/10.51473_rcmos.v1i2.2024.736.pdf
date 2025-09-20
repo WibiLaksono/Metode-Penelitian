@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xml:lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		Protótipo de Pesquisa Documental para a Polícia Militar do Paraná com Retrieval Augmented Generation e Gemini AI em Ambiente Dockerizado: Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment
+							| RCMOS - Revista Científica Multidisciplinar O Saber
+			</title>
+
+	
+<link rel="icon" href="https://submissoesrevistarcmos.com.br/public/journals/1/favicon_pt_BR.png" />
+<meta name="generator" content="Open Journal Systems 3.4.0.9" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QXP06QH9YZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QXP06QH9YZ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T5SB2DS3');</script>
+<!-- End Google Tag Manager -->
+<!-- SEO Básico -->
+<meta name="description" content="A Revista Científica Multidisciplinar O Saber (RCMOS) publica artigos científicos em português, inglês, espanhol e francês, com DOI, revisão por pares duplo-cega, acesso aberto e indexação internacional.">
+<meta name="keywords" content="revista científica, periódico acadêmico, artigos científicos, publicação com DOI, acesso aberto, indexação internacional, fluxo contínuo, multidisciplinar, RCMOS, Editora  Acadêmica Aluz">
+<meta name="author" content="Revista Científica Multidisciplinar O Saber - Editora Acadêmica Aluz">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+<meta property="og:title" content="Revista Científica Multidisciplinar O Saber (RCMOS)">
+<meta property="og:description" content="Periódico científico internacional, multidisciplinar, com DOI, revisão por pares e publicações em português, inglês, espanhol e francês.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://submissoesrevistacientificaosaber.com/index.php/rcmos">
+<meta property="og:image" content="https://submissoesrevistacientificaosaber.com/public/site/images/logo.jpg">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Revista Científica Multidisciplinar O Saber (RCMOS)">
+<meta name="twitter:description" content="Publicação científica internacional com DOI, fluxo contínuo e indexação global.">
+<meta name="twitter:image" content="https://submissoesrevistacientificaosaber.com/public/site/images/logo.jpg">
+<meta name="twitter:site" content="@RevistaOSaber">
+
+<!-- Idiomas -->
+<meta name="content-language" content="pt,en,es,fr">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://submissoesrevistacientificaosaber.com/index.php/rcmos">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5SB2DS3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+<meta name="gs_meta_revision" content="1.1"/>
+<meta name="citation_journal_title" content="RCMOS - Revista Científica Multidisciplinar O Saber"/>
+<meta name="citation_journal_abbrev" content="Rev. Cient. Multidisc. Saber"/>
+<meta name="citation_issn" content="2675-9128"/> 
+<meta name="citation_author" content="Cleiton Giacomelli da Silva"/>
+<meta name="citation_author_institution" content="Polícia Militar do Paraná"/>
+<meta name="citation_title" content="Protótipo de Pesquisa Documental para a Polícia Militar do Paraná com Retrieval Augmented Generation e Gemini AI em Ambiente Dockerizado: Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment"/>
+<meta name="citation_language" content="pt"/>
+<meta name="citation_date" content="2024/11/12"/>
+<meta name="citation_volume" content="1"/>
+<meta name="citation_issue" content="2"/>
+<meta name="citation_doi" content="10.51473/rcmos.v1i2.2024.736"/>
+<meta name="citation_abstract_html_url" content="https://submissoesrevistarcmos.com.br/rcmos/article/view/736"/>
+<meta name="citation_abstract" xml:lang="pt" content="Este trabalho apresenta o desenvolvimento de um protótipo de pesquisa documental para as diretrizes e doutrinas da Polícia Militar do Paraná (PMPR) utilizando a estratégia Retrieval Augmented Generation (RAG) e o modelo de linguagem Gemini AI Flash 1.5. O protótipo foi implementado em um ambiente containerizado com Docker, visando garantir portabilidade e reprodutibilidade. A estratégia RAG combina a busca tradicional com modelos de linguagem avançados para gerar respostas mais precisas e completas às consultas dos usuários. O protótipo foi testado com perguntas reais e os resultados preliminares demonstram a capacidade do sistema em compreender as perguntas e fornecer respostas relevantes, com base nas informações contidas nos documentos da PMPR. O trabalho discute o potencial do protótipo para auxiliar os policiais militares no acesso às informações relevantes, superando as limitações da atual forma de pesquisa documental na instituição."/>
+<meta name="citation_pdf_url" content="https://submissoesrevistarcmos.com.br/rcmos/article/download/736/1625"/>
+<meta name="citation_pdf_url" content="https://submissoesrevistarcmos.com.br/rcmos/article/download/736/1626"/>
+<meta name="citation_pdf_url" content="https://submissoesrevistarcmos.com.br/rcmos/article/download/736/1629"/>
+<meta name="citation_reference" content="BAUMANN, P. et al. Large Language Models for Retrieval Augmented Generation: A Comprehensive Survey. arXiv preprint arXiv:2308.01186, 2023."/>
+<meta name="citation_reference" content="BOETTIGER, C. An introduction to Docker for reproducible research. ACM SIGOPS Operating Systems Review, v. 49, n. 1, p. 71-79, 2015."/>
+<meta name="citation_reference" content="BRASIL. Ministério da Justiça e Segurança Pública. Portaria nº 332, de 27 de abril de 2023. Dispõe sobre o Manual de Uso da Força Policial. Diário Oficial da União, Brasília, DF, 28 abr. 2023. Seção 1, p. 47."/>
+<meta name="citation_reference" content="LEWIS, P. et al. Retrieval-augmented generation for knowledge-intensive nlp tasks. Advances in Neural Information Processing Systems, v. 33, p. 9459-9474, 2020."/>
+<meta name="citation_reference" content="N8N. n8n - Workflow Automation. Disponível em: https://n8n.io/. Acesso em: 06 nov. 2024."/>
+<meta name="citation_reference" content="QDRANT. Qdrant - Vector Database. Disponível em: https://qdrant.tech/. Acesso em: 06 nov. 2024."/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<meta name="DC.Creator.PersonalName" content="Cleiton Giacomelli da Silva"/>
+<meta name="DC.Date.created" scheme="ISO8601" content="2024-11-12"/>
+<meta name="DC.Date.dateSubmitted" scheme="ISO8601" content="2024-11-08"/>
+<meta name="DC.Date.issued" scheme="ISO8601" content="2024-08-15"/>
+<meta name="DC.Date.modified" scheme="ISO8601" content="2024-11-13"/>
+<meta name="DC.Description" xml:lang="pt" content="Este trabalho apresenta o desenvolvimento de um protótipo de pesquisa documental para as diretrizes e doutrinas da Polícia Militar do Paraná (PMPR) utilizando a estratégia Retrieval Augmented Generation (RAG) e o modelo de linguagem Gemini AI Flash 1.5. O protótipo foi implementado em um ambiente containerizado com Docker, visando garantir portabilidade e reprodutibilidade. A estratégia RAG combina a busca tradicional com modelos de linguagem avançados para gerar respostas mais precisas e completas às consultas dos usuários. O protótipo foi testado com perguntas reais e os resultados preliminares demonstram a capacidade do sistema em compreender as perguntas e fornecer respostas relevantes, com base nas informações contidas nos documentos da PMPR. O trabalho discute o potencial do protótipo para auxiliar os policiais militares no acesso às informações relevantes, superando as limitações da atual forma de pesquisa documental na instituição."/>
+<meta name="DC.Description" xml:lang="en" content="This paper presents the development of a prototype for document retrieval for the Military Police of Paraná (PMPR) using the Retrieval Augmented Generation (RAG) strategy and the Gemini AI Flash 1.5 language model. The prototype was implemented in a containerized environment with Docker, aiming to ensure portability and reproducibility. The RAG strategy combines traditional search with advanced language models to generate more accurate and complete answers to user queries. The prototype was tested with real questions and preliminary results demonstrate the system&#039;s ability to understand the questions and provide relevant answers, based on the information contained in the PMPR documents. The paper discusses the potential of the prototype to assist military police officers in accessing relevant information, overcoming the limitations of the current form of document retrieval in the institution."/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Identifier" content="736"/>
+<meta name="DC.Identifier.DOI" content="10.51473/rcmos.v1i2.2024.736"/>
+<meta name="DC.Identifier.URI" content="https://submissoesrevistarcmos.com.br/rcmos/article/view/736"/>
+<meta name="DC.Language" scheme="ISO639-1" content="pt"/>
+<meta name="DC.Rights" content="Copyright (c) 2024 Cleiton Giacomelli da Silva (Autor/in)"/>
+<meta name="DC.Rights" content="https://creativecommons.org/licenses/by/4.0"/>
+<meta name="DC.Source" content="RCMOS - Revista Científica Multidisciplinar O Saber"/>
+<meta name="DC.Source.ISSN" content="2675-9128"/>
+<meta name="DC.Source.Issue" content="2"/>
+<meta name="DC.Source.Volume" content="1"/>
+<meta name="DC.Source.URI" content="https://submissoesrevistarcmos.com.br/rcmos"/>
+<meta name="DC.Title" content="Protótipo de Pesquisa Documental para a Polícia Militar do Paraná com Retrieval Augmented Generation e Gemini AI em Ambiente Dockerizado: Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment"/>
+<meta name="DC.Title.Alternative" xml:lang="en" content="Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment: Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment"/>
+<meta name="DC.Type" content="Text.Serial.Journal"/>
+<meta name="DC.Type.articleType" content="Artigos Científicos de Pesquisa"/>
+<link rel="alternate" type="application/atom+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/WebFeedGatewayPlugin/atom">
+<link rel="alternate" type="application/rdf+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/WebFeedGatewayPlugin/rss">
+<link rel="alternate" type="application/rss+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/WebFeedGatewayPlugin/rss2">
+<link rel="alternate" type="application/atom+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/atom">
+<link rel="alternate" type="application/rdf+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/rss">
+<link rel="alternate" type="application/rss+xml" href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/rss2">
+
+	<link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/rcmos/$$$call$$$/page/page/css?name=stylesheet" type="text/css" /><link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/rcmos/$$$call$$$/page/page/css?name=font" type="text/css" /><link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/lib/pkp/styles/fontawesome/fontawesome.css?v=3.4.0.9" type="text/css" /><style type="text/css">.pkp_structure_head { background: center / cover no-repeat url("https://submissoesrevistarcmos.com.br/public/journals/1/homepageImage_pt_BR.png");}</style><link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/plugins/generic/doiInSummary/styles/doi.css?v=3.4.0.9" type="text/css" /><link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/plugins/generic/orcidProfile/css/orcidProfile.css?v=3.4.0.9" type="text/css" /><link rel="stylesheet" href="https://submissoesrevistarcmos.com.br/plugins/generic/citationStyleLanguage/css/citationStyleLanguagePlugin.css?v=3.4.0.9" type="text/css" />
+</head>
+<body class="pkp_page_article pkp_op_view has_site_logo" dir="ltr">
+
+	<div class="pkp_structure_page">
+
+				<header class="pkp_structure_head" id="headerNavigationContainer" role="banner">
+						
+ <nav class="cmp_skip_to_content" aria-label="Ir para os links de conteúdo">
+	<a href="#pkp_content_main">Ir para o conteúdo principal</a>
+	<a href="#siteNav">Ir para o menu de navegação principal</a>
+		<a href="#pkp_content_footer">Ir para o rodapé</a>
+</nav>
+
+			<div class="pkp_head_wrapper">
+
+				<div class="pkp_site_name_wrapper">
+					<button class="pkp_site_nav_toggle">
+						<span>Open Menu</span>
+					</button>
+										<div class="pkp_site_name">
+																<a href="						https://submissoesrevistarcmos.com.br/rcmos/index
+					" class="is_img">
+							<img src="https://submissoesrevistarcmos.com.br/public/journals/1/pageHeaderLogoImage_pt_BR.png" width="500" height="500" alt="&lt;img src=&quot;logo.jpg&quot; alt=&quot;Logo da Revista Científica Multidisciplinar O Saber (RCMOS) - Periódico acadêmico internacional com artigos em português, inglês, espanhol e francês, indexação internacional e DOI&quot;&gt;" />
+						</a>
+										</div>
+				</div>
+
+				
+				<nav class="pkp_site_nav_menu" aria-label="Navegação no Site">
+					<a id="siteNav"></a>
+					<div class="pkp_navigation_primary_row">
+						<div class="pkp_navigation_primary_wrapper">
+																				<ul id="navigationPrimary" class="pkp_navigation_primary pkp_nav_list">
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/issue/current">
+					Atual
+				</a>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/about">
+					Sobre a Revista
+				</a>
+									<ul>
+																					<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/about">
+										Sobre
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/policies">
+										Políticas
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/periodicidade">
+										Periodicidade
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/open_acess">
+										Declaração de Acesso Aberto
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/premiacoes">
+										Prêmios Acadêmicos
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/premiados_peer-review_roberto-lima-penha-barbosa-goncalves-2022">
+										Premiado Avaliador Peer Review – Roberto Lima Penha Barbosa Gonçalves – 2022
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/plagiarism">
+										Plágio
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/data">
+										Compartilhamento de Dados
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/revisao">
+										Processo de Revisão por Pares
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/about/submissions">
+										Submissão
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/acp">
+										Taxa de Publicação (APCs)
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/about/privacy">
+										Declaração de Privacidade
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/about/editorialTeam">
+										Corpo Editorial
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/about/contact">
+										Contato
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/announcement">
+										Notícias
+									</a>
+								</li>
+																		</ul>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistacientificaosaber.com/livros/loja/">
+					Ebooks
+				</a>
+							</li>
+								<li class="">
+				<a href="https://www.editoraaluz.com.br/chamadas">
+					Chamadas Abertas
+				</a>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/classificacaoemetricas">
+					Métricas e Indexadores
+				</a>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/secoes">
+					Seções
+				</a>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/issue/archive">
+					Acervo
+				</a>
+							</li>
+								<li class="">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/declaracoes/consulta">
+					Busca/Certificados
+				</a>
+							</li>
+			</ul>
+
+				
+
+																						<div class="pkp_navigation_search_wrapper">
+									<a href="https://submissoesrevistarcmos.com.br/rcmos/search" class="pkp_search pkp_search_desktop">
+										<span class="fa fa-search" aria-hidden="true"></span>
+										Buscar
+									</a>
+								</div>
+													</div>
+					</div>
+					<div class="pkp_navigation_user_wrapper" id="navigationUserWrapper">
+							<ul id="navigationUser" class="pkp_navigation_user pkp_nav_list">
+								<li class="profile">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/user/register">
+					Registrar-se
+				</a>
+							</li>
+								<li class="profile">
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/login">
+					Acesso
+				</a>
+							</li>
+										</ul>
+
+					</div>
+				</nav>
+			</div><!-- .pkp_head_wrapper -->
+		</header><!-- .pkp_structure_head -->
+
+						<div class="pkp_structure_content has_sidebar">
+			<div class="pkp_structure_main" role="main">
+				<a id="pkp_content_main"></a>
+
+<div class="page page_article">
+			<nav class="cmp_breadcrumbs" role="navigation" aria-label="Você está aqui:">
+	<ol>
+		<li>
+			<a href="https://submissoesrevistarcmos.com.br/rcmos/index">
+				Início
+			</a>
+			<span class="separator">/</span>
+		</li>
+		<li>
+			<a href="https://submissoesrevistarcmos.com.br/rcmos/issue/archive">
+				Acervo
+			</a>
+			<span class="separator">/</span>
+		</li>
+					<li>
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/issue/view/18">
+					v. 1 n. 2 (2024): Edição de Agosto a Dezembro de 2024 – Volume 1, Número 2, RCMOS – Revista Científica Multidisciplinar O Saber
+				</a>
+				<span class="separator">/</span>
+			</li>
+				<li class="current" aria-current="page">
+			<span aria-current="page">
+									Artigos Científicos de Pesquisa
+							</span>
+		</li>
+	</ol>
+</nav>
+	
+		  	 <article class="obj_article_details">
+
+		
+	<h1 class="page_title">
+		Protótipo de Pesquisa Documental para a Polícia Militar do Paraná com Retrieval Augmented Generation e Gemini AI em Ambiente Dockerizado
+	</h1>
+
+			<h2 class="subtitle">
+			Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment
+		</h2>
+	
+	<div class="row">
+		<div class="main_entry">
+
+							<section class="item authors">
+					<h2 class="pkp_screen_reader">Autores</h2>
+					<ul class="authors">
+											<li>
+							<span class="name">
+								Cleiton Giacomelli da Silva
+							</span>
+															<span class="affiliation">
+									Polícia Militar do Paraná
+																	</span>
+																													<span class="userGroup">
+									Autor
+								</span>
+																				</li>
+										</ul>
+				</section>
+			
+																	<section class="item doi">
+					<h2 class="label">
+												DOI:
+					</h2>
+					<span class="value">
+						<a href="https://doi.org/10.51473/rcmos.v1i2.2024.736">
+							https://doi.org/10.51473/rcmos.v1i2.2024.736
+						</a>
+					</span>
+				</section>
+			
+
+						
+										<section class="item abstract">
+					<h2 class="label">Resumo</h2>
+					<p>Este trabalho apresenta o desenvolvimento de um protótipo de pesquisa documental para as diretrizes e doutrinas da Polícia Militar do Paraná (PMPR) utilizando a estratégia Retrieval Augmented Generation (RAG) e o modelo de linguagem Gemini AI Flash 1.5. O protótipo foi implementado em um ambiente containerizado com Docker, visando garantir portabilidade e reprodutibilidade. A estratégia RAG combina a busca tradicional com modelos de linguagem avançados para gerar respostas mais precisas e completas às consultas dos usuários. O protótipo foi testado com perguntas reais e os resultados preliminares demonstram a capacidade do sistema em compreender as perguntas e fornecer respostas relevantes, com base nas informações contidas nos documentos da PMPR. O trabalho discute o potencial do protótipo para auxiliar os policiais militares no acesso às informações relevantes, superando as limitações da atual forma de pesquisa documental na instituição.</p>
+				</section>
+			
+			
+
+										
+				<section class="item downloads_chart">
+					<h2 class="label">
+						Downloads
+					</h2>
+					<div class="value">
+						<canvas class="usageStatsGraph" data-object-type="Submission" data-object-id="736"></canvas>
+						<div class="usageStatsUnavailable" data-object-type="Submission" data-object-id="736">
+							Os dados de download ainda não estão disponíveis.
+						</div>
+					</div>
+				</section>
+			
+																			
+										<section class="item references">
+					<h2 class="label">
+						Referências
+					</h2>
+					<div class="value">
+																					<p>BAUMANN, P. et al. Large Language Models for Retrieval Augmented Generation: A Comprehensive Survey. arXiv preprint arXiv:2308.01186, 2023. </p>
+															<p>BOETTIGER, C. An introduction to Docker for reproducible research. ACM SIGOPS Operating Systems Review, v. 49, n. 1, p. 71-79, 2015. </p>
+															<p>BRASIL. Ministério da Justiça e Segurança Pública. Portaria nº 332, de 27 de abril de 2023. Dispõe sobre o Manual de Uso da Força Policial. Diário Oficial da União, Brasília, DF, 28 abr. 2023. Seção 1, p. 47. </p>
+															<p>LEWIS, P. et al. Retrieval-augmented generation for knowledge-intensive nlp tasks. Advances in Neural Information Processing Systems, v. 33, p. 9459-9474, 2020. </p>
+															<p>N8N. n8n - Workflow Automation. Disponível em: <a href="https://n8n.io/">https://n8n.io/</a>. Acesso em: 06 nov. 2024. </p>
+															<p>QDRANT. Qdrant - Vector Database. Disponível em: <a href="https://qdrant.tech/">https://qdrant.tech/</a>. Acesso em: 06 nov. 2024. </p>
+																		</div>
+				</section>
+			
+		</div><!-- .main_entry -->
+
+		<div class="entry_details">
+
+										<div class="item cover_image">
+					<div class="sub_item">
+													<a href="https://submissoesrevistarcmos.com.br/rcmos/issue/view/18">
+								<img src="https://submissoesrevistarcmos.com.br/public/journals/1/cover_issue_18_pt_BR.png" alt="">
+							</a>
+											</div>
+				</div>
+			
+										<div class="item galleys">
+					<h2 class="pkp_screen_reader">
+						Downloads
+					</h2>
+					<ul class="value galleys_links">
+													<li>
+								
+	
+													
+
+<a class="obj_galley_link pdf" href="https://submissoesrevistarcmos.com.br/rcmos/article/view/736/1625">
+		
+	artigo_
+
+	</a>
+							</li>
+													<li>
+								
+	
+													
+
+<a class="obj_galley_link pdf" href="https://submissoesrevistarcmos.com.br/rcmos/article/view/736/1629">
+		
+	inglês (Inglês)
+
+	</a>
+							</li>
+											</ul>
+				</div>
+										<div class="item galleys">
+					<h3 class="pkp_screen_reader">
+						Arquivos adicionais
+					</h3>
+					<ul class="value supplementary_galleys_links">
+													<li>
+								
+	
+													
+
+<a class="obj_galley_link_supplementary pdf" href="https://submissoesrevistarcmos.com.br/rcmos/article/view/736/1626">
+		
+	certificado_
+
+	</a>
+							</li>
+											</ul>
+				</div>
+			
+						<div class="item published">
+				<section class="sub_item">
+					<h2 class="label">
+						Publicado
+					</h2>
+					<div class="value">
+																			<span>12.11.2024</span>
+																	</div>
+				</section>
+							</div>
+			
+						
+										<div class="item issue">
+
+											<section class="sub_item">
+							<h2 class="label">
+								Edição
+							</h2>
+							<div class="value">
+								<a class="title" href="https://submissoesrevistarcmos.com.br/rcmos/issue/view/18">
+									v. 1 n. 2 (2024): Edição de Agosto a Dezembro de 2024 – Volume 1, Número 2, RCMOS – Revista Científica Multidisciplinar O Saber
+								</a>
+							</div>
+						</section>
+					
+											<section class="sub_item">
+							<h2 class="label">
+								Seção
+							</h2>
+							<div class="value">
+								Artigos Científicos de Pesquisa
+							</div>
+						</section>
+					
+											<section class="sub_item">
+							<h2 class="label">
+								Categorias
+							</h2>
+							<div class="value">
+								<ul class="categories">
+																			<li><a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/tecnologia_e_engenharia">Tecnologia e Engenharia</a></li>
+																	</ul>
+							</div>
+						</section>
+									</div>
+			
+																					
+										<div class="item copyright">
+					<h2 class="label">
+						Licença
+					</h2>
+																										<p>Copyright (c) 2024 Cleiton Giacomelli da Silva (Autor/in)</p>
+														<a rel="license" href="https://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Este trabalho está licenciado sob uma licença <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+																<p>Este trabalho está licenciado sob a Licença Creative Commons Atribuição 4.0 Internacional (CC BY 4.0). Isso significa que você tem a liberdade de:</p>
+<ul>
+<li><strong>Compartilhar</strong> — copiar e redistribuir o material em qualquer meio ou formato.</li>
+<li><strong>Adaptar</strong> — remixar, transformar e construir sobre o material para qualquer propósito, inclusive comercial.</li>
+</ul>
+<p>O uso deste material está condicionado à atribuição apropriada ao(s) autor(es) original(is), fornecendo um link para a licença, e indicando se foram feitas alterações. A licença não exige permissão do autor ou da editora, desde que seguidas estas condições.</p>
+<p>A logomarca da licença Creative Commons é exibida de maneira permanente no rodapé da revista.</p>
+<p>Os direitos autorais do manuscrito podem ser retidos pelos autores sem restrições e solicitados a qualquer momento, mesmo após a publicação na revista.</p>
+				</div>
+			
+				<div class="item citation">
+		<section class="sub_item citation_display">
+			<h2 class="label">
+				Como Citar
+			</h2>
+			<div class="value">
+				<div id="citationOutput" role="region" aria-live="polite">
+					<div class="csl-bib-body">
+  <div class="csl-entry">GIACOMELLI DA SILVA, Cleiton. Protótipo de Pesquisa Documental para a Polícia Militar do Paraná com Retrieval Augmented Generation e Gemini AI em Ambiente Dockerizado: Prototype for Document Retrieval for the Military Police of Paraná with Retrieval Augmented Generation and Gemini AI in a Dockerized Environment. <b>RCMOS - Revista Científica Multidisciplinar O Saber</b>, Brasil, v. 1, n. 2, 2024. DOI: <a href="https://doi.org/10.51473/rcmos.v1i2.2024.736">10.51473/rcmos.v1i2.2024.736</a>. Disponível em: <a href="https://submissoesrevistarcmos.com.br/rcmos/article/view/736">https://submissoesrevistarcmos.com.br/rcmos/article/view/736</a>. Acesso em: 20 set. 2025.</div>
+</div>
+				</div>
+				<div class="citation_formats">
+					<button class="citation_formats_button label" aria-controls="cslCitationFormats" aria-expanded="false" data-csl-dropdown="true">
+						Formatos de Citação
+					</button>
+					<div id="cslCitationFormats" class="citation_formats_list" aria-hidden="true">
+						<ul class="citation_formats_styles">
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/apa?submissionId=736&amp;publicationId=736&amp;issueId=18"
+											data-load-citation
+											data-json-href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/apa?submissionId=736&amp;publicationId=736&amp;issueId=18&amp;return=json"
+									>
+										APA
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/chicago-author-date?submissionId=736&amp;publicationId=736&amp;issueId=18"
+											data-load-citation
+											data-json-href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/chicago-author-date?submissionId=736&amp;publicationId=736&amp;issueId=18&amp;return=json"
+									>
+										Chicago
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/harvard-cite-them-right?submissionId=736&amp;publicationId=736&amp;issueId=18"
+											data-load-citation
+											data-json-href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/harvard-cite-them-right?submissionId=736&amp;publicationId=736&amp;issueId=18&amp;return=json"
+									>
+										Harvard
+									</a>
+								</li>
+															<li>
+									<a
+											rel="nofollow"
+											aria-controls="citationOutput"
+											href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/vancouver?submissionId=736&amp;publicationId=736&amp;issueId=18"
+											data-load-citation
+											data-json-href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/get/vancouver?submissionId=736&amp;publicationId=736&amp;issueId=18&amp;return=json"
+									>
+										Vancouver
+									</a>
+								</li>
+													</ul>
+													<div class="label">
+								Baixar Citação
+							</div>
+							<ul class="citation_formats_styles">
+																	<li>
+										<a href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/download/ris?submissionId=736&amp;publicationId=736&amp;issueId=18">
+											<span class="fa fa-download"></span>
+											Endnote/Zotero/Mendeley (RIS)
+										</a>
+									</li>
+																	<li>
+										<a href="https://submissoesrevistarcmos.com.br/rcmos/citationstylelanguage/download/bibtex?submissionId=736&amp;publicationId=736&amp;issueId=18">
+											<span class="fa fa-download"></span>
+											BibTeX
+										</a>
+									</li>
+															</ul>
+											</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+				<link rel="stylesheet" type="text/css" href="https://submissoesrevistarcmos.com.br/plugins/generic/shariff/css/shariff.css">
+				<link rel="stylesheet" type="text/css" href="https://submissoesrevistarcmos.com.br/plugins/generic/shariff/shariff-3.3.0/shariff.complete.css">
+				<link rel="stylesheet" type="text/css" href="https://submissoesrevistarcmos.com.br/plugins/generic/shariff/css/wcag-themes.css">
+				<div class="item shariffblock"><div>
+				<div class="shariff item" data-lang="pt"
+					data-services="[twitter,linkedin,whatsapp]"
+					data-mail-url="mailto:"
+					data-mail-body="https://submissoesrevistarcmos.com.br/rcmos/article/view/736"
+					data-backend-url="https://submissoesrevistarcmos.com.br/shariff-backend"
+					data-theme="standard"
+					data-orientation="horizontal"
+					data-url="https://submissoesrevistarcmos.com.br/rcmos/article/view/736">
+				</div>
+				</div>
+				</div>
+				<script src="https://submissoesrevistarcmos.com.br/plugins/generic/shariff/shariff-3.3.0/shariff.complete.js"></script>
+
+		</div><!-- .entry_details -->
+	</div><!-- .row -->
+
+</article>
+
+	
+
+</div><!-- .page -->
+
+	</div><!-- pkp_structure_main -->
+
+									<div class="pkp_structure_sidebar left" role="complementary">
+				<div class="pkp_block block_custom" id="customblock-submeta-seu-artigo">
+	<h2 class="title">Submeta seu Artigo</h2>
+	<div class="content">
+		<p><a href="https://wa.link/y88tug"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/2-d31f547a2cb40a6686cd62b841bd9724.png" alt="" width="200" height="200"> &nbsp;</a> &nbsp; &nbsp; <a href="https://submissoesrevistacientificaosaber.com/index.php/rcmos/about/submissions" target="_blank" rel="noopener"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/1-69f78af09684bd7163253b762a19ca19.png" alt="" width="200" height="200"></a></p>
+	</div>
+</div>
+<div class="pkp_block block_information">
+	<h2 class="title">Informações</h2>
+	<div class="content">
+		<ul>
+							<li>
+					<a href="https://submissoesrevistarcmos.com.br/rcmos/information/readers">
+						Para Leitores
+					</a>
+				</li>
+										<li>
+					<a href="https://submissoesrevistarcmos.com.br/rcmos/information/authors">
+						Para Autores
+					</a>
+				</li>
+										<li>
+					<a href="https://submissoesrevistarcmos.com.br/rcmos/information/librarians">
+						Para Bibliotecários
+					</a>
+				</li>
+					</ul>
+	</div>
+</div>
+<div class="pkp_block block_language">
+	<h2 class="title">
+		Idioma
+	</h2>
+
+	<div class="content">
+		<ul>
+							<li class="locale_en" lang="en">
+					<a href="https://submissoesrevistarcmos.com.br/rcmos/user/setLocale/en?source=%2Findex.php%2Frcmos%2Farticle%2Fview%2F736">
+						English
+					</a>
+				</li>
+							<li class="locale_pt_BR current" lang="pt-BR">
+					<a href="https://submissoesrevistarcmos.com.br/rcmos/user/setLocale/pt_BR?source=%2Findex.php%2Frcmos%2Farticle%2Fview%2F736">
+						Português
+					</a>
+				</li>
+					</ul>
+	</div>
+</div><!-- .block_language -->
+<div class="pkp_block block_custom" id="customblock-indexadores">
+	<h2 class="title">Indexadores</h2>
+	<div class="content">
+		<p><a href="https://latindex.org/latindex/ficha/28756"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/logo-latindex.png" alt="" width="151" height="55"></a></p>
+<p><a href="https://journals.indexcopernicus.com/search/details?id=131647" target="_blank" rel="noopener"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/index-copernicus.jpg" alt="" width="151" height="147"></a></p>
+<p><a href="https://miguilim.ibict.br/handle/miguilim/8304"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/diadorim.png" alt="" width="151" height="59"></a></p>
+<p><a href="https://journalseeker.researchbib.com/view/issn/2675-9128"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/researchbio.png" alt="" width="150" height="68"></a></p>
+<p><a href="https://miguilim.ibict.br/handle/miguilim/7391"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/logo-miguilim.png" alt="" width="150" height="55"></a></p>
+<p>&nbsp;</p>
+	</div>
+</div>
+<div class="pkp_block block_browse">
+	<h2 class="title">
+		Navegar
+	</h2>
+
+	<nav class="content" role="navigation" aria-label="Navegar">
+		<ul>
+							<li class="has_submenu">
+					Navegar a categoria
+					<ul>
+													<li class="category_1">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/ciencias-exatas-e-da-terra">
+									Ciências Exatas e da Terra
+								</a>
+							</li>
+													<li class="category_2">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/ciencias_biologicas">
+									Ciências Biológicas
+								</a>
+							</li>
+													<li class="category_3">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/ciencias_sociais_aplicadas">
+									Ciências Sociais Aplicadas
+								</a>
+							</li>
+													<li class="category_7">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/ciencias-da-saude">
+									Ciências da Saúde
+								</a>
+							</li>
+													<li class="category_4">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/artes_e_humanidades">
+									Artes e Humanidades
+								</a>
+							</li>
+													<li class="category_5">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/tecnologia_e_engenharia">
+									Tecnologia e Engenharia
+								</a>
+							</li>
+													<li class="category_6">
+								<a href="https://submissoesrevistarcmos.com.br/rcmos/catalog/category/pesquisas_africanas">
+									Pesquisas Africanas
+								</a>
+							</li>
+											</ul>
+				</li>
+					</ul>
+	</nav>
+</div><!-- .block_browse -->
+<div class="pkp_block block_custom" id="customblock-dimensions">
+	<h2 class="title">Dimensions</h2>
+	<div class="content">
+		<p><a href="https://app.dimensions.ai/discover/publication?search_mode=content&amp;and_facet_source_title=jour.1407300"><img src="https://submissoesrevistacientificaosaber.com/public/site/images/rcmos/dimensions.png" alt="" width="125" height="22"></a></p>
+	</div>
+</div>
+<div class="pkp_block block_keyword_cloud">
+    <h2 class="title">Palavras-chave</h2>
+    <div class="content" id='wordcloud'></div>
+
+    <script>
+        function randomColor() {
+            var cores = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+            return cores[Math.floor(Math.random()*cores.length)];
+        }
+
+                    document.addEventListener("DOMContentLoaded", function() {
+                var keywords = [{"text":"agricultura familiar","size":1},{"text":"pol\u00edticas p\u00fablicas","size":1},{"text":"vale do ribeira","size":1},{"text":"exerc\u00edcio f\u00edsico","size":1},{"text":"per\u00edodo gestacional","size":1},{"text":"gestantes","size":1},{"text":"sa\u00fade","size":1},{"text":"mem\u00f3ria","size":1},{"text":"oralidade","size":1},{"text":"hist\u00f3ria","size":1},{"text":"pr\u00e1tica docente","size":1},{"text":"ensino fundamental","size":1},{"text":"polival\u00eancia e interdisciplinaridade","size":1},{"text":"aprendizagem","size":1},{"text":"karl marx","size":1},{"text":"verdadeira revolu\u00e7\u00e3o","size":1},{"text":"revolu\u00e7\u00e3o pelo amor","size":1},{"text":"contabilidade rural","size":1},{"text":"presta\u00e7\u00e3o de servi\u00e7o","size":1},{"text":"tomada de decis\u00e3o","size":1},{"text":"tr\u00e1fico de animais silvestres","size":1},{"text":"c\u00f3digo florestal","size":1},{"text":"lei de prote\u00e7\u00e3o da fauna","size":1},{"text":"vulner\u00e1vel","size":1},{"text":"amparo","size":1},{"text":"estado","size":1},{"text":"sistema penal","size":1},{"text":"seletividade","size":1},{"text":"justi\u00e7a","size":1},{"text":"ontologia","size":1},{"text":"assentamentos funcionais","size":1},{"text":"minera\u00e7\u00e3o de textos","size":1},{"text":"ontokem","size":1},{"text":"processo administrativo","size":1},{"text":"engenharia do conhecimento","size":1},{"text":"processo eletr\u00f4nico","size":1},{"text":"commonkads","size":1},{"text":"gest\u00e3o do conhecimento","size":1},{"text":"sei","size":1},{"text":"pol\u00edticas p\u00fablica","size":1},{"text":"pr\u00e1ticas produtivas","size":1},{"text":"vale do ribeira -sp","size":1},{"text":"nascente","size":1},{"text":"viveiro de mudas","size":1},{"text":"educa\u00e7\u00e3o ambiental","size":1},{"text":"itapira-sp","size":1},{"text":"com\u00e9rcio eletr\u00f4nico","size":1},{"text":"inova\u00e7\u00e3o","size":1},{"text":"minist\u00e9rio p\u00fablico","size":1},{"text":"poder de investigar","size":1}];
+                var totalWeight = 0;
+                var blockWidth = 300;
+                var blockHeight = 200;
+                var transitionDuration = 200;
+                var length_keywords = keywords.length;
+                var layout = d3.layout.cloud();
+
+                layout.size([blockWidth, blockHeight])
+                    .words(keywords)
+                    .fontSize(function(d)
+                    {
+                        return fontSize(+d.size);
+                    })
+                    .on('end', draw);
+
+                var svg = d3.select("#wordcloud").append("svg")
+                    .attr("viewBox", "0 0 " + blockWidth + " " + blockHeight)
+                    .attr("width", '100%');
+
+                function update() {
+                    var words = layout.words();
+                    fontSize = d3.scaleLinear().range([16, 34]);
+                    if (words.length) {
+                        fontSize.domain([+words[words.length - 1].size || 1, +words[0].size]);
+                    }
+                }
+
+                keywords.forEach(function(item,index){totalWeight += item.size;});
+
+                update();
+
+                function draw(words, bounds) {
+                    var width = layout.size()[0],
+                        height = layout.size()[1];
+
+                    scaling = bounds
+                        ? Math.min(
+                            width / Math.abs(bounds[1].x - width / 2),
+                            width / Math.abs(bounds[0].x - width / 2),
+                            height / Math.abs(bounds[1].y - height / 2),
+                            height / Math.abs(bounds[0].y - height / 2),
+                        ) / 2
+                        : 1;
+
+                    svg
+                    .append("g")
+                    .attr(
+                        "transform",
+                        "translate(" + [width >> 1, height >> 1] + ")scale(" + scaling + ")",
+                    )
+                    .selectAll("text")
+                        .data(words)
+                    .enter().append("text")
+                        .style("font-size", function(d) { return d.size + "px"; })
+                        .style("font-family", 'serif')
+                        .style("fill", randomColor)
+                        .style('cursor', 'pointer')
+                        .style('opacity', 0.7)
+                        .attr('class', 'keyword')
+                        .attr("text-anchor", "middle")
+                        .attr("transform", function(d) {
+                            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                        })
+                        .text(function(d) { return d.text; })
+                        .on("click", function(d, i){
+                            window.location = "https://submissoesrevistarcmos.com.br/rcmos/search?query=QUERY_SLUG".replace(/QUERY_SLUG/, encodeURIComponent(''+d.text+''));
+                        })
+                        .on("mouseover", function(d, i) {
+                            d3.select(this).transition()
+                                .duration(transitionDuration)
+                                .style('font-size',function(d) { return (d.size + 3) + "px"; })
+                                .style('opacity', 1);
+                        })
+                        .on("mouseout", function(d, i) {
+                            d3.select(this).transition()
+                                .duration(transitionDuration)
+                                .style('font-size',function(d) { return d.size + "px"; })
+                                .style('opacity', 0.7);
+                        })
+                        .on('resize', function() { update() });
+                }
+
+                layout.start();
+            });
+        	</script>
+</div>
+<div class="pkp_block block_announcement_feed">
+	<h2 class="title">Notícias</h2>
+	<div class="content">
+		<ul>
+			<li>
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/atom">
+					<img src="https://submissoesrevistarcmos.com.br/lib/pkp/templates/images/atom.svg" alt="Logo Atom">
+				</a>
+			</li>
+			<li>
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/rss2">
+					<img src="https://submissoesrevistarcmos.com.br/lib/pkp/templates/images/rss20_logo.svg" alt="Logo RSS2">
+				</a>
+			</li>
+			<li>
+				<a href="https://submissoesrevistarcmos.com.br/rcmos/gateway/plugin/AnnouncementFeedGatewayPlugin/rss">
+					<img src="https://submissoesrevistarcmos.com.br/lib/pkp/templates/images/rss10_logo.svg" alt="Logo RSS1">
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+			</div><!-- pkp_sidebar.left -->
+			</div><!-- pkp_structure_content -->
+
+<div class="pkp_structure_footer_wrapper" role="contentinfo">
+	<a id="pkp_content_footer"></a>
+
+	<div class="pkp_structure_footer">
+
+					<div class="pkp_footer_content">
+				<p>RCMOS - Revista Científica Multidisciplinar o Saber</p>
+<p>Editora: Editora Acadêmica Aluz</p>
+<p>Contato:<br />E-mail: rcmos.rev@gmail.com<br />Telefone: +55 11 97228-7607</p>
+<p>Prefixo Editorial:<br />ISSN-e 2675-9128<br />ISBN 978-65-994914<br />ISBN 978-65-996149<br />ISBN 978-65-995060<br />DOI 10.51473</p>
+<p>Endereço: Rua Benedito Calixto, 143, térreo – Centro, SP, Mongaguá, Brasil | Código Postal: 11730-000. CNPJ 30006249000175</p>
+<p>A RCMOS utiliza os sistemas ZENODO e Crossref para armazenamento de artigos em nuvem, garantindo a disponibilidade mesmo durante períodos de indisponibilidade do servidor. Este periódico está arquivado de acordo com a Lei nº 10.994, de 14/12/2004, na Biblioteca Nacional.</p>
+<!-- Rodapé com logomarca à esquerda -->
+<div style="width: 100%; padding: 10px 0; border-top: 1px solid #ccc; display: flex; align-items: center;"><img style="width: 150px; height: auto; margin-right: 15px;" src="https://www.abecbrasil.org.br/wp-content/uploads/2015/09/Marca-ABEC-Completa.jpg" alt="Logomarca ABEC Brasil" /> <span style="font-family: Arial, sans-serif; font-size: 12px; color: #333;"> Periódico associado à ABEC Brasil </span></div>
+<!-- Rodapé com copyright e licença CC à esquerda -->
+<div style="width: 100%; padding: 10px 0; border-top: 1px solid #ccc; display: flex; align-items: center;"><img style="width: 30px; height: auto; margin-right: 10px;" src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Cc_by-nc_icon.svg" alt="Licença Creative Commons" /> <span style="font-family: Arial, sans-serif; font-size: 12px; color: #333;"> © RCMOS 2025. Todos os direitos reservados. Este trabalho está licenciado sob uma Licença Internacional Creative Commons Atribuição 4.0 (CC BY 4.0). </span></div>
+			</div>
+		
+		<div class="pkp_brand_footer">
+			<a href="https://submissoesrevistarcmos.com.br/rcmos/about/aboutThisPublishingSystem">
+				<img alt="Mais informações sobre o sistema de publicação, a plataforma e o fluxo de publicação do OJS/PKP." src="https://submissoesrevistarcmos.com.br/templates/images/ojs_brand.png">
+			</a>
+		</div>
+	</div>
+</div><!-- pkp_structure_footer_wrapper -->
+
+</div><!-- pkp_structure_page -->
+
+<script src="https://submissoesrevistarcmos.com.br/lib/pkp/lib/vendor/components/jquery/jquery.min.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/lib/pkp/lib/vendor/components/jqueryui/jquery-ui.min.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/plugins/themes/default/js/lib/popper/popper.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/plugins/themes/default/js/lib/bootstrap/util.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/plugins/themes/default/js/lib/bootstrap/dropdown.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/plugins/themes/default/js/main.js?v=3.4.0.9" type="text/javascript"></script><script src="https://submissoesrevistarcmos.com.br/plugins/generic/citationStyleLanguage/js/articleCitation.js?v=3.4.0.9" type="text/javascript"></script><script src="https://d3js.org/d3.v4.js?v=3.4.0.9" type="text/javascript"></script><script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js?v=3.4.0.9" type="text/javascript"></script><script type="text/javascript">var pkpUsageStats = pkpUsageStats || {};pkpUsageStats.data = pkpUsageStats.data || {};pkpUsageStats.data.Submission = pkpUsageStats.data.Submission || {};pkpUsageStats.data.Submission[736] = {"data":{"2024":{"11":"8","12":"22"},"2025":{"1":"14","2":"14","3":"7","4":0,"5":0,"6":0,"7":0,"8":"5","9":"16"}},"label":"Todos os downloads","color":"79,181,217","total":86};</script><script src="https://submissoesrevistarcmos.com.br/lib/pkp/js/lib/Chart.min.js?v=3.4.0.9" type="text/javascript"></script><script type="text/javascript">var pkpUsageStats = pkpUsageStats || {};pkpUsageStats.locale = pkpUsageStats.locale || {};pkpUsageStats.locale.months = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];pkpUsageStats.config = pkpUsageStats.config || {};pkpUsageStats.config.chartType = "bar";</script><script src="https://submissoesrevistarcmos.com.br/lib/pkp/js/usage-stats-chart.js?v=3.4.0.9" type="text/javascript"></script><script type="text/javascript">
+(function (w, d, s, l, i) { w[l] = w[l] || []; var f = d.getElementsByTagName(s)[0],
+j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true;
+j.src = 'https://www.googletagmanager.com/gtag/js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+function gtag(){dataLayer.push(arguments)}; gtag('js', new Date()); gtag('config', i); })
+(window, document, 'script', 'dataLayer', 'G-QXP06QH9YZ');
+</script>
+
+
+</body>
+</html>

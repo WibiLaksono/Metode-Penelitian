@@ -1,0 +1,636 @@
+
+<!doctype html>
+<html lang="en-US" xml:lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="&lt;p&gt;Orclever Proceedings of Research and Development (OPRD) is an open access journal dedicated to publishing findings resulting from conferences, congresses, and similar events, in all areas of engineering and natural science. OPRD has two peer review processes: for conference, congress, and similar event volumes, the peer review process is handled by the conference scientific committee, and the review method as well as reports number are decided by the conference organizers&#039; requirements; for standalone papers, the process is handled by researchers as a single-blind assessment with at least one independent reviewer, followed by a final acceptance/rejection decision by the Advisory Board Members of OPRD.&lt;/p&gt;">
+	<meta name="keywords" content="Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search, Open Journal Systems, OJS">
+	<title>
+		Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search
+							| Orclever Proceedings of Research and Development
+			</title>
+
+	
+<link rel="icon" href="https://journals.orclever.com/public/journals/3/favicon_en_US.png">
+<meta name="generator" content="Open Journal Systems 3.3.0.8">
+<meta name="gs_meta_revision" content="1.1"/>
+<meta name="citation_journal_title" content="Orclever Proceedings of Research and Development"/>
+<meta name="citation_journal_abbrev" content="OPRD"/>
+<meta name="citation_issn" content="2980-020X"/> 
+<meta name="citation_author" content="Derya Tanyildiz"/>
+<meta name="citation_author_institution" content="Yildiz Technical University"/>
+<meta name="citation_author" content="Serkan Ayvaz"/>
+<meta name="citation_author_institution" content="University of Southern Denmark"/>
+<meta name="citation_author" content="Mehmet Fatih Amasyali"/>
+<meta name="citation_author_institution" content="Yildiz Technical University"/>
+<meta name="citation_title" content="Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search"/>
+<meta name="citation_language" content="en"/>
+<meta name="citation_date" content="2024/12/31"/>
+<meta name="citation_volume" content="5"/>
+<meta name="citation_issue" content="1"/>
+<meta name="citation_firstpage" content="215"/>
+<meta name="citation_lastpage" content="225"/>
+<meta name="citation_doi" content="10.56038/oprd.v5i1.516"/>
+<meta name="citation_abstract_html_url" content="https://journals.orclever.com/oprd/article/view/516"/>
+<meta name="citation_keywords" xml:lang="en" content="Retrieval-Augmented Generation (RAG)"/>
+<meta name="citation_keywords" xml:lang="en" content=" Cross Encoders"/>
+<meta name="citation_keywords" xml:lang="en" content=" Vector Database"/>
+<meta name="citation_keywords" xml:lang="en" content="Dynamic Chunking"/>
+<meta name="citation_keywords" xml:lang="en" content="Semantic Search"/>
+<meta name="citation_pdf_url" content="https://journals.orclever.com/oprd/article/download/516/360"/>
+<meta name="citation_reference" content="W. X. Zhao, K. Zhou, J. Li, T. Tang, X. Wang, Y. Hou, Y. Min, B. Zhang, J. Zhang, Z. Dong, and Y. Du, &quot;A survey of large language models,&quot; arXiv preprint arXiv:2303.18223, 2023."/>
+<meta name="citation_reference" content="Z. Jiang, X. Ma, and W. Chen, &quot;Longrag: Enhancing retrieval-augmented generation with long-context LLMs,&quot; arXiv preprint arXiv:2406.15319, 2024."/>
+<meta name="citation_reference" content="&quot;Metin/WikiRAG-TR,&quot; Hugging Face, 2024. [Online]. Available: https://huggingface.co/datasets/Metin/WikiRAG-TR"/>
+<meta name="citation_reference" content="Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, Y. Dai, J. Sun, M. Wang, and H. Wang, &quot;Retrieval-Augmented Generation for Large Language Models: A Survey,&quot; arXiv preprint arXiv:2312.10997v5, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2312.10997"/>
+<meta name="citation_reference" content="I. S. Singh, R. Aggarwal, I. Allahverdiyev, A. Akalin, K. Zhu, and S. O’Brien, &quot;ChunkRAG: Novel LLM-Chunk Filtering Method for RAG Systems,&quot; arXiv preprint arXiv:2410.19572v4, Nov. 2024. [Online]. Available: https://arxiv.org/abs/2410.19572"/>
+<meta name="citation_reference" content="W. Song, T. Tan, Y. Qin, X. Lu, and T. Liu, &quot;MPNet: Masked and Permuted Pre-training for Language Understanding,&quot; Advances in Neural Information Processing Systems (NeurIPS), 2020. [Online]. Available: https://huggingface.co/sentence-transformers/all-mpnet-base-v2"/>
+<meta name="citation_reference" content="M. Douze, J. Johnson, M. Lomeli, A. Guzhva, G. Szilvasy, L. Hosseini, C. Deng, P.-E. Mazaré, and H. Jégou, &quot;The FAISS Library,&quot; arXiv preprint arXiv:2401.08281v2, Sep. 2024. [Online]. Available: https://arxiv.org/abs/2401.08281"/>
+<meta name="citation_reference" content="X. Ma, T. Teofili, and J. Lin, &quot;Anserini Gets Dense Retrieval: Integration of Lucene’s HNSW Indexes,&quot; arXiv preprint arXiv:2304.12139v1, Apr. 2023. [Online]. Available: https://arxiv.org/abs/2304.12139"/>
+<meta name="citation_reference" content="H. Déjean, S. Clinchant, and T. Formal, &quot;A Thorough Comparison of Cross-Encoders and LLMs for Reranking SPLADE,&quot; arXiv preprint arXiv:2403.10407v1, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2403.10407"/>
+<meta name="citation_reference" content="&quot;ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1,&quot; Hugging Face, 2024. [Online]. Available: https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1"/>
+<meta name="citation_reference" content="&quot;ytu-ce-cosmos/Turkish-Llama-8b-Instruct-v0.1,&quot; Hugging Face, 2024. [Online]. Available: https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-Instruct-v0.1"/>
+<meta name="citation_reference" content="H. T. Kesgin, M. K. Yuce, E. Dogan, M. E. Uzun, A. Uz, E. İnce, Y. Erdem, O. Shbib, A. Zeer, and M. F. Amasyali, &quot;Optimizing Large Language Models for Turkish: New Methodologies in Corpus Selection and Training,&quot; in *2024 Innovations in Intelligent Systems and Applications Conference (ASYU)*, 2024, pp. 1-6."/>
+<meta name="citation_reference" content="S. Es, J. James, L. Espinosa-Anke, and S. Schockaert, &quot;RAGAS: Automated Evaluation of Retrieval Augmented Generation,&quot; arXiv preprint arXiv:2309.15217v1, Sep. 2023. [Online]. Available: https://arxiv.org/abs/2309.15217"/>
+<meta name="citation_reference" content="Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, Y. Dai, J. Sun, M. Wang, and H. Wang, &quot;Retrieval-Augmented Generation for Large Language Models: A Survey,&quot; *arXiv preprint arXiv:2312.10997v5*, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2312.10997"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<meta name="DC.Creator.PersonalName" content="Derya Tanyildiz"/>
+<meta name="DC.Creator.PersonalName" content="Serkan Ayvaz"/>
+<meta name="DC.Creator.PersonalName" content="Mehmet Fatih Amasyali"/>
+<meta name="DC.Date.created" scheme="ISO8601" content="2024-12-31"/>
+<meta name="DC.Date.dateSubmitted" scheme="ISO8601" content="2024-12-25"/>
+<meta name="DC.Date.issued" scheme="ISO8601" content="2025-01-15"/>
+<meta name="DC.Date.modified" scheme="ISO8601" content="2025-02-06"/>
+<meta name="DC.Description" xml:lang="en" content="Retrieval-Augmented Generation (RAG) architectures depend on the integration of efficient retrieval and ranking mechanisms to enhance response accuracy and relevance. This study investigates a novel approach to improving the response performance of RAG systems, leveraging dynamic chunking for contextual coherence, Sentence-Transformers (all-mpnet-base-v2) for high-quality embeddings, and cross-encoder-based re-ranking for retrieval refinement. Our evaluation utilizes RAGAS metrics to assess key performance metrics, including faithfulness, relevancy, correctness, and context precision. Empirical evaluations highlighted the significant impact of index choice on the performance. Our proposed approach integrates the FAISS HNSW index with re-ranking, resulting in a balanced architecture that improves response fidelity without compromising efficiency. These insights underscore the importance of advanced indexing and retrieval techniques in bridging the gap between large-scale language models and domain-specific information needs. The findings provide a robust framework for future research in optimizing RAG systems, particularly in scenarios requiring high-context preservation and precision."/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Identifier" content="516"/>
+<meta name="DC.Identifier.pageNumber" content="215-225"/>
+<meta name="DC.Identifier.DOI" content="10.56038/oprd.v5i1.516"/>
+<meta name="DC.Identifier.URI" content="https://journals.orclever.com/oprd/article/view/516"/>
+<meta name="DC.Language" scheme="ISO639-1" content="en"/>
+<meta name="DC.Rights" content="Copyright (c) 2024 Orclever Proceedings of Research and Development"/>
+<meta name="DC.Rights" content="https://creativecommons.org/licenses/by-nc/4.0"/>
+<meta name="DC.Source" content="Orclever Proceedings of Research and Development"/>
+<meta name="DC.Source.ISSN" content="2980-020X"/>
+<meta name="DC.Source.Issue" content="1"/>
+<meta name="DC.Source.Volume" content="5"/>
+<meta name="DC.Source.URI" content="https://journals.orclever.com/oprd"/>
+<meta name="DC.Subject" xml:lang="en" content="Semantic Search"/>
+<meta name="DC.Title" content="Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search"/>
+<meta name="DC.Type" content="Text.Serial.Journal"/>
+<meta name="DC.Type.articleType" content="Articles"/>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap" type="text/css" /><link rel="stylesheet" href="https://journals.orclever.com/plugins/themes/gopher/css/fa_all.min.css?v=3.3.0.8" type="text/css" /><link rel="stylesheet" href="https://journals.orclever.com/plugins/themes/gopher/css/v4-font-face.css?v=3.3.0.8" type="text/css" /><link rel="stylesheet" href="https://journals.orclever.com/plugins/themes/gopher/css/bootstrap.min.css?v=3.3.0.8" type="text/css" /><link rel="stylesheet" href="https://journals.orclever.com/plugins/themes/gopher/css/custom.css?v=3.3.0.8" type="text/css" /><style type="text/css">:root { --color-primary: #4E1B61;}</style><link rel="stylesheet" href="https://journals.orclever.com/plugins/generic/citations/css/citations.css?v=3.3.0.8" type="text/css" /><link rel="stylesheet" href="https://journals.orclever.com/plugins/generic/publons/styles/publons.css?v=3.3.0.8" type="text/css" />
+</head>
+<body>
+<section class="header container-fluid py-4">
+	<div class="container px-3 px-md-4">
+		<div class="row align-items-center align-items-md-start">
+			<div class="col-sm-5 ps-md-3 p-0">
+								<img src="https://journals.orclever.com/public/site/pageHeaderTitleImage_en_US.png" alt="" class="img-fluid">
+							</div>
+			<div class="col-sm-7 text-end right-col pe-0 pe-md-2 mt-sm-0 mt-4">
+					                                			<a href="https://journals.orclever.com/oprd/user/register">
+                Register
+			</a>
+			                                			<a href="https://journals.orclever.com/oprd/login">
+                Login
+			</a>
+			                            
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="container shadow p-0">
+	<div class="container page-header py-3 py-lg-4 px-4">
+				<h1>
+            				<a class="heading-link" href="			https://journals.orclever.com/oprd/index
+		"}>
+                	Orclever Proceedings of Research and Development
+				</a>
+            		</h1>
+	</div>
+	<div class="container border-bottom menu-row px-xl-4 px-2 position-relative">
+		<nav class="navbar navbar-expand-xl navbar-dark">
+			<div class="container-fluid p-0">
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#collapsibleNavbar"
+					aria-controls="collapsibleNavbar"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    	<ul id="" class="navbar-nav">
+																		<li class="nav-item">
+				<a class="nav-link" href="https://journals.orclever.com/oprd/issue/current">
+											Current									</a>
+				</li>
+																					<li class="nav-item">
+				<a class="nav-link" href="https://journals.orclever.com/oprd/issue/archive">
+											Archives
+									</a>
+				</li>
+																															<li class="nav-item dropdown">
+					<a
+						id="3"
+						class="nav-link dropdown-toggle"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+						role="button"
+						href="https://journals.orclever.com/oprd/about"
+					>
+						About
+					</a>
+				 						<ul class="dropdown-menu" aria-labelledby="3">
+																					<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/about"
+									>
+										About the Journal
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/about/submissions"
+									>
+										Submissions
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/about/editorialTeam"
+									>
+										Editorial Team
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/publisher"
+									>
+										Publisher
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/licensing"
+									>
+										Licensing
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/about/privacy"
+									>
+										Privacy Statement
+									</a>
+								</li>
+																												<li>
+									<a
+										class="dropdown-item"
+										href="https://journals.orclever.com/oprd/about/contact"
+									>
+										Contact
+									</a>
+								</li>
+																		</ul>
+				</li>
+						</ul>
+
+				</div>
+			</div>
+		</nav>
+							<a href="https://journals.orclever.com/oprd/search" class="btn btn-primary small">Search</a>
+			</div>
+
+    <div class="container px-4 pt-4">
+	<nav role="navigation" aria-label="You are here:">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a href="https://journals.orclever.com/oprd/index">
+                    Home
+				</a>
+			</li>
+			<li class="breadcrumb-item">
+				<a href="https://journals.orclever.com/oprd/issue/archive">
+                    Archives
+				</a>
+			</li>
+							<li class="breadcrumb-item">
+					<a href="https://journals.orclever.com/oprd/issue/view/18">
+                        Vol. 5 No. 1 (2024): 4th International Conference on Design, Research and Development (RDCONF 2024)
+					</a>
+				</li>
+						<li class="breadcrumb-item active" aria-current="page">
+				<span aria-current="page">
+				                    Articles
+                			</span>
+			</li>
+		</ol>
+	</nav>
+</div>
+
+<article class="container mt-4 mt-md-5 px-4">
+	<div class="row flex-column-reverse flex-md-row g-md-5">
+				<div class="col-xxl-3 col-md-4 sidebar-left">
+			            									<a href="https://journals.orclever.com/oprd/issue/view/18">
+						<img
+							src="https://journals.orclever.com/public/journals/3/cover_issue_18_en_US.png"
+							alt=""
+							class="img-fluid d-block mx-auto"
+						>
+					</a>
+								
+										                    
+    
+                            
+
+
+<a class="btn btn-primary small article-btn w-100 mt-2" href="https://journals.orclever.com/oprd/article/view/516/360">
+	<i class="fa-solid fa-file-pdf"></i>
+	    
+	PDF
+
+	    </a>
+													
+										<div class="container px-0 mt-4">
+					<h4>Published</h4>
+					<p>
+						                        							2024-12-31
+                                                    					</p>
+				</div>
+
+							
+							<div class="container px-0 mt-4">
+					<h4>Issue</h4>
+					<p>
+						<a href="https://journals.orclever.com/oprd/issue/view/18">
+							Vol. 5 No. 1 (2024): 4th International Conference on Design, Research and Development (RDCONF 2024)
+						</a>
+					</p>
+				</div>
+			
+							<div class="container px-0 mt-4">
+					<h4>Section</h4>
+					<p>
+						Articles
+					</p>
+				</div>
+			
+			
+                        				<div class="container px-0 mt-4">
+					<h4>License</h4>
+                                                                        								<p>Copyright (c) 2024 Orclever Proceedings of Research and Development</p>
+                                                        <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" src="//i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><p>This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.</p>
+                                                                
+				</div>
+			
+                        				<div class="container px-0 mt-4">
+					<h4>How to Cite</h4>
+					<div id="citationOutput" role="region" aria-live="polite">
+                        <div class="csl-bib-body">
+  <div class="csl-entry">Tanyildiz, D., Ayvaz, S., &#38; Amasyali, M. F. (2024). Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search. <i>Orclever Proceedings of Research and Development</i>, <i>5</i>(1), 215–225. https://doi.org/10.56038/oprd.v5i1.516</div>
+</div>
+					</div>
+					<div class="dropdown my-3">
+						<button
+								class="btn btn-secondary dropdown-toggle"
+								id="citationFormatsDropdown"
+								aria-controls="cslCitationFormats"
+								aria-expanded="false"
+								data-csl-dropdown="true"
+								data-bs-toggle="dropdown"
+								type="button"
+						>
+                            More Citation Formats
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="citationFormatsDropdown">
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/acm-sig-proceedings?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/acm-sig-proceedings?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        ACM
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/acs-nano?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/acs-nano?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        ACS
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/apa?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/apa?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        APA
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        ABNT
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/chicago-author-date?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/chicago-author-date?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        Chicago
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/harvard-cite-them-right?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/harvard-cite-them-right?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        Harvard
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/ieee?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/ieee?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        IEEE
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/modern-language-association?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/modern-language-association?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        MLA
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        Turabian
+									</a>
+								</li>
+                            								<li>
+									<a
+											class="dropdown-item"
+											aria-controls="citationOutput"
+											href="https://journals.orclever.com/oprd/citationstylelanguage/get/vancouver?submissionId=516&amp;publicationId=517"
+											data-load-citation
+											data-json-href="https://journals.orclever.com/oprd/citationstylelanguage/get/vancouver?submissionId=516&amp;publicationId=517&amp;return=json"
+									>
+                                        Vancouver
+									</a>
+								</li>
+                                                        								<li><hr class="dropdown-divider"></li>
+								<li><span class="dropdown-item">Download Citation</span></li>
+                                									<li>
+										<a
+												class="dropdown-item"
+												href="https://journals.orclever.com/oprd/citationstylelanguage/download/ris?submissionId=516&amp;publicationId=517"
+										>
+											<span class="fa fa-download"></span>
+                                            Endnote/Zotero/Mendeley (RIS)
+										</a>
+									</li>
+                                									<li>
+										<a
+												class="dropdown-item"
+												href="https://journals.orclever.com/oprd/citationstylelanguage/download/bibtex?submissionId=516&amp;publicationId=517"
+										>
+											<span class="fa fa-download"></span>
+                                            BibTeX
+										</a>
+									</li>
+                                                            						</ul>
+					</div>
+				</div>
+            
+			<div class="container px-0 mt-4">
+            	
+			</div>
+		</div>
+
+				<div class="col-xxl-9 col-md-8 ps-md-4 mb-4 mb-md-0">
+						<h2>
+				Enhancing Retrieval-Augmented Generation Accuracy with Dynamic Chunking and Optimized Vector Search
+			</h2>
+			
+																				<p class="bold mb-0">
+						Derya Tanyildiz
+					</p>
+																<p>
+							Yildiz Technical University
+													</p>
+																					<p class="orcid">
+							
+							<a href="https://orcid.org/0009-0009-2802-5262" target="_blank">
+								https://orcid.org/0009-0009-2802-5262
+							</a>
+						</p>
+																			<p class="bold mb-0">
+						Serkan Ayvaz
+					</p>
+																<p>
+							University of Southern Denmark
+													</p>
+																					<p class="orcid">
+							
+							<a href="https://orcid.org/0000-0003-2016-4443" target="_blank">
+								https://orcid.org/0000-0003-2016-4443
+							</a>
+						</p>
+																			<p class="bold mb-0">
+						Mehmet Fatih Amasyali
+					</p>
+																<p>
+							Yildiz Technical University
+													</p>
+																					<p class="orcid">
+							
+							<a href="https://orcid.org/0000-0002-0404-5973" target="_blank">
+								https://orcid.org/0000-0002-0404-5973
+							</a>
+						</p>
+												
+																												<p>
+						<span class="bold">
+														DOI:
+						</span>
+						<a href="https://doi.org/10.56038/oprd.v5i1.516">
+							https://doi.org/10.56038/oprd.v5i1.516
+						</a>
+					</p>
+							
+										<p>
+					<span class="bold">
+												Keywords:
+					</span>
+											Retrieval-Augmented Generation (RAG), 											 Cross Encoders, 											 Vector Database, 											Dynamic Chunking, 											Semantic Search									</p>
+			
+										<hr class="mt-5">
+				<h3>Abstract</h3>
+				<p>Retrieval-Augmented Generation (RAG) architectures depend on the integration of efficient retrieval and ranking mechanisms to enhance response accuracy and relevance. This study investigates a novel approach to improving the response performance of RAG systems, leveraging dynamic chunking for contextual coherence, Sentence-Transformers (all-mpnet-base-v2) for high-quality embeddings, and cross-encoder-based re-ranking for retrieval refinement. Our evaluation utilizes RAGAS metrics to assess key performance metrics, including faithfulness, relevancy, correctness, and context precision. Empirical evaluations highlighted the significant impact of index choice on the performance. Our proposed approach integrates the FAISS HNSW index with re-ranking, resulting in a balanced architecture that improves response fidelity without compromising efficiency. These insights underscore the importance of advanced indexing and retrieval techniques in bridging the gap between large-scale language models and domain-specific information needs. The findings provide a robust framework for future research in optimizing RAG systems, particularly in scenarios requiring high-context preservation and precision.</p>
+			
+			
+
+                                                                                                                        			
+										<hr class="mt-5">
+				<h3>References</h3>
+															<p>W. X. Zhao, K. Zhou, J. Li, T. Tang, X. Wang, Y. Hou, Y. Min, B. Zhang, J. Zhang, Z. Dong, and Y. Du, "A survey of large language models," arXiv preprint arXiv:2303.18223, 2023. </p>
+											<p>Z. Jiang, X. Ma, and W. Chen, "Longrag: Enhancing retrieval-augmented generation with long-context LLMs," arXiv preprint arXiv:2406.15319, 2024. </p>
+											<p>"Metin/WikiRAG-TR," Hugging Face, 2024. [Online]. Available: <a href="https://huggingface.co/datasets/Metin/WikiRAG-TR">https://huggingface.co/datasets/Metin/WikiRAG-TR</a> </p>
+											<p>Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, Y. Dai, J. Sun, M. Wang, and H. Wang, "Retrieval-Augmented Generation for Large Language Models: A Survey," arXiv preprint arXiv:2312.10997v5, Mar. 2024. [Online]. Available: <a href="https://arxiv.org/abs/2312.10997">https://arxiv.org/abs/2312.10997</a> </p>
+											<p>I. S. Singh, R. Aggarwal, I. Allahverdiyev, A. Akalin, K. Zhu, and S. O’Brien, "ChunkRAG: Novel LLM-Chunk Filtering Method for RAG Systems," arXiv preprint arXiv:2410.19572v4, Nov. 2024. [Online]. Available: <a href="https://arxiv.org/abs/2410.19572">https://arxiv.org/abs/2410.19572</a> </p>
+											<p>W. Song, T. Tan, Y. Qin, X. Lu, and T. Liu, "MPNet: Masked and Permuted Pre-training for Language Understanding," Advances in Neural Information Processing Systems (NeurIPS), 2020. [Online]. Available: <a href="https://huggingface.co/sentence-transformers/all-mpnet-base-v2">https://huggingface.co/sentence-transformers/all-mpnet-base-v2</a> </p>
+											<p>M. Douze, J. Johnson, M. Lomeli, A. Guzhva, G. Szilvasy, L. Hosseini, C. Deng, P.-E. Mazaré, and H. Jégou, "The FAISS Library," arXiv preprint arXiv:2401.08281v2, Sep. 2024. [Online]. Available: <a href="https://arxiv.org/abs/2401.08281">https://arxiv.org/abs/2401.08281</a> </p>
+											<p>X. Ma, T. Teofili, and J. Lin, "Anserini Gets Dense Retrieval: Integration of Lucene’s HNSW Indexes," arXiv preprint arXiv:2304.12139v1, Apr. 2023. [Online]. Available: <a href="https://arxiv.org/abs/2304.12139">https://arxiv.org/abs/2304.12139</a>  
+DOI: <a href="https://doi.org/10.1145/3583780.3615112">https://doi.org/10.1145/3583780.3615112</a>
+</p>
+											<p>H. Déjean, S. Clinchant, and T. Formal, "A Thorough Comparison of Cross-Encoders and LLMs for Reranking SPLADE," arXiv preprint arXiv:2403.10407v1, Mar. 2024. [Online]. Available: <a href="https://arxiv.org/abs/2403.10407">https://arxiv.org/abs/2403.10407</a> </p>
+											<p>"ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1," Hugging Face, 2024. [Online]. Available: <a href="https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1">https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1</a> </p>
+											<p>"ytu-ce-cosmos/Turkish-Llama-8b-Instruct-v0.1," Hugging Face, 2024. [Online]. Available: <a href="https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-Instruct-v0.1">https://huggingface.co/ytu-ce-cosmos/Turkish-Llama-8b-Instruct-v0.1</a> </p>
+											<p>H. T. Kesgin, M. K. Yuce, E. Dogan, M. E. Uzun, A. Uz, E. İnce, Y. Erdem, O. Shbib, A. Zeer, and M. F. Amasyali, "Optimizing Large Language Models for Turkish: New Methodologies in Corpus Selection and Training," in *2024 Innovations in Intelligent Systems and Applications Conference (ASYU)*, 2024, pp. 1-6.  
+DOI: <a href="https://doi.org/10.1109/ASYU62119.2024.10757019">https://doi.org/10.1109/ASYU62119.2024.10757019</a>
+</p>
+											<p>S. Es, J. James, L. Espinosa-Anke, and S. Schockaert, "RAGAS: Automated Evaluation of Retrieval Augmented Generation," arXiv preprint arXiv:2309.15217v1, Sep. 2023. [Online]. Available: <a href="https://arxiv.org/abs/2309.15217">https://arxiv.org/abs/2309.15217</a> </p>
+											<p>Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, Y. Dai, J. Sun, M. Wang, and H. Wang, "Retrieval-Augmented Generation for Large Language Models: A Survey," *arXiv preprint arXiv:2312.10997v5*, Mar. 2024. [Online]. Available: <a href="https://arxiv.org/abs/2312.10997">https://arxiv.org/abs/2312.10997</a> </p>
+														</div>
+	</div>
+</article>
+
+<div id="articlesBySameAuthorList">
+						<h3>Most read articles by the same author(s)</h3>
+
+			<ul>
+																													<li>
+													Ömer Faruk Cebeci,
+													Mehmet Fatih Amasyali,
+												<a href="https://journals.orclever.com/oprd/article/view/581">
+							Synthetic Data Generation for Enhancing Text Classification Performance Using Conditional Variational Autoencoders
+						</a>,
+						<a href="https://journals.orclever.com/oprd/issue/view/18">
+							Orclever Proceedings of Research and Development: Vol. 5 No. 1 (2024): 4th International Conference on Design, Research and Development (RDCONF 2024)
+						</a>
+					</li>
+							</ul>
+			<div id="articlesBySameAuthorPages">
+				
+			</div>
+			</div>
+
+
+
+    <div class="container border-top mt-5 px-4 pb-4">
+			<div class="row mt-4 footer-additional-content">
+							<div class="col-12">
+					<div class="pkp_block block_custom" id="customblock-online-issn">
+	<h2 class="title pkp_screen_reader">online-issn</h2>
+	<div class="content">
+		<p><strong>Online ISSN:</strong> 2980-020X</p>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-make-a-submission">
+	<h2 class="title pkp_screen_reader">Make Submission</h2>
+	<div class="content">
+		<p><a href="https://journals.orclever.com/oprd/submission/wizard">Make Submission</a></p>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-copyright-form">
+	<h2 class="title pkp_screen_reader">Copyright Form</h2>
+	<div class="content">
+		<p><a href="https://journals.orclever.com/public/journals/3/Copyright_Transfer_Form_OPRD.docx">Copyright Form</a></p>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-submission-system-guide">
+	<h2 class="title pkp_screen_reader">Submission System Guide</h2>
+	<div class="content">
+		<p><a href="https://journals.orclever.com/public/journals/3/submission-system-guide.pdf">Submission System Guide</a></p>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-turkish-templete">
+	<h2 class="title pkp_screen_reader">Turkish Template</h2>
+	<div class="content">
+		<p><a href="https://journals.orclever.com/public/journals/3/OPRD_Türkçe_Template.docx">Turkish Template</a></p>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-english-templete">
+	<h2 class="title pkp_screen_reader">English Template</h2>
+	<div class="content">
+		<p><a href="https://journals.orclever.com/public/journals/3/OPRD_English_Template.docx">English Template</a></p>
+	</div>
+</div>
+
+				</div>
+								</div>
+	</div>
+</section>
+
+<section class="footer container-fluid">
+	<div class="container py-3">
+		<div class="row">
+			<div class="col-12">
+          					</div>
+			<div class="col-12 text-md-end text-center" role="complementary">
+				<a href="https://journals.orclever.com/oprd/about/aboutThisPublishingSystem">
+					<img
+						class="pkp-brand-footer"
+						alt="More information about the publishing system, Platform and Workflow by OJS/PKP."
+						src="https://journals.orclever.com/templates/images/ojs_brand.png"
+					>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="row bottom-bar py-3"></div>
+</section>
+
+<script src="https://journals.orclever.com/plugins/themes/gopher/js/jquery.js?v=3.3.0.8" type="text/javascript"></script><script src="https://journals.orclever.com/plugins/themes/gopher/js/bootstrap.bundle.min.js?v=3.3.0.8" type="text/javascript"></script><script src="https://journals.orclever.com/plugins/themes/gopher/js/custom.js?v=3.3.0.8" type="text/javascript"></script><script src="https://journals.orclever.com/plugins/generic/citationStyleLanguage/js/articleCitation.js?v=3.3.0.8" type="text/javascript"></script>
+
+
+</body>
+</html>

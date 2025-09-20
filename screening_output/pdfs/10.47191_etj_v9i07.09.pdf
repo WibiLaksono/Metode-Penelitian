@@ -1,0 +1,866 @@
+
+
+<!DOCTYPE html>
+<html lang="en_US" xml:lang="en_US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<meta name="description" content="">
+	<meta name="og:description" content="">
+	<meta name="author" content="Engineering And Technology Journal" />
+	<meta name="copyright" content="Engineering And Technology Journal - " />	
+			<meta name="keywords" content="Information retrieval,Artificial Intelligence,retrieval augmented generation,OCR,fine-tuning model"/>		
+			<meta name="themeCreator" content="OpenJournalTheme.com"/>
+	<meta name="themeName" content="Noble"/>
+	<meta name="themeVersion" content="1.5.2.6"/>
+	
+	<title>
+		Advanced Retrieval Augmented Generation: Multilingual Semantic Retrieval across Document Types by Finetuning Transformer Based Language Models and OCR Integration
+							| Engineering And Technology Journal
+			</title>
+
+	
+<link rel="icon" href="https://everant.org/public/journals/2/favicon_en_US.png">
+<meta name="generator" content="Open Journal Systems 3.3.0.15">
+<meta name="gs_meta_revision" content="1.1"/>
+<meta name="citation_journal_title" content="Engineering And Technology Journal"/>
+<meta name="citation_journal_abbrev" content="etj"/>
+<meta name="citation_issn" content="2456-3358"/> 
+<meta name="citation_author" content="Ismail OUBAH"/>
+<meta name="citation_author_institution" content="MS Student, Computer Engineering, Istanbul Aydin University, Istanbul, Turkey"/>
+<meta name="citation_author" content="Dr. Selçuk ŞENER"/>
+<meta name="citation_author_institution" content="Lecturer, Computer Engineering, Istanbul Aydin University, Istanbul, Turkey"/>
+<meta name="citation_title" content="Advanced Retrieval Augmented Generation: Multilingual Semantic Retrieval across Document Types by Finetuning Transformer Based Language Models and OCR Integration"/>
+<meta name="citation_language" content="en"/>
+<meta name="citation_date" content="2024/07/10"/>
+<meta name="citation_volume" content="9"/>
+<meta name="citation_issue" content="7"/>
+<meta name="citation_firstpage" content="4404"/>
+<meta name="citation_lastpage" content="4411"/>
+<meta name="citation_doi" content="10.47191/etj/v9i07.09"/>
+<meta name="citation_abstract_html_url" content="https://everant.org/index.php/etj/article/view/1402"/>
+<meta name="citation_keywords" xml:lang="en" content="Information retrieval"/>
+<meta name="citation_keywords" xml:lang="en" content="Artificial Intelligence"/>
+<meta name="citation_keywords" xml:lang="en" content="retrieval augmented generation"/>
+<meta name="citation_keywords" xml:lang="en" content="OCR"/>
+<meta name="citation_keywords" xml:lang="en" content="fine-tuning model"/>
+<meta name="citation_pdf_url" content="https://everant.org/index.php/etj/article/download/1402/1000"/>
+<meta name="citation_reference" content="Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, et al. 2021. “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.” arXiv. https://doi.org/10.48550/arXiv.2005.11401."/>
+<meta name="citation_reference" content="Borgeaud, Sebastian, Arthur Mensch, Jordan Hoffmann, Trevor Cai, Eliza Rutherford, Katie Millican, George van den Driessche, et al. 2022. “Improving Language Models by Retrieving from Trillions of Tokens.” arXiv. https://doi.org/10.48550/arXiv.2112.04426."/>
+<meta name="citation_reference" content="Jiang, Zhengbao, Frank F. Xu, Luyu Gao, Zhiqing Sun, Qian Liu, Jane Dwivedi-Yu, Yiming Yang, Jamie Callan, and Graham Neubig. 2023. “Active Retrieval Augmented Generation.” arXiv. https://doi.org/10.48550/arXiv.2305.06983."/>
+<meta name="citation_reference" content="Weston, Jason, and Sainbayar Sukhbaatar. 2023. “System 2 Attention (Is Something You Might Need Too).” arXiv. https://doi.org/10.48550/arXiv.2311.11829."/>
+<meta name="citation_reference" content="Ramos, Rita, Bruno Martins, and Desmond Elliott. 2023. “LMCap: Few-Shot Multilingual Image Captioning by Retrieval Augmented Language Model Prompting.” arXiv. https://doi.org/10.48550/arXiv.2305.19821."/>
+<meta name="citation_reference" content="Zhuang, Shengyao, Linjun Shou, and Guido Zuccon. 2023. “Augmenting Passage Representations with Query Generation for Enhanced Cross-Lingual Dense Retrieval.” In Proceedings of the 46th International ACM SIGIR Conference on Research and Development in Information Retrieval, 1827–32. SIGIR ’23. New York, NY, USA: Association for Computing Machinery. https://doi.org/10.1145/3539618.3591952."/>
+<meta name="citation_reference" content="Shao, Zhihong, Yeyun Gong, Yelong Shen, Minlie Huang, Nan Duan, and Weizhu Chen. 2023. “Enhancing Retrieval-Augmented Large Language Models with Iterative Retrieval-Generation Synergy.” arXiv. https://doi.org/10.48550/arXiv.2305.15294."/>
+<meta name="citation_reference" content="Du, Yuning, Chenxia Li, Ruoyu Guo, Xiaoting Yin, Weiwei Liu, Jun Zhou, Yifan Bai, et al. 2020. “PP-OCR: A Practical Ultra Lightweight OCR System.” arXiv. https://doi.org/10.48550/arXiv.2009.09941."/>
+<meta name="citation_reference" content="Es, Shahul, Jithin James, Luis Espinosa-Anke, and Steven Schockaert. 2023. “RAGAS: Automated Evaluation of Retrieval Augmented Generation.” arXiv. https://doi.org/10.48550/arXiv.2309.15217."/>
+<meta name="citation_reference" content="“Introducing Meta Llama 3: The Most Capable Openly Available LLM to Date.” n.d. Meta AI. Accessed May 11, 2024. https://ai.meta.com/blog/meta-llama-3/."/>
+<meta name="citation_reference" content="Wang, Liang, Nan Yang, Xiaolong Huang, Linjun Yang, Rangan Majumder, and Furu Wei. 2024. “Multilingual E5 Text Embeddings: A Technical Report.” arXiv. https://doi.org/10.48550/arXiv.2402.05672."/>
+<meta name="citation_reference" content="Xue, Linting, Noah Constant, Adam Roberts, Mihir Kale, Rami Al-Rfou, Aditya Siddhant, Aditya Barua, and Colin Raffel. 2021. “mT5: A Massively Multilingual Pre-Trained Text-to-Text Transformer.” arXiv. https://doi.org/10.48550/arXiv.2010.11934."/>
+<meta name="citation_reference" content="Douze, Matthijs, Alexandr Guzhva, Chengqi Deng, Jeff Johnson, Gergely Szilvasy, Pierre-Emmanuel Mazaré, Maria Lomeli, Lucas Hosseini, and Hervé Jégou. 2024. “The Faiss Library.” arXiv. https://doi.org/10.48550/arXiv.2401.08281."/>
+<meta name="citation_reference" content="Whitehouse, Chenxi, Monojit Choudhury, and Alham Fikri Aji. 2023. “LLM-Powered Data Augmentation for Enhanced Cross-Lingual Performance.” arXiv. https://doi.org/10.48550/arXiv.2305.14288."/>
+<meta name="citation_reference" content="Merity, Stephen, Caiming Xiong, James Bradbury, and Richard Socher. 2016. “Pointer Sentinel Mixture Models.” arXiv. https://doi.org/10.48550/arXiv.1609.07843."/>
+<meta name="noblethemeplugin" content="Noble Theme Plugin Version 1.5.2.6 by openjournaltheme.com">
+<meta name="ojtcontrolpanel" content="OJT Control Panel Version 2.0.9.2 by openjournaltheme.com">
+	<link rel="stylesheet" href="https://everant.org/lib/pkp/styles/fontawesome/fontawesome.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" type="text/css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/aos/aos.min.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/css/academicicon/css/academicons.min.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/swiper/swiper-bundle.min.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/styles/noble-tailwind.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/styles/hover/hover-noble.min.css?v=3.3.0.15" type="text/css" /><link rel="stylesheet" href="https://everant.org/index.php/etj/$$$call$$$/page/page/css?name=stylesheet" type="text/css" /><link rel="stylesheet" href="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/touch-menu-la.min.css?v=3.3.0.15" type="text/css" />
+</head>
+
+<body class="pkp_page_article pkp_op_view has_site_logo bg-gray-200 dark:bg-gray-600" dir="ltr">
+	<script>
+	if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+		document.querySelector('html').classList.add('dark')
+	} else {
+		document.querySelector('html').classList.remove('dark')
+	}
+	</script>
+
+		<div class="overlay">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
+	<div class="sr-only current-page" style="display:none">
+	article
+	</div>
+
+	<div class="pkp_structure_page">
+				<div id="menu-mobile" class="touch-menu-la lg:hidden flex flex-col">
+			<div class="mobile-primary-menu mt-4">
+					<ul id="navigationPrimaryMobile" class="pkp_navigation_primary pkp_nav_list">
+								<li class="">
+				<a href="http://everant.org/index.php/etj">
+					Home
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/Ebm">
+					Editorial Member
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/about/submissions">
+					Submissions
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/issue/archive">
+					Archives
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/issue/current">
+					Current
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/about/contact">
+					Contact
+				</a>
+							</li>
+			</ul>
+
+					<ul id="navigationUserMobile" class="pkp_navigation_primary pkp_nav_list">
+								<li class="profile-mobile">
+				<a href="https://everant.org/index.php/etj/user/register">
+					Register
+				</a>
+							</li>
+								<li class="profile-mobile">
+				<a href="https://everant.org/index.php/etj/login">
+					Login
+				</a>
+							</li>
+										</ul>
+
+				<ul id="navigationUserMobile" class="pkp_navigation_primary pkp_nav_list">
+					<li class="profile-mobile">
+						<a href="https://everant.org/index.php/etj/search">
+							<i class="fa fa-search" aria-hidden="true"></i>
+							Search
+						</a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+		<div class="w-full bg-white dark:bg-gray-800 py-3">
+				<div class="pkp_site_name_wrapper flex items-center">
+										<div class="header-logo me-auto lg:me-0">
+																		<a href="						https://everant.org/index.php/etj/index
+						" class="is_img">
+							<img src="https://everant.org/public/journals/2/pageHeaderLogoImage_en_US.png"
+								width="1170" height="177"  />
+						</a>
+											</div>
+										<div class="ms-auto me-3 p-3 ps-6 hidden lg:block">
+													<form class=" mb-0" action="https://everant.org/index.php/etj/search" method="get" role="search" aria-label="Article Search">
+		<input type="hidden" name="csrfToken" value="913bbcc90c2edf5a3b9acd5ef6a1440d">
+		<div class="text-gray-600 flex border-2 border-primary border-opacity-50">
+				
+        <input class="bg-transparent text-black dark:text-white h-8 px-5 text-sm focus:outline-none w-48"
+          type="search" name="query" value="" placeholder="Search" aria-label="Search Query">
+				
+        <button type="submit" class="me-4">
+          <svg class="text-black dark:text-white h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+            viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
+            width="512px" height="512px">
+            <path
+              d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+          </svg>
+        </button>
+      </div>
+	</form>
+
+      											</div>
+					<div class="p-3 flex items-center lg:border-s lg:border-r" id="navigationUserWrapper">
+							<ul id="navigationUser" class="hidden lg:block pkp_nav_list">
+								<li class="profile">
+				<a href="https://everant.org/index.php/etj/user/register">
+					Register
+				</a>
+							</li>
+								<li class="profile">
+				<a href="https://everant.org/index.php/etj/login">
+					Login
+				</a>
+							</li>
+										</ul>
+
+					</div>
+					<button class="lg:hidden" id="menu-open">
+						<svg viewBox="0 0 100 80" width="30" height="30">
+								<rect width="100" height="15" rx="8"></rect>
+								<rect y="30" width="100" height="15" rx="8"></rect>
+								<rect y="60" width="100" height="15" rx="8"></rect>
+						</svg>
+					</button>
+				</div>
+			</div>
+		<header class="pkp_structure_head border-b-8 border-primary-bottom lg:sticky top-0 z-10 shadow-lg" id="headerNavigationContainer"
+			role="banner">
+						
+ <nav class="cmp_skip_to_content" aria-label="Jump to content links">
+	<a href="#pkp_content_main">Skip to main content</a>
+	<a href="#siteNav">Skip to main navigation menu</a>
+		<a href="#pkp_content_footer">Skip to site footer</a>
+</nav>
+
+			<div class="pkp_head_wrapper">
+				<nav class="pkp_site_nav_menu" aria-label="Site Navigation">
+					<a id="siteNav"></a>
+					<div class="pkp_navigation_primary_row">
+						<div class="pkp_navigation_primary_wrapper text-base lg:flex lg:items-center">
+														<a href="						https://everant.org/index.php/etj/index
+						" class="is_img me-auto logo-navbar" style="display:none">
+								<img src="https://everant.org/public/journals/2/pageHeaderLogoImage_en_US.png"
+									width="1170" class="max-h-16" height="177"  />
+							</a>
+																								<ul id="navigationPrimary" class="pkp_navigation_primary pkp_nav_list">
+								<li class="">
+				<a href="http://everant.org/index.php/etj">
+					Home
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/Ebm">
+					Editorial Member
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/about/submissions">
+					Submissions
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/issue/archive">
+					Archives
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/issue/current">
+					Current
+				</a>
+							</li>
+								<li class="">
+				<a href="https://everant.org/index.php/etj/about/contact">
+					Contact
+				</a>
+							</li>
+			</ul>
+
+
+														<div class="lg:ms-auto issn">
+									<a href="https://portal.issn.org/resource/issn/2456-3358" class=""><span class="">Online ISSN  : 2456-3358</span></a>
+							</div>
+								
+													</div>
+					</div>
+
+					
+
+				</nav>
+			</div><!-- .pkp_head_wrapper -->
+		</header><!-- .pkp_structure_head -->
+						
+		<div class="pkp_structure_content has_sidebar mt-4">
+			<div class="pkp_structure_main bg-white dark:bg-gray-800 my-4 pt-4 shadow-lg border-primary-bottom border-b-8" role="main">
+				<a id="pkp_content_main"></a>
+<div class="page page_article">
+			<nav class="cmp_breadcrumbs" role="navigation" aria-label="You are here:">
+	<ol>
+		<li>
+			<a href="https://everant.org/index.php/etj/index">
+				Home
+			</a>
+			<span class="separator">/</span>
+		</li>
+		<li>
+			<a href="https://everant.org/index.php/etj/issue/archive">
+				Archives
+			</a>
+			<span class="separator">/</span>
+		</li>
+					<li>
+				<a href="https://everant.org/index.php/etj/issue/view/191">
+					Vol. 9 No. 7 (2024): VOLUME 09 ISSUE 07
+				</a>
+				<span class="separator">/</span>
+			</li>
+				<li class="current" aria-current="page">
+			<span aria-current="page">
+									Articles
+							</span>
+		</li>
+	</ol>
+</nav>
+	
+					
+	
+
+<article class="obj_article_details">
+
+		
+	
+	<h1 class="page_title">
+		Advanced Retrieval Augmented Generation: Multilingual Semantic Retrieval across Document Types by Finetuning Transformer Based Language Models and OCR Integration
+	</h1>
+	
+	<div class="lg:flex lg:items-center mb-2">
+		<div class="doi">
+																												<section class="item doi">
+						<span class="value">
+							<a href="https://doi.org/10.47191/etj/v9i07.09" class="break-words">
+								<i class="ai ai-doi" style="color:#fcb425"></i> https://doi.org/10.47191/etj/v9i07.09
+							</a>
+						</span>
+					</section>
+																		</div>
+					<div class="crossmark ms-auto">
+				<span class="crossmark_button">
+					<!-- Start Crossmark Snippet v2.0 -->
+					<script async src="https://crossmark-cdn.crossref.org/widget/v2.0/widget.js"></script>
+					<a data-target="crossmark"><img class="h-8"
+							src="https://crossmark-cdn.crossref.org/widget/v2.0/logos/CROSSMARK_Color_horizontal.svg" width="150" /></a>
+					<!-- End Crossmark Snippet -->
+				</span>
+			</div>
+			</div>
+
+				<section class="item keywords" title="Keywords">
+			<span class="value">
+									<a href="https://everant.org/index.php/etj/search/search?query=Information%20retrieval"
+						class="text-xs hover:text-white inline-block py-1 px-2 text-bg-secondary bg-secondary capitalize me-1 mb-1">
+						Information retrieval</a>
+									<a href="https://everant.org/index.php/etj/search/search?query=Artificial%20Intelligence"
+						class="text-xs hover:text-white inline-block py-1 px-2 text-bg-secondary bg-secondary capitalize me-1 mb-1">
+						Artificial Intelligence</a>
+									<a href="https://everant.org/index.php/etj/search/search?query=retrieval%20augmented%20generation"
+						class="text-xs hover:text-white inline-block py-1 px-2 text-bg-secondary bg-secondary capitalize me-1 mb-1">
+						retrieval augmented generation</a>
+									<a href="https://everant.org/index.php/etj/search/search?query=OCR"
+						class="text-xs hover:text-white inline-block py-1 px-2 text-bg-secondary bg-secondary capitalize me-1 mb-1">
+						OCR</a>
+									<a href="https://everant.org/index.php/etj/search/search?query=fine-tuning%20model"
+						class="text-xs hover:text-white inline-block py-1 px-2 text-bg-secondary bg-secondary capitalize me-1 mb-1">
+						fine-tuning model</a>
+							</span>
+		</section>
+	
+	<div class="">
+		<div class="main_entry">
+							<section class="item authors">
+					<h2 class="pkp_screen_reader">Authors</h2>
+					<ul class="authors sm:grid sm:grid-auto-flow sm:grid-cols-2 gap-2">
+													<li>
+								<span class="name">
+									<a href="https://everant.org/index.php/etj/search/search?authors=Ismail%20OUBAH">
+										<i class="fa fa-fw fa-user"> </i>
+										Ismail OUBAH
+									</a>
+								</span>
+								<!--									<div class="primary_contact">
+										<i class="fa fa-fw fa-envelope-o"> </i> ismailoubah@stu.aydin.edu.tr
+									</div>
+								 -->
+																	<span class="affiliation">
+										<i class="fa fa-fw  fa-university" aria-hidden="true"></i>
+										MS Student, Computer Engineering, Istanbul Aydin University, Istanbul, Turkey									</span>
+																							</li>
+													<li>
+								<span class="name">
+									<a href="https://everant.org/index.php/etj/search/search?authors=Dr.%20Sel%C3%A7uk%20%C5%9EENER">
+										<i class="fa fa-fw fa-user"> </i>
+										Dr. Selçuk ŞENER
+									</a>
+								</span>
+								<!-- -->
+																	<span class="affiliation">
+										<i class="fa fa-fw  fa-university" aria-hidden="true"></i>
+										Lecturer, Computer Engineering, Istanbul Aydin University, Istanbul, Turkey									</span>
+																							</li>
+											</ul>
+				</section>
+			
+
+			<div class="flow-root">
+				<div class="share-button">
+					<div class="tip">Share</div>
+					<div class="share-window">
+						<div class="share-bar">
+							<div class="trigger"><a target="_blank"
+									href="mailto:?subject=Advanced Retrieval Augmented Generation: Multilingual Semantic Retrieval across Document Types by Finetuning Transformer Based Language Models and OCR Integration;body=everant.org/index.php/etj/article/view/1402"><i
+										class="fa fa-envelope-o"></i></a></div>
+							<div class="trigger"><a target="_blank" href="https://wa.me/?text=everant.org/index.php/etj/article/view/1402"><i
+										class="fa fa-whatsapp"></i></a></div>
+							<div class="trigger"><a target="_blank"
+									href="https://www.facebook.com/sharer.php?u=everant.org/index.php/etj/article/view/1402"><i class="fa fa-facebook"></i></a>
+							</div>
+							<div class="trigger"><a target="_blank"
+									href="https://twitter.com/intent/tweet?url=everant.org/index.php/etj/article/view/1402"><i class="fa fa-twitter"></i></a>
+							</div>
+							<div class="trigger"><a target="_blank"
+									href="https://www.linkedin.com/sharing/share-offsite/?url=everant.org/index.php/etj/article/view/1402"><i
+										class="fa fa-linkedin"></i></a></div>
+							<div class="trigger"><a target="_blank" href="https://telegram.me/share/url?url=everant.org/index.php/etj/article/view/1402"><i
+										class="fa fa-paper-plane"></i></a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+										<div class="item issue">
+
+											<a class="issue" href="https://everant.org/index.php/etj/issue/view/191"
+							title="Issue">
+							Vol. 9 No. 7 (2024): VOLUME 09 ISSUE 07
+						</a>
+					
+											<div class="section" title="Section">
+							Articles
+						</div>
+									</div>
+										<div class="item date-log" title="Date Log">
+					<section class="sub_item">
+						<div class="value">
+
+							
+															<div class="date-log-item">
+									<label class="date-log-label">Accepted</label>
+									<span>July 10, 2024</span>
+								</div>
+							
+															<div class="date-log-item">
+									<label class="date-log-label">Published</label>
+																			<span>July 10, 2024</span>
+																																				</div>
+													</div>
+					</section>
+				</div>
+			
+							<div class="item published" title="Published">
+									</div>
+			
+		<!--				--> 
+							<div class="panel panel-default dimension_badge" title="Dimension Badge">
+					<span class="__dimensions_badge_embed__" data-doi="10.47191/etj/v9i07.09"
+						data-legend="always" data-style="small_circle"></span>
+					<script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+				</div>
+			 
+
+										<div class="item galleys" title="Downloads">
+					<h2 class="pkp_screen_reader">
+						Downloads
+					</h2>
+					<ul class="value galleys_links flex flex-wrap gap-2">
+													<li>
+								
+	
+							
+
+<a class="obj_galley_link pdf" href="https://everant.org/index.php/etj/article/view/1402/1000">
+
+		
+	PDF
+
+	</a>
+							</li>
+											</ul>
+				</div>
+			
+			
+																														
+
+			
+
+
+			<div class="flex flex-wrap" id="tabs-id">
+				<div class="w-full">
+					<ul class="flex mb-0 lg:flex-none flex-auto list-none flex-wrap pt-3 flex-row">
+						<li class="-mb-px lg:me-2 lg:justify-start justify-evenly last:me-0 text-center border">
+							<a class="cursor-default text-xs font-bold uppercase px-5 py-3 block hover:text-white leading-normal text-white bg-base"
+								onclick="changeActiveTab(event,'tab-abstract')">
+								Abstract
+							</a>
+						</li>
+						<li
+							class="-mb-px lg:me-2 lg:justify-start justify-evenly flex-auto lg:flex-none last:me-0 text-center border">
+							<a class="cursor-default text-xs font-bold uppercase px-5 py-3 block leading-normal "
+								onclick="changeActiveTab(event,'tab-citation')">
+								How to Cite
+							</a>
+						</li>
+												<li
+							class="-mb-px lg:me-2 lg:justify-start justify-evenly flex-auto lg:flex-none last:me-0 text-center border">
+							<a class="cursor-default text-xs font-bold uppercase px-5 py-3 block leading-normal "
+								onclick="changeActiveTab(event,'tab-download')">
+								Metrics
+							</a>
+						</li>
+													<li
+								class="-mb-px lg:me-2 lg:justify-start justify-evenly flex-auto lg:flex-none last:me-0 text-center border">
+								<a class="cursor-default text-xs font-bold uppercase px-5 py-3 block leading-normal "
+									onclick="changeActiveTab(event,'tab-references')">
+									References
+								</a>
+							</li>
+																	</ul>
+					<div class="relative flex flex-col min-w-0 break-words bg-white dark:bg-gray-800 w-full mb-6 border ">
+						<div class="px-4 py-5 flex-auto">
+							<div class="tab-content tab-space">
+								<div class="block" id="tab-abstract">
+																												<section class="abstract text-justify">
+											<p>This study presents an advanced system for multilingual semantic retrieval of diverse document types, integrating Retrieval-Augmented Generation (RAG) with transformer-based language models and Optical Character Recognition (OCR) technologies. Addressing the challenge of creating a robust multilingual Question-Answering (QA) system, we developed a custom dataset derived from XQuAD, FQuAD, and MLQA, enhanced by synthetic data generated using OpenAI's GPT-3.5 Turbo. This ensured comprehensive, context-rich answers. The inclusion of Paddle OCR facilitated high-quality text extraction in French, English, and Spanish, though Arabic presented some difficulties. The Multilingual E5 embedding model was fine-tuned using the Multiple Negatives Ranking Loss approach, optimizing retrieval of context-question pairs. We utilized two models for text generation: MT5, fine-tuned for enhanced contextual understanding and longer answer generation, suitable for CPU-friendly uses, and LLAMA 3 8b-instruct, optimized for advanced language generation, ideal for professional and industry applications requiring extensive GPU resources. Evaluation employed metrics such as F1, EM, and BLEU scores for individual components, and the RAGAS framework for the entire system. MT5 showed promising results and excelled in context precision and relevancy, while the quantized version of LLAMA 3 led in answer correctness and similarity. This work highlights the effectiveness of our RAG system in multilingual semantic retrieval, providing a robust solution for real-world QA applications and laying the groundwork for future advancements in multilingual document processing.</p>
+										</section>
+																	</div>
+								<div class="hidden" id="tab-citation">
+																												<div class="citation">
+											<section class="sub_item citation_display">
+												<div class="value">
+													<div id="citationOutput" role="region" aria-live="polite">
+														<div class="csl-bib-body">
+  <div class="csl-entry">Ismail OUBAH, &#38; Dr. Selçuk ŞENER. (2024). Advanced Retrieval Augmented Generation: Multilingual Semantic Retrieval across Document Types by Finetuning Transformer Based Language Models and OCR Integration. <i>Engineering And Technology Journal</i>, <i>9</i>(7), 4404–4411. https://doi.org/10.47191/etj/v9i07.09</div>
+</div>
+													</div>
+													<div class="citation_formats">
+														<button class="cmp_button citation_formats_button" aria-controls="cslCitationFormats"
+															aria-expanded="false" data-csl-dropdown="true">
+															More Citation Formats
+														</button>
+														<div id="cslCitationFormats" class="citation_formats_list" aria-hidden="true">
+															<ul class="citation_formats_styles">
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/acm-sig-proceedings?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/acm-sig-proceedings?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			ACM
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/acs-nano?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/acs-nano?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			ACS
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/apa?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/apa?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			APA
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			ABNT
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/chicago-author-date?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/chicago-author-date?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			Chicago
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/harvard-cite-them-right?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/harvard-cite-them-right?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			Harvard
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/ieee?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/ieee?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			IEEE
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/modern-language-association?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/modern-language-association?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			MLA
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			Turabian
+																		</a>
+																	</li>
+																																	<li>
+																		<a aria-controls="citationOutput"
+																			href="https://everant.org/index.php/etj/citationstylelanguage/get/vancouver?submissionId=1402&amp;publicationId=2263"
+																			data-load-citation
+																			data-json-href="https://everant.org/index.php/etj/citationstylelanguage/get/vancouver?submissionId=1402&amp;publicationId=2263&amp;return=json">
+																			Vancouver
+																		</a>
+																	</li>
+																															</ul>
+																															<div class="label">
+																	Download Citation
+																</div>
+																<ul class="citation_formats_styles">
+																																			<li>
+																			<a
+																				href="https://everant.org/index.php/etj/citationstylelanguage/download/ris?submissionId=1402&amp;publicationId=2263">
+																				<span class="fa fa-download"></span>
+																				Endnote/Zotero/Mendeley (RIS)
+																			</a>
+																		</li>
+																																			<li>
+																			<a
+																				href="https://everant.org/index.php/etj/citationstylelanguage/download/bibtex?submissionId=1402&amp;publicationId=2263">
+																				<span class="fa fa-download"></span>
+																				BibTeX
+																			</a>
+																		</li>
+																																	</ul>
+																													</div>
+													</div>
+												</div>
+											</section>
+										</div>
+																	</div>
+																<div class="hidden" id="tab-download">
+									
+								</div>
+																									<div class="hidden" id="tab-references">
+										<section class="item references">
+											<div class="value">
+																																							<p>Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, et al. 2021. “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.” arXiv. <a href="https://doi.org/10.48550/arXiv.2005.11401">https://doi.org/10.48550/arXiv.2005.11401</a>.
+															
+														</p>
+																											<p>Borgeaud, Sebastian, Arthur Mensch, Jordan Hoffmann, Trevor Cai, Eliza Rutherford, Katie Millican, George van den Driessche, et al. 2022. “Improving Language Models by Retrieving from Trillions of Tokens.” arXiv. <a href="https://doi.org/10.48550/arXiv.2112.04426">https://doi.org/10.48550/arXiv.2112.04426</a>.
+															
+														</p>
+																											<p>Jiang, Zhengbao, Frank F. Xu, Luyu Gao, Zhiqing Sun, Qian Liu, Jane Dwivedi-Yu, Yiming Yang, Jamie Callan, and Graham Neubig. 2023. “Active Retrieval Augmented Generation.” arXiv. <a href="https://doi.org/10.48550/arXiv.2305.06983">https://doi.org/10.48550/arXiv.2305.06983</a>.
+															
+														</p>
+																											<p>Weston, Jason, and Sainbayar Sukhbaatar. 2023. “System 2 Attention (Is Something You Might Need Too).” arXiv. <a href="https://doi.org/10.48550/arXiv.2311.11829">https://doi.org/10.48550/arXiv.2311.11829</a>.
+															
+														</p>
+																											<p>Ramos, Rita, Bruno Martins, and Desmond Elliott. 2023. “LMCap: Few-Shot Multilingual Image Captioning by Retrieval Augmented Language Model Prompting.” arXiv. <a href="https://doi.org/10.48550/arXiv.2305.19821">https://doi.org/10.48550/arXiv.2305.19821</a>.
+															
+														</p>
+																											<p>Zhuang, Shengyao, Linjun Shou, and Guido Zuccon. 2023. “Augmenting Passage Representations with Query Generation for Enhanced Cross-Lingual Dense Retrieval.” In Proceedings of the 46th International ACM SIGIR Conference on Research and Development in Information Retrieval, 1827–32. SIGIR ’23. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/3539618.3591952">https://doi.org/10.1145/3539618.3591952</a>.
+															
+														</p>
+																											<p>Shao, Zhihong, Yeyun Gong, Yelong Shen, Minlie Huang, Nan Duan, and Weizhu Chen. 2023. “Enhancing Retrieval-Augmented Large Language Models with Iterative Retrieval-Generation Synergy.” arXiv. <a href="https://doi.org/10.48550/arXiv.2305.15294">https://doi.org/10.48550/arXiv.2305.15294</a>.
+															
+														</p>
+																											<p>Du, Yuning, Chenxia Li, Ruoyu Guo, Xiaoting Yin, Weiwei Liu, Jun Zhou, Yifan Bai, et al. 2020. “PP-OCR: A Practical Ultra Lightweight OCR System.” arXiv. <a href="https://doi.org/10.48550/arXiv.2009.09941">https://doi.org/10.48550/arXiv.2009.09941</a>.
+															
+														</p>
+																											<p>Es, Shahul, Jithin James, Luis Espinosa-Anke, and Steven Schockaert. 2023. “RAGAS: Automated Evaluation of Retrieval Augmented Generation.” arXiv. <a href="https://doi.org/10.48550/arXiv.2309.15217">https://doi.org/10.48550/arXiv.2309.15217</a>.
+															
+														</p>
+																											<p>“Introducing Meta Llama 3: The Most Capable Openly Available LLM to Date.” n.d. Meta AI. Accessed May 11, 2024. <a href="https://ai.meta.com/blog/meta-llama-3/">https://ai.meta.com/blog/meta-llama-3/</a>.
+															
+														</p>
+																											<p>Wang, Liang, Nan Yang, Xiaolong Huang, Linjun Yang, Rangan Majumder, and Furu Wei. 2024. “Multilingual E5 Text Embeddings: A Technical Report.” arXiv. <a href="https://doi.org/10.48550/arXiv.2402.05672">https://doi.org/10.48550/arXiv.2402.05672</a>.
+															
+														</p>
+																											<p>Xue, Linting, Noah Constant, Adam Roberts, Mihir Kale, Rami Al-Rfou, Aditya Siddhant, Aditya Barua, and Colin Raffel. 2021. “mT5: A Massively Multilingual Pre-Trained Text-to-Text Transformer.” arXiv. <a href="https://doi.org/10.48550/arXiv.2010.11934">https://doi.org/10.48550/arXiv.2010.11934</a>.
+															
+														</p>
+																											<p>Douze, Matthijs, Alexandr Guzhva, Chengqi Deng, Jeff Johnson, Gergely Szilvasy, Pierre-Emmanuel Mazaré, Maria Lomeli, Lucas Hosseini, and Hervé Jégou. 2024. “The Faiss Library.” arXiv. <a href="https://doi.org/10.48550/arXiv.2401.08281">https://doi.org/10.48550/arXiv.2401.08281</a>.
+															
+														</p>
+																											<p>Whitehouse, Chenxi, Monojit Choudhury, and Alham Fikri Aji. 2023. “LLM-Powered Data Augmentation for Enhanced Cross-Lingual Performance.” arXiv. <a href="https://doi.org/10.48550/arXiv.2305.14288">https://doi.org/10.48550/arXiv.2305.14288</a>.
+															
+														</p>
+																											<p>Merity, Stephen, Caiming Xiong, James Bradbury, and Richard Socher. 2016. “Pointer Sentinel Mixture Models.” arXiv. <a href="https://doi.org/10.48550/arXiv.1609.07843">https://doi.org/10.48550/arXiv.1609.07843</a>.
+															
+														</p>
+																																				</div>
+										</section>
+									</div>
+																							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div><!-- .main_entry -->
+	</div><!-- .row -->
+
+</article>
+	
+
+</div><!-- .page -->
+
+	</div><!-- pkp_structure_main -->
+
+									<div class="pkp_structure_sidebar left sticky top-14 mt-4" role="complementary" aria-label="Sidebar">
+												<div class="pkp_block block_make_submission">
+	<h2 class="pkp_screen_reader">
+		Make a Submission
+	</h2>
+
+	<div class="content">
+		<a class="block_make_submission_link" href="https://everant.org/index.php/etj/about/submissions">
+			Make a Submission
+		</a>
+	</div>
+</div>
+<div class="pkp_block block_custom" id="customblock-author_desk">
+	<h2 class="title pkp_screen_reader">author_desk</h2>
+	<div class="content">
+		<div id="customblock-sidebarmenu" class="pkp_block block_custom bg-white dark:bg-gray-800 mt-4 lg:mb-4 lg:ms-4 lg:shadow-lg border-primary-bottom border-b-8">
+<h2 class="title pkp_screen_reader">sidebarmenu</h2>
+<div class="content">
+<p class="grid gap-2 grid-cols-2 lg:grid-cols-1"><a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Author Guidlines" href="http://everant.org/index.php/etj/Guideline"> Author Guidlines</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Call for Paper" href="http://everant.org/index.php/etj/call"> Call for Paper</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Publication Fees" href="http://everant.org/index.php/etj/fee"> Publication Fees</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Mode of Payment" href="http://everant.org/index.php/etj/mod"> Mode of Payment</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Indexing" href="http://everant.org/index.php/etj/ethics"> Publication Ethics</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Indexing" href="http://everant.org/index.php/etj/Indexing"> Indexing</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Peer-Review Policy" href="http://everant.org/index.php/etj/PeerReviewPolicy">Peer-Review Policy</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Plagiarism Policy" href="http://everant.org/index.php/etj/ArticleCorrectionPolicy">Article Correction Policy</a> <a class="border-2 border-primary p-2 hvr-sweep-to-right hvr-icon-grow" title="Area Covered" href="http://everant.org/index.php/etj/WithdrawalPolicie">Article Withdrawal Policies</a></p>
+</div>
+</div>
+<div class="content">
+<p>&nbsp;</p>
+</div>
+	</div>
+</div>
+<div class="pkp_block block_web_feed">
+	<h2 class="title">Current Issue</h2>
+	<div class="content">
+		<ul>
+			<li>
+				<a href="https://everant.org/index.php/etj/gateway/plugin/WebFeedGatewayPlugin/atom">
+					<img src="https://everant.org/lib/pkp/templates/images/atom.svg" alt="Atom logo">
+				</a>
+			</li>
+			<li>
+				<a href="https://everant.org/index.php/etj/gateway/plugin/WebFeedGatewayPlugin/rss2">
+					<img src="https://everant.org/lib/pkp/templates/images/rss20_logo.svg" alt="RSS2 logo">
+				</a>
+			</li>
+			<li>
+				<a href="https://everant.org/index.php/etj/gateway/plugin/WebFeedGatewayPlugin/rss">
+					<img src="https://everant.org/lib/pkp/templates/images/rss10_logo.svg" alt="RSS1 logo">
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="pkp_block block_information">
+	<h2 class="title">Information</h2>
+	<div class="content">
+		<ul>
+							<li>
+					<a href="https://everant.org/index.php/etj/information/readers">
+						For Readers
+					</a>
+				</li>
+										<li>
+					<a href="https://everant.org/index.php/etj/information/authors">
+						For Authors
+					</a>
+				</li>
+										<li>
+					<a href="https://everant.org/index.php/etj/information/librarians">
+						For Librarians
+					</a>
+				</li>
+					</ul>
+	</div>
+</div>
+<div class="pkp_block block_browse">
+	<h2 class="title">
+		Browse
+	</h2>
+
+	<nav class="content" role="navigation" aria-label="Browse">
+		<ul>
+					</ul>
+	</nav>
+</div><!-- .block_browse -->
+
+			</div><!-- pkp_sidebar.left -->
+			</div><!-- pkp_structure_content -->
+
+<div class="pkp_structure_footer_wrapper" role="contentinfo">
+	<a id="pkp_content_footer"></a>
+
+	<div class="pkp_structure_footer flex">
+		
+		<div class="pkp_footer_content">
+						<div class="pkp_footer_content">
+<div class="footer grid grid-cols-1 lg:grid-cols-3 mb-4">
+<div>
+<h4 class="font-bold text-lg">Author Info.:</h4>
+<ul class="list-reset leading-normal">
+<li class=""><a href="http://everant.org/index.php/etj/call"><strong>Call for Paper</strong></a></li>
+<li class=""><a href="http://everant.org/index.php/etj/Guideline"><strong>Author Guideline </strong></a></li>
+<li class=""><a href="https://everant.org/copyright.pdf"><strong>Copyright From</strong></a></li>
+<li class=""><a href="https://everant.org/ManuscriptTemplate.docx"><strong> Manuscript Template</strong></a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-lg">Contact Info:</h4>
+<ul class="list-reset leading-normal">
+<li class=""><strong>EVERANT JOURNALS</strong></li>
+<li class=""><strong>editor@everant.org</strong></li>
+</ul>
+</div>
+<div>
+<div class="logo"><a href="https://www.rajournals.in/index.php/ijmei/"><img src="https://everant.org/images/EVERANTJOURNALSLOGO.jpg" alt="" width="258" height="42" /> </a></div>
+</div>
+</div>
+<div class="copyright w-full text-center"><strong>Copyright © 2024 EVERANT JOURNALS</strong>. This is an open-access article distributed under the terms of the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license"><img class="inline-block" src="https://licensebuttons.net/l/by/4.0/80x15.png" alt="Creative Commons License" /></a> a <a class="font-bold" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. Site using<a class="font-bold" href="https://www.rajournals.in"> Open Journal System</a></div>
+</div>
+				</div>
+				<div class="pkp_footer_content pkp_noble_toggle ms-auto fixed -bottom-2 -right-2 transform scale-75">
+			<div class="switch">
+				<div class="toggle-button">
+					<div class="toggle"></div>
+					<div class="moon-mask"></div>
+					<div class="circles-wrapper">
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div><!-- pkp_structure_footer_wrapper -->
+
+</div><!-- pkp_structure_page -->
+
+<script src="https://everant.org/lib/pkp/lib/vendor/components/jquery/jquery.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/lib/pkp/lib/vendor/components/jqueryui/jquery-ui.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/citationStyleLanguage/js/articleCitation.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/lib/pkp/js/lib/jquery/plugins/jquery.tag-it.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/lib/popper/popper.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/lib/bootstrap/util.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/lib/bootstrap/dropdown.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/jquery-replaceTag.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/aos/aos.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/swiper/swiper-bundle.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/gsap/gsap.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/touch-menu-la.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/hammer.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/instantpage-5.1.0.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/alpinejs/alpine.min.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/noble.js?v=3.3.0.15" type="text/javascript"></script><script src="https://everant.org/plugins/generic/ojtPlugin/modules/noble/js/default.js?v=3.3.0.15" type="text/javascript"></script>
+
+
+            <div style='background-color:white !important;z-index:1000 !important;padding:20px !important;display:block;height:10px !important;position:fixed;bottom:0;right:0;border:1px solid #dfddfd;'>
+            <span class='text-alert' style='position:relative;top:-11px;'><i class='fa fa-info' style='color:white;'></i>Editorialpickblockplugin was unvalidated product, <a href='https://openjournaltheme.com/' target='_blank'>Click here to support us</a></span>
+            </div>
+        
+            <div style='background-color:white !important;z-index:1000 !important;padding:20px !important;display:block;height:10px !important;position:fixed;bottom:0;right:0;border:1px solid #dfddfd;'>
+            <span class='text-alert' style='position:relative;top:-11px;'><i class='fa fa-info' style='color:white;'></i>Googlescholarcitation was unvalidated product, <a href='https://openjournaltheme.com/' target='_blank'>Click here to support us</a></span>
+            </div>
+        <span id='classy_base_url' style='display:none'>https://everant.org/index.php/etj</span>
+            <div style='background-color:white !important;z-index:1000 !important;padding:20px !important;display:block;height:10px !important;position:fixed;bottom:0;right:0;border:1px solid #dfddfd;'>
+            <span class='text-alert' style='position:relative;top:-11px;'><i class='fa fa-info' style='color:white;'></i>Noblethemeplugin was unvalidated product, <a href='https://openjournaltheme.com/' target='_blank'>Click here to support us</a></span>
+            </div>
+        
+</body>
+</html>

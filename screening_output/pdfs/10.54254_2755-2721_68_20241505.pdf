@@ -1,0 +1,1807 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+    Enhancing text-audio generation by music classification and Retrieval-Augmented Generation | Applied and Computational Engineering
+</title>
+<link rel="icon" href="https://www.ewadirect.com/web/static/img/EWA.svg">
+<meta name="generator" content="Open Journal Systems 3.3.0.15">
+<meta name="gs_meta_revision" content="1.1"/>
+
+<link rel="canonical" href="https://www.ewadirect.com/proceedings/ace/article/view/14090">
+<meta name="robots" content="INDEX,NOFOLLOW,NOARCHIVE">
+
+
+
+<meta name="description" content="Recent advancements in deep learning have propelled the development of AI systems capable of generating music that resonates with human emotions and preferences. However, current music generation models still struggle to align generated music with detailed textual descriptions and maintain consistency, especially for longer compositions. This paper presents an innovative approach to address these challenges by integrating genre classification and retrieval-augmented generation (RAG) into the music generation pipeline. We train advanced CNN architectures, including ResNet-50, GoogleNet, and VGG16, for accurate genre classification. The classifier is then incorporated into a RAG framework, where the most relevant pre-classified music piece is retrieved based on the input text query. The retrieved audio and the text description are then fed into the MUSICGEN model to generate a new music piece that inherits attributes from both inputs. We evaluate our system through a double-blind human study, comparing the outputs of the original MUSICGEN model with our RAG-enhanced model. The results demonstrate a significant improvement in the ability of the RAG-enhanced model to generate music embodying specific stylistic elements, as evidenced by higher average confidence scores from participants. Our work represents a significant step towards more personalized and context-aware AI-generated musical experiences, laying the foundation for future advancements in this exciting field."/>
+
+
+
+
+<meta name="citation_title" content="Enhancing text-audio generation by music classification and Retrieval-Augmented Generation"/>
+
+
+
+<meta name="citation_author" content="Runyu He"/>
+<meta name="citation_author_institution" content="Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"/>
+
+<meta name="citation_author" content="Junyi Zhu"/>
+<meta name="citation_author_institution" content="Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"/>
+
+<meta name="citation_author" content="Bochen Wang"/>
+<meta name="citation_author_institution" content="Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"/>
+
+<meta name="citation_author" content="Yixuan Yin"/>
+<meta name="citation_author_institution" content="Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"/>
+
+
+
+<meta name="citation_publication_date" content='2024/07/23'/>
+<meta name="citation_date" content='2024/07/23'/>
+
+
+
+<meta name="citation_journal_title" content="Applied and Computational Engineering"/>
+
+
+
+<meta name="citation_journal_abbrev" content="ACE"/>
+
+
+
+<meta name="citation_issn" content="2755-273X"/>
+
+
+
+<meta name="citation_issn" content="2755-2721"/>
+
+
+
+<meta name="citation_volume" content="68"/>
+
+
+
+
+
+<meta name="citation_firstpage" content="319"/>
+
+
+
+<meta name="citation_lastpage" content="329"/>
+
+
+
+<meta name="citation_language" content="en"/>
+
+
+<meta name="citation_doi" content="10.54254/2755-2721/68/20241505"/>
+
+
+
+<meta name="citation_abstract_html_url" content="https://www.ewadirect.com/proceedings/ace/article/view/14090"/>
+<meta name="citation_fulltext_html_url" content="https://www.ewadirect.com/proceedings/ace/article/view/14090"/>
+
+
+
+
+<meta name="citation_keywords" xml:lang="en" content="Multi-Modal Network"/>
+
+<meta name="citation_keywords" xml:lang="en" content="Music Generation"/>
+
+<meta name="citation_keywords" xml:lang="en" content="Genre Classification"/>
+
+<meta name="citation_keywords" xml:lang="en" content="Retrieval-Augmented Generation"/>
+
+
+
+
+<meta name="citation_pdf_url" content="https://www.ewadirect.com/proceedings/ace/article/view/14090/pdf"/>
+
+
+
+<meta name="citation_reference" content="Prafulla Dhariwal, Heewoo Jun, Christine Payne, Jong Wook Kim, Alec Radford, Ilya Sutskever, and Miles Brundage. Jukebox: A generative model for music. arXiv preprint arXiv:2005.00341, 2020."/>
+
+<meta name="citation_reference" content="Jesse Engel, Lukas Hantrakul, Chenjie Gu, and Adam Roberts. Ddsp: Differentiable digital signal processing. arXiv preprint arXiv:2001.04643, 2020."/>
+
+<meta name="citation_reference" content="Alexandre D´efossez, Julien Copet, Gabriel Synnaeve, and Yossi Adi. High fidelity neural audio compression. arXiv preprint arXiv:2210.13438, 2022."/>
+
+<meta name="citation_reference" content="Andrea Agostinelli, Tilman I Denk, Zalan Borsos, Jesse Engel, Massimiliano Verzetti, Antoine Caillon, and Christian Frank. Musiclm: Generating music from text. arXiv preprit arXiv:2301.11325, 2023."/>
+
+<meta name="citation_reference" content="Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, and Heinrich K¨uttler. Retrieval-augmented generation for knowledge-intensive nlp tasks. arXiv preprint arXiv:2005.11401, 2020."/>
+
+<meta name="citation_reference" content="Kurt Shuster, Stephen Poff, Moya Chen, Douwe Kiela, and Jason Weston. Retrieval augmentation reduces hallucination in conversation. arXiv preprint arXiv:2104.07567, 2021."/>
+
+<meta name="citation_reference" content="Lonce Wyse. Audio spectrogram representations for processing with convolutional neural networks. arXiv preprint arXiv:1706.09559, 2017.
+"/>
+
+<meta name="citation_reference" content="Karen Simonyan and Andrew Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014."/>
+
+<meta name="citation_reference" content="Zhuang Liu, Hanzi Mao, Chao-Yuan Wu, Christoph Feichtenhofer, Trevor Darrell, and Saining Xie. A convnet for the 2020s. arXiv preprint arXiv:2201.03545, 2022."/>
+
+<meta name="citation_reference" content="Mingxing Tan and Quoc V Le. Efficientnetv2: Smaller models and faster training. arXiv preprint arXiv:2104.00298, 2021."/>
+
+<meta name="citation_reference" content="Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929, 2020."/>
+
+<meta name="citation_reference" content="Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. arXiv preprint arXiv:1706.03762, 2017."/>
+
+<meta name="citation_reference" content="Yixuan Wu, Kevin Chen, Tong Zhang, Yu Hui, Taylor Berg-Kirkpatrick, and Shlomo Dubnov. Large-scale contrastive language-audio pretraining with feature fusion and keyword-to-caption augmentation. arXiv preprint arXiv:2302.07295, 2023."/>
+
+<meta name="citation_reference" content="Jeff Johnson, Matthijs Douze, and Herve´ J´egou. Billion-scale similarity search with gpus. arXiv preprint arXiv:1702.08734, 2017."/>
+
+<meta name="citation_reference" content="Vladimir Karpukhin, Barlas O˘guz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih. Dense passage retrieval for open-domain question answering. arXiv preprint arXiv:2004.04906, 2020."/>
+
+
+
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+
+
+<meta name="DC.Creator.PersonalName" content="Runyu He"/>
+
+<meta name="DC.Creator.PersonalName" content="Junyi Zhu"/>
+
+<meta name="DC.Creator.PersonalName" content="Bochen Wang"/>
+
+<meta name="DC.Creator.PersonalName" content="Yixuan Yin"/>
+
+
+
+<meta name="DC.Date.created" scheme="ISO8601" content='2024-06-27'/>
+<meta name="DC.Date.dateSubmitted" scheme="ISO8601" content='2024-07-23'/>
+<meta name="DC.Date.issued" scheme="ISO8601" content='2024-07-23'/>
+<meta name="DC.Date.modified" scheme="ISO8601" content='2024-10-08'/>
+
+
+
+<meta name="DC.Description" xml:lang="en" content="Recent advancements in deep learning have propelled the development of AI systems capable of generating music that resonates with human emotions and preferences. However, current music generation models still struggle to align generated music with detailed textual descriptions and maintain consistency, especially for longer compositions. This paper presents an innovative approach to address these challenges by integrating genre classification and retrieval-augmented generation (RAG) into the music generation pipeline. We train advanced CNN architectures, including ResNet-50, GoogleNet, and VGG16, for accurate genre classification. The classifier is then incorporated into a RAG framework, where the most relevant pre-classified music piece is retrieved based on the input text query. The retrieved audio and the text description are then fed into the MUSICGEN model to generate a new music piece that inherits attributes from both inputs. We evaluate our system through a double-blind human study, comparing the outputs of the original MUSICGEN model with our RAG-enhanced model. The results demonstrate a significant improvement in the ability of the RAG-enhanced model to generate music embodying specific stylistic elements, as evidenced by higher average confidence scores from participants. Our work represents a significant step towards more personalized and context-aware AI-generated musical experiences, laying the foundation for future advancements in this exciting field."/>
+
+
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+
+
+<meta name="DC.Identifier" content="14090"/>
+
+
+
+<meta name="DC.Identifier.pageNumber" content='319-329'/>
+
+
+
+<meta name="DC.Identifier.DOI" content="10.54254/2755-2721/68/20241505"/>
+
+
+<meta name="DC.Identifier.URI" content="https://www.ewadirect.com/proceedings/ace/article/view/14090"/>
+
+<meta name="DC.Language" scheme="ISO639-1" content="en"/>
+
+<meta name="DC.Rights" content='Copyright (c) 2024 Runyu He, Junyi Zhu, Bochen Wang, Yixuan Yin'/>
+<meta name="DC.Rights" content="https://creativecommons.org/licenses/by/4.0/"/>
+<meta name="DC.Source" content="Applied and Computational Engineering"/>
+<meta name="DC.Source.ISSN" content="2755-273X"/>
+<meta name="DC.Source.Volume" content="68"/>
+<meta name="DC.Source.URI" content="https://www.ewadirect.com/proceedings/ace"/>
+
+
+
+
+<meta name="DC.Subject" xml:lang="en" content="Multi-Modal Network"/>
+
+<meta name="DC.Subject" xml:lang="en" content="Music Generation"/>
+
+<meta name="DC.Subject" xml:lang="en" content="Genre Classification"/>
+
+<meta name="DC.Subject" xml:lang="en" content="Retrieval-Augmented Generation"/>
+
+
+
+
+<meta name="DC.Title" content="Enhancing text-audio generation by music classification and Retrieval-Augmented Generation"/>
+
+<meta name="DC.Type" content="Text.Serial.Journal"/>
+<meta name="DC.Type.articleType" content="Articles"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Enhancing text-audio generation by music classification and Retrieval-Augmented Generation",
+  "abstract": "Recent advancements in deep learning have propelled the development of AI systems capable of generating music that resonates with human emotions and preferences. However, current music generation models still struggle to align generated music with detailed textual descriptions and maintain consistency, especially for longer compositions. This paper presents an innovative approach to address these challenges by integrating genre classification and retrieval-augmented generation (RAG) into the music generation pipeline. We train advanced CNN architectures, including ResNet-50, GoogleNet, and VGG16, for accurate genre classification. The classifier is then incorporated into a RAG framework, where the most relevant pre-classified music piece is retrieved based on the input text query. The retrieved audio and the text description are then fed into the MUSICGEN model to generate a new music piece that inherits attributes from both inputs. We evaluate our system through a double-blind human study, comparing the outputs of the original MUSICGEN model with our RAG-enhanced model. The results demonstrate a significant improvement in the ability of the RAG-enhanced model to generate music embodying specific stylistic elements, as evidenced by higher average confidence scores from participants. Our work represents a significant step towards more personalized and context-aware AI-generated musical experiences, laying the foundation for future advancements in this exciting field.",
+  "author": [
+    
+    
+    {
+      "@type": "Person",
+      "name": "Runyu He",
+      "affiliation": "Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"
+    }
+    
+    ,
+    {
+      "@type": "Person",
+      "name": "Junyi Zhu",
+      "affiliation": "Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"
+    }
+    
+    ,
+    {
+      "@type": "Person",
+      "name": "Bochen Wang",
+      "affiliation": "Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"
+    }
+    
+    ,
+    {
+      "@type": "Person",
+      "name": "Yixuan Yin",
+      "affiliation": "Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213"
+    }
+    
+  ],
+  "datePublished": "2024-07-23",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Applied and Computational Engineering"
+  },
+  "isPartOf": {
+    "@type": "PublicationIssue",
+    
+    "isPartOf": {
+      "@type": "PublicationVolume",
+      "volumeNumber": "68",
+      "isPartOf": {
+        "@type": "Periodical",
+        "name": "Applied and Computational Engineering",
+        "issn": "2755-273X"
+      }
+    }
+  },
+  "identifier": "10.54254\/2755-2721\/68\/20241505",
+  "url": "https:\/\/www.ewadirect.com/proceedings/ace/article/view/14090",
+  "mainEntityOfPage": "https:\/\/www.ewadirect.com/proceedings/ace/article/view/14090"
+}
+</script>
+
+    
+    
+
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/fonts.css">
+
+
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/element-ui/theme-chalk_index.css">
+<script src="https://www.ewadirect.com/web/static/js/vue.js"></script>
+
+<script src="https://www.ewadirect.com/web/static/css/element-ui/lib_index.js.css"></script>
+
+
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/index.css">
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/header.css">
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/footer.css">
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/search.css">
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/about.css">
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/listItem.css">
+
+
+<link rel="stylesheet" href="https://www.ewadirect.com/web/static/css/font-reset.css">
+
+
+    
+<style>
+    .article-body p {
+        margin: 1em 0;
+    }
+
+    .article-body a {
+        color: #1a1a1a;
+    }
+
+    .article-body a:visited {
+        color: #1a1a1a;
+    }
+
+    .article-body img {
+        max-width: 100%;
+    }
+
+    .article-body svg {
+        height: auto;
+        max-width: 100%;
+    }
+
+    .article-body h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+    }
+
+    .article-body h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+    }
+
+    .article-body h6 {
+        font-weight: normal;
+    }
+
+    .article-body ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+    }
+
+    .article-body li > ol,.article-body li > ul {
+        margin-top: 0;
+    }
+
+    .article-body blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+    }
+
+    .article-body code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+    }
+
+    .article-body pre {
+        margin: 1em 0;
+        overflow: auto;
+    }
+
+    .article-body pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+    }
+
+    .article-body .sourceCode {
+        background-color: transparent;
+        overflow: visible;
+    }
+
+    .article-body hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+    }
+
+    .article-body table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    .article-body table caption {
+        margin-bottom: 0.75em;
+    }
+
+    .article-body tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+    }
+
+    .article-body th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+
+    .article-body td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+
+    .article-body #TOC li {
+        list-style: none;
+    }
+
+    .article-body #TOC ul {
+        padding-left: 1.3em;
+    }
+
+    .article-body #TOC > ul {
+        padding-left: 0;
+    }
+
+    .article-body #TOC a:not(:hover) {
+        text-decoration: none;
+    }
+
+    .article-body code {
+        white-space: pre-wrap;
+    }
+
+    .article-body span.smallcaps {
+        font-variant: small-caps;
+    }
+
+    .article-body div.columns {
+        display: flex;
+        gap: min(4vw, 1.5em);
+    }
+
+    .article-body div.column {
+        flex: auto;
+        overflow-x: auto;
+    }
+
+    .article-body div.hanging-indent {
+        margin-left: 1.5em;
+        text-indent: -1.5em;
+    }
+
+     
+
+    .article-body ul.task-list[class] {
+        list-style: none;
+    }
+
+    .article-body ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+    }
+
+    .article-body .mjx-full-width.mjx-chtml {
+        width: 100%;
+        max-width: 100% !important;
+        display: flex !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        min-width: inherit !important;
+    }
+
+    .article-body p>span {
+        color: black !important;
+    }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_CHTML" type="text/javascript"></script>
+<script>MathJax.Hub.Config({
+    "CommonHTML": {linebreaks: {automatic: true, width: "container"}},
+    "HTML-CSS": {linebreaks: {automatic: true, width: "container"}},
+    "SVG": {linebreaks: {automatic: true, width: "container"}}
+})</script>
+
+</head>
+<style>
+    .header {
+        position: relative;
+        z-index: 100;
+        background-color: #ffffff;
+    }
+    .contHeader {
+        margin-top: 40px;
+        padding: 0 198px 40px;
+        border-bottom: 1px solid #eeeeee;
+    }
+    .contHeader span {
+        font-size: 14px;
+        color: #666666;
+        line-height: 21px;
+    }
+    .contHeader .row-1 {
+        display: flex;
+        align-items: center;
+    }
+    .contHeader .row-1 .access {
+        display: inline-block;
+        width: 85px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        cursor:default;
+        margin-left: 20px;
+        color: #666666;
+        font-size: 12px;
+        border: 1px solid #0d4aa6;
+        border-radius: 4px;
+        background-color: transparent;
+    }
+    .contHeader .row-2 {
+        margin-top: 40px;
+        display: flex;
+        align-items: center;
+    }
+    .faceButton {
+        border-radius: 8px;
+        height: 40px;
+        border: 2px solid #0d4aa6;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        background-color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        color: #0d4aa6;
+    }
+    .faceButton:hover {
+        background-color: #0d4aa6;
+        color: #ffffff;
+    }
+    .contHeader .row-2 a {
+        color: #0d4aa6;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .contHeader .row-3 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        word-wrap: break-word;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+    .contHeader .row-4 {
+        margin-top: 2px;
+        font-size: 14px;
+        color: #666666;
+    }
+    .contHeader .row-5 {
+        font-size: 14px;
+        color: #999999;
+    }
+    .row-5 {
+        max-height: 500px;  
+        transition: max-height 0.3s ease-in-out;
+    }
+
+     
+    .row-5.collapsed {
+        max-height: 0;
+        overflow: hidden;
+    }
+
+     
+    #toggle-button {
+        transition: transform 0.3s ease;
+    }
+
+    #toggle-button.rotated {
+        transform: rotate(180deg);
+    }
+    .ceiling {
+        position: sticky;
+        top: 0px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 198px;
+        background-color: #ffffff;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+    }
+    .view {
+        margin-top: 40px;
+    }
+
+    .view iframe {
+        width: 100%;
+        height: 802px;
+        margin-top: 40px;
+    }
+    .content .main{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .references p {
+        font-size: 16px;
+        line-height: 24px;
+        margin-top: 20px;
+    }
+    .references p:first-child {
+        margin-top: 40px;
+    }
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+        margin-top: 20px
+    }
+    .flex-item {
+        margin-top: 12px;
+        box-sizing: border-box;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    td, th {
+        border: 1px solid #333333;
+        padding: 4px;
+        text-align: center;
+    }
+    .highlight {
+        background-color: #ffe69b;
+        margin-left: 0 !important;
+        font-weight: initial !important;
+        line-height: inherit !important;
+        color: inherit !important;
+        font-size: inherit !important;
+    }
+    .row3 .highlight {
+        background-color: #ffe69b;
+        margin-left: 0 !important;
+        font-weight: initial !important;
+        line-height: 28px !important;
+        color: initial !important;
+        font-size: 28px !important;
+    }
+
+     
+    p > span {
+        font-weight: initial;
+        color: initial;
+    }
+
+     
+    span.highlight {
+        background-color: #ffe69b !important;
+        padding: 0 2px;
+        border-radius: 2px;
+        display: inline;
+        font-weight: initial !important;
+        color: inherit !important;
+        margin: 0 !important;
+        line-height: inherit !important;
+    }
+
+     
+    .row-3 h2 .highlight {
+        font-size: inherit !important;
+    }
+
+     
+    mark.search-highlight {
+        background-color: #ffe69b;
+        padding: 0 2px;
+        border-radius: 2px;
+        color: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        margin: 0;
+    }
+
+    .view p{
+
+        font-family: "LT Soul", sans-serif !important;
+        font-weight: 500;
+        font-size: 18px !important;
+        line-height: 27px !important;
+
+    }
+
+    .figurecaption,
+    .tablecaption {
+        font-family: "Gandhi Sans (Italic)" !important;
+        font-style: italic !important;
+    }
+
+    .view div .figurecaption,
+    .article-body .figurecaption,
+    .article-content .figurecaption,
+    .view div .Figure.Caption,
+    div.Figure.Caption,
+    .Figure.Caption {
+        font-family: "Gandhi Sans (Italic)" !important;
+        font-style: italic !important;
+    }
+
+    .view div .tablecaption,
+    .article-body .tablecaption,
+    .article-content .tablecaption {
+        font-family: "Gandhi Sans (Italic)" !important;
+        font-style: italic !important;
+    }
+
+
+
+    .figurecaption,
+    .tablecaption {
+        font-family: "Gandhi Sans (Italic)" !important;
+        font-style: italic !important;
+    }
+
+    div .ZT,
+    p[class*="heading 1"],   
+    p[class*="heading 2"],   
+    p[class*="ewa-h1"],   
+    p[class*="ewa-h2"],   
+    .heading1,
+    .heading2,
+    .section,
+    .subsection {
+        font-family: "Gandhi Serif", "Times New Roman", serif !important;
+        font-weight: 700;
+        font-size: 32px !important;
+        line-height: 48px !important;
+    }
+    .figure, figure {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;
+        text-align: center;
+        margin-top: 6pt;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+     
+    .figure img, figure img {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: 48%;
+        height: auto;
+        margin: 0 1%;
+    }
+     
+    .figure img:only-child, figure img:only-child {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 60%;
+    }
+     
+    tiny-math-inline {
+        text-indent: 0 !important;
+    }
+    tiny-math-block {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    .equation {
+        display: flex;
+        justify-content: space-between;  
+        align-items: center;
+        margin: 12pt 0;
+    }
+    .equation tiny-math-inline, 
+    .equation tiny-math-block {
+        flex: 1;
+        text-align: center;
+        display: flex;  
+        justify-content: center;  
+        align-items: center;      
+    }
+    .equation .eqn-num-right {
+        white-space: nowrap;
+        margin-left: 0.5em;
+    }
+         
+    table {
+         
+        border: none;
+        border-collapse: collapse;
+        margin: 0;
+        margin-bottom: 6pt;
+        width: 100%;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+     
+    table td {
+        text-align: center !important;
+    }
+     
+    table p, table tiny-math-block, table tiny-math-inline {
+        text-align: center !important;
+    }
+
+     
+    table.table-three-line {
+        border-top: 0.5pt solid #000;
+        border-bottom: 0.5pt solid #000;
+    }
+
+     
+    tr.table-three-line-header,
+    tr.table-three-line-header td {
+        border-bottom: 0.5pt solid #000;
+    }
+
+     
+    .table-border-full {
+        border: 0.5pt solid #000 !important;
+    }
+
+    .table-border-full td {
+        border: 0.5pt solid #000 !important;
+    }
+     
+    .table-border-top {
+        border-top: 0.5pt solid #000 !important;
+    }
+
+    .table-border-bottom {
+        border-bottom: 0.5pt solid #000 !important;
+    }
+</style>
+<body>
+<div id="app" class="index">
+    
+<div id="header" class="header">
+    <div class="logoSearch">
+        <img src="https://www.ewadirect.com/web/static/img/logo.svg" alt="">
+    </div>
+    <div class="title" style="background-color: #FBF6E8;">
+        <b>Applied and Computational Engineering</b><i></i><span>Open access</span>
+    </div>
+    
+<div class="navBar">
+    <el-menu
+            default-active="1"
+            class="el-menu-demo"
+            mode="horizontal"
+            @select=""
+            text-color="#333333"
+            active-text-color="#0D4AA6"
+    >
+        
+        
+        
+        
+        
+        
+        
+        
+        <el-menu-item index="0">
+            <a style="display: block; width: 100%; height: 100%;"
+               href="https://www.ewadirect.com/proceedings/ace/home/index">
+                Home
+            </a>
+        </el-menu-item>
+        
+        
+        
+        
+        
+        
+        <el-submenu index="1" popper-class="navItem">
+            <template slot="title">About series</template>
+            
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/about/aims_and_scope">
+                <el-menu-item index="1-0">Aims and scope</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/about/editorial_board">
+                <el-menu-item index="1-1">Editorial board</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/about/announcements">
+                <el-menu-item index="1-2">Announcements</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/about/indexing">
+                <el-menu-item index="1-3">Indexing</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/about/faqs">
+                <el-menu-item index="1-4">FAQs</el-menu-item>
+            </a>
+            
+            
+        </el-submenu>
+        
+        
+        
+        
+        
+        <el-submenu index="2" popper-class="navItem">
+            <template slot="title">Policies</template>
+            
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/publication_ethics">
+                <el-menu-item index="2-0">Publication ethics</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_authors">
+                <el-menu-item index="2-1">Policies for authors</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_reviewers">
+                <el-menu-item index="2-2">Policies for reviewers</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_editors">
+                <el-menu-item index="2-3">Policies for editors</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_organizers">
+                <el-menu-item index="2-4">Policies for organizers</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/open_access_policy">
+                <el-menu-item index="2-5">Open access policy</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/privacy_policy">
+                <el-menu-item index="2-6">Privacy policy</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/declaration_of_interests">
+                <el-menu-item index="2-7">Declaration of interests</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/authorship_policy">
+                <el-menu-item index="2-8">Authorship policy</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/preservation">
+                <el-menu-item index="2-9">Preservation</el-menu-item>
+            </a>
+            
+            
+        </el-submenu>
+        
+        
+        
+        
+        
+        <el-submenu index="3" popper-class="navItem">
+            <template slot="title">Volumes</template>
+            
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/volume/view/1047">
+                <el-menu-item index="3-0">ACE Vol.185 </el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/volume/view/1031">
+                <el-menu-item index="3-1">ACE Vol.183 </el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/volume/view/1016">
+                <el-menu-item index="3-2">ACE Vol.182 </el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/volume/all">
+                <el-menu-item index="3--1">All volumes</el-menu-item>
+            </a>
+            
+        </el-submenu>
+        
+        
+        
+        
+        
+        <el-submenu index="4" popper-class="navItem">
+            <template slot="title">Guides</template>
+            
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/proceedings_guide/for_organizers">
+                <el-menu-item index="4-0">Guide for organizers</el-menu-item>
+            </a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/proceedings_guide/for_authors">
+                <el-menu-item index="4-1">Guide for authors</el-menu-item>
+            </a>
+            
+            
+        </el-submenu>
+        
+        
+        
+        
+        
+        
+        <el-menu-item index="5">
+            <a style="display: block; width: 100%; height: 100%;"
+               href="https://www.ewadirect.com/proceedings/ace/contact/index">
+                Contact
+                <img style="margin-left: 8px;" src="/web/static/img/arrow_insert.svg" style="width: 12px;" alt="">
+            </a>
+        </el-menu-item>
+        
+        
+        
+        
+    </el-menu>
+</div>
+
+</div>
+<div id="backTop" onclick="topFunction()" class="backTop">
+    <img src="https://www.ewadirect.com/web/static/img/backTop.svg" alt="">
+</div>
+<script>
+    
+    window.onscroll = function () {
+        scrollFunction()
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+            document.getElementById("backTop").style.display = "block";
+        } else {
+            document.getElementById("backTop").style.display = "none";
+        }
+    }
+
+    
+    function topFunction() {
+        scrollToptimer = setInterval(function () {
+            let top = document.body.scrollTop || document.documentElement.scrollTop;
+            let speed = top / 4;
+            if (document.body.scrollTop !== 0) {
+                document.body.scrollTop -= speed
+            } else {
+                document.documentElement.scrollTop -= speed;
+            }
+            if (top === 0) {
+                clearInterval(scrollToptimer)
+            }
+        }, 30)
+    }
+</script>
+
+    <div id="ceiling" class="ceiling">
+        <div class="titleView" style="width: 66%">
+            <h2 style="margin-top: 0">Enhancing text-audio generation by music classification and Retrieval-Augmented Generation</h2>
+        </div>
+        <div class="option">
+            <button class="faceButton" onclick="downloadPdf()">
+                <img style="margin-right: 20px;" src="https://www.ewadirect.com/web/static/img/download-face.svg" alt="">
+                Download PDF
+            </button>
+        </div>
+    </div>
+    <div class="contHeader">
+        <div style="display: flex;justify-content: space-between;gap: 60px">
+            <div style="display: flex;flex-direction: column;justify-content: space-between;">
+                <div>
+                    <div class="row-1">
+                        <span>Research Article</span>
+                        
+                        <div class="access">Open access</div>
+                        <a href="https://creativecommons.org/licenses/by/4.0/" style="width: 70px; height: 26px" target="_blank">
+                            <img src="https://www.ewadirect.com/web/static/img/cc_by.png" alt="" style="width: 100%; height: 100%; margin-left: 20px">
+                        </a>
+                    </div>
+                    <div class="row-3">
+                        <h2 style="font-size: 32px;line-height: 48px;margin-top: 20px;">Enhancing text-audio generation by music classification and Retrieval-Augmented Generation</h2>
+                    </div>
+
+                </div>
+                <div style="flex: 1;">
+                    <div class="row-4 authorInfo">
+                        
+                        
+                        
+                        
+                        
+                        
+                        Runyu He <sup>1*</sup>
+                        
+                        
+                        ,
+                        
+                        
+                        
+                        
+                        Junyi Zhu <sup>2</sup>
+                        
+                        
+                        ,
+                        
+                        
+                        
+                        
+                        Bochen Wang <sup>3</sup>
+                        
+                        
+                        ,
+                        
+                        
+                        
+                        
+                        Yixuan Yin <sup>4</sup>
+                        
+                        
+                        
+                        <img id="toggle-button" class="rotated" style="margin-left: 24px; cursor: pointer" src="https://www.ewadirect.com/web/static/img/arrows.svg" alt="">
+                    </div>
+
+                    <div class="row-5 expanded authorAffiliation" style="display: flex;">
+                        <ul style="margin-top: 0;padding-left: 0; display: flex;flex-wrap: wrap">
+                            
+
+                            
+                            
+                            <li style="padding-left: 0;"><sup>1</sup> Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                            
+                            
+
+                            
+                            
+                            <li style="padding-left: 0;"><sup>2</sup> Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                            
+                            
+
+                            
+                            
+                            <li style="padding-left: 0;"><sup>3</sup> Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                            
+                            
+
+                            
+                            
+                            <li style="padding-left: 0;"><sup>4</sup> Carnegie Mellon University, 5000 Forbes Ave, Pittsburgh, PA 15213&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                            
+                            
+                            <li style="padding-left: 0; color: #999999;">
+                                <sup> </sup>*corresponding author
+                                <img style="margin: 0 4px; position: relative; top: 4px;" src="https://www.ewadirect.com/web/static/img/email-icon.svg" alt="">
+                                <span style="color: #0D4AA6;">runyuh@andrew.cmu.edu</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 10px; display: flex; align-items: center">
+                        <span>Published on 23 July 2024 | <a href="https://doi.org/10.54254/2755-2721/68/20241505" style="color:#0D4AA6">https://doi.org/10.54254/2755-2721/68/20241505</a></span>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div style="flex-shrink: 0;width: 24%;height: 161px;display: flex;justify-content: space-between;">
+                <div style="width: 112px; height: 161px; border: 1px solid #666666">
+                    
+                    <img style="width: 100%; height: 100%" src="https://www.ewadirect.com/media/var/media/upload/ace.68.jpg" alt="">
+                    
+                </div>
+                <div style="display: flex;flex-direction: column;justify-content: space-between;">
+                    <div style="flex: 1;">
+                        <div style="font-size: 18px; font-weight: 700; margin-top: 20px">
+                            ACE Vol.68
+                            
+                        </div>
+                        <div style="font-size: 14px;margin-top: 12px;">
+                            <div style="white-space: nowrap; font-size: 10px;line-height: 15px">ISSN (Print): 2755-2721</div>
+                            <div style="white-space: nowrap; font-size: 10px;line-height: 15px">ISSN (Online): 2755-273X</div>
+                        </div>
+                        <div style="font-size: 14px;margin-top: 8px">
+                            
+                            <div style="white-space: nowrap; font-size: 10px;line-height: 15px">ISBN (Print): 978-1-83558-457-6</div>
+                            
+                            
+                            <div style="white-space: nowrap; font-size: 10px;line-height: 15px">ISBN (Online): 978-1-83558-458-3</div>
+                            
+                        </div>
+                    </div>
+
+                    <div style="display: flex;gap: 8px;align-items: center;">
+                        <img src="https://www.ewadirect.com/web/static/img/download.svg" alt="">
+                        
+                        <a style="color: #0d4aa6; font-weight: 700"
+                           href="https://www.ewadirect.com/media/var/media/upload/ace.68.jpg"
+                           download>Download Cover</a>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="view" style="margin-top: 20px">
+
+                <div class="row">
+                    <h2 style="font-size: 24px;line-height: 36px;margin-top: 20px;font-family:'Gandhi Serif' !important;">Abstract</h2>
+                    <p style="margin-top: 10px;">Recent advancements in deep learning have propelled the development of AI systems capable of generating music that resonates with human emotions and preferences. However, current music generation models still struggle to align generated music with detailed textual descriptions and maintain consistency, especially for longer compositions. This paper presents an innovative approach to address these challenges by integrating genre classification and retrieval-augmented generation (RAG) into the music generation pipeline. We train advanced CNN architectures, including ResNet-50, GoogleNet, and VGG16, for accurate genre classification. The classifier is then incorporated into a RAG framework, where the most relevant pre-classified music piece is retrieved based on the input text query. The retrieved audio and the text description are then fed into the MUSICGEN model to generate a new music piece that inherits attributes from both inputs. We evaluate our system through a double-blind human study, comparing the outputs of the original MUSICGEN model with our RAG-enhanced model. The results demonstrate a significant improvement in the ability of the RAG-enhanced model to generate music embodying specific stylistic elements, as evidenced by higher average confidence scores from participants. Our work represents a significant step towards more personalized and context-aware AI-generated musical experiences, laying the foundation for future advancements in this exciting field.</p>
+                </div>
+                <div class="row keyword" style="display: flex;gap: 12px; align-items: center;margin-top: 20px;">
+                    <h2 style="font-size: 18px;line-height: 27px;margin-top: 0;font-family:'Gandhi Serif' !important;">Keywords: </h2>
+                    <p style="margin-top: 1px;">Multi-Modal Network, Music Generation, Genre Classification, Retrieval-Augmented Generation</p>
+                </div>
+                <div class="row-2">
+                    <button class="faceButton" onclick="downloadPdf()">
+                        <img style="margin-right: 20px;" src="https://www.ewadirect.com/web/static/img/download-face.svg" alt="">
+                        Download PDF
+                    </button>
+
+                    <div style="display: flex; align-items: center">
+                        <img style="margin: 0 12px 0 40px;" src="https://www.ewadirect.com/web/static/img/view.svg" alt="">
+                        <a href="https://www.ewadirect.com/proceedings/ace/article/view/14090/pdf" target="_blank"> View PDF</a>
+                    </div>
+
+                    <img style="margin: 0 20px 0 40px; width: 24px; height: 24px" src="https://www.ewadirect.com/web/static/img/quotation.svg" alt="">
+                    <div style="cursor: pointer; margin-left: 48px;">
+                        <el-popover
+                                placement="right"
+                                width="400"
+                        >
+                            <div style="">He,R.;Zhu,J.;Wang,B.;Yin,Y. (2024). Enhancing text-audio generation by music classification and Retrieval-Augmented Generation. Applied and Computational Engineering,68,319-329.</div>
+                            <div style="text-align: right; margin: 0">
+                                <img style="cursor: pointer;" onclick="getText(&#34;He,R.;Zhu,J.;Wang,B.;Yin,Y. (2024). Enhancing text-audio generation by music classification and Retrieval-Augmented Generation. Applied and Computational Engineering,68,319-329.&#34;)" src="https://www.ewadirect.com/web/static/img/copy.svg" alt="">
+                            </div>
+                            <a href="#"  style="font-size: 18px;margin-left: -50px" slot="reference">Export citation</a>
+                        </el-popover>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="main">
+            <div style="width: 66%;">
+
+                <div class="view">
+                    <div>
+                        <div v-pre><p class="ewa-h1">1. Introduction</p><p>
+
+The advent of deep learning has revolutionized the field of music generation, giving rise to AI systems capable of composing music that resonates with human emotions and preferences. Pioneering models like OpenAI's Jukebox [1] and Google's Magenta [2] have demonstrated significant capabilities in generating music across various styles. More recently, MUSICGEN by Meta AI [3] has made strides in simplifying the music generation pipeline and enhancing quality through efficient token interleaving patterns.
+
+Despite these advancements, current music generation AI still faces shortcomings in aligning generated music to detailed textual descriptions and maintaining consistency, especially for longer compositions. Creating music based on unstructured text remains a complex task due to the wide range of possible descriptions covering various genres, instruments, tempos, scenarios, and subjective emotions [4].
+
+Retrieval-augmented generation (RAG) has shown promise in supporting generative models, particularly for text-based tasks. By integrating a retrieval mechanism, RAG enables models to access and utilize relevant information from external knowledge bases, enhancing the quality and coherence of generated outputs [5]. Recent studies have demonstrated RAG's effectiveness in improving the factual accuracy and fluency of language models [6].
+
+Our project, "Enhancing Text-to-Audio Generation by Genre Classification and Retrieval-Augmented Generation," seeks to leverage the power of RAG to refine the interface between technology and music. By incorporating a retrieval component based on genre classification, we aim to enhance the fidelity and applicability of generated audio, enabling the creation of music that more closely aligns with targeted text descriptions.
+
+Our approach involves training advanced CNN architectures like ResNet-50, GoogleNet, and VGG16 for accurate genre classification. This classifier is then integrated into a retrieval-augmented generation pipeline, where the most relevant pre-classified music piece is retrieved based on the input text query. The retrieved audio is then fed into the MUSICGEN model along with the text description to generate a new music piece that inherits attributes from both inputs.
+
+Through this innovative fusion of genre classification and RAG, our system demonstrates improved ability to generate music embodying specific stylistic elements, as evidenced by human evaluations. This work represents a significant step towards more personalized and emotionally connected AI-generated musical experiences, laying the foundation for future advancements in this exciting field.
+
+</p><p class="ewa-h1">2. Background</p>
+<p class="ewa-h2">2.1. Music Classification</p><p>
+
+A common technique involves converting audio signals into spectrograms—visual representations that depict time-frequency information [7]. These spectrograms are traditionally processed using Convolutional Neural Networks (CNNs) like VGG [8], a model widely implemented through the torchvision library for classifying various music characteristics.
+
+</p><figure>
+<img alt="figure 1" src="https://file.ewadirect.com/press/media/markdown/CNN Classification Through Spectrogram.JPG"/>
+<figcaption>Figure 1. CNN classification through spectrogram</figcaption>
+</figure><p>
+
+Recent advancements have, however, extended beyond traditional CNN architectures due to their limitations in handling highly diverse and complex music tracks, which often led to a plateau in model accuracy and adaptability [8]. Newer architectures like ConvNextV2, introduced in 2020, incorporate residual connections to mitigate the issues of exploding or diminishing gradients commonly observed in deep networks [9]. EfficientNetV2, unveiled in 2021, enhances training speed and model efficiency, optimizing resource allocation during model training [10]. Moreover, the Vision Transformer architecture shifts focus towards leveraging attention mechanisms, reinforcing the notion that "attention is all you need" for significant improvements in image and, by extension, audio classification tasks [11] [12].
+
+</p><figure>
+<img alt="figure 2" src="https://file.ewadirect.com/press/media/markdown/ImageNet Classification top-5 error.JPG"/>
+<figcaption>Figure 2. ImageNet classification top-5 error (%)</figcaption>
+</figure><p>
+
+Our research builds upon these innovative approaches by exploring their application in music classification. Initially, we replicate existing classification methodologies using these advanced models to assess their efficacy. Our classification tasks utilize openly available text-audio datasets to broaden our training scope. For instance, the GTZAN dataset, which consists of 1,000 audio clips each lasting 30 seconds and labeled by one of ten genres, serves as a foundational dataset. We also consider the Google Audio Set, comprising 10-second sound clips extracted from 2.1 million YouTube videos annotated across 527 classes, which include a diverse range of sounds from instruments to animal noises.
+
+</p><p class="ewa-h2">2.2. Music Generation</p><p>
+
+The landscape of music generation has been profoundly reshaped by the advent of advanced neural networks, which now enable the creation of music across various styles and the simulation of human-like vocal textures. Pioneering models like OpenAI's Jukebox and Google's Magenta have demonstrated significant capabilities in generating music by learning complex patterns from extensive musical datasets. These models employ deep neural architectures to generate compositions that are both innovative and reflective of learned styles, though they often struggle with aligning closely to detailed textual descriptions and maintaining consistency throughout longer compositions.
+
+One of the significant strides in addressing these challenges is the development of MUSICGEN by Meta AI. This model represents a paradigm shift in music generation, utilizing a single-stage transformer language model that processes multiple streams of compressed discrete music representations. Unlike traditional models that required cascading stages for effective generation, MUSICGEN uses efficient token interleaving patterns to streamline the generation process, allowing for enhanced control over the produced musical pieces. This approach not only simplifies the music generation pipeline but also enhances the quality of the audio output, making it possible to generate music that closely adheres to given textual or melodic inputs.
+
+MUSICGEN incorporates advanced text conditioning capabilities, which play a crucial role in aligning the generated music with textual descriptions. Text conditioning in MUSICGEN involves encoding textual descriptions into embeddings that guide the music generation process [13]. This is achieved through a sophisticated architecture that integrates both the audio and text inputs, allowing the model to attend to relevant features from both modalities. The text encoder processes the descriptions and converts them into a format that the music generation model can utilize effectively, ensuring that the generated music not only exhibits high fidelity but also aligns with the textual cues provided by the user.
+
+While MUSICGEN can generate music based on simple textual descriptions, its ability to understand and incorporate more complex narrative contexts or emotional subtleties into the music remains limited. Improving text conditioning in MUSICGEN could further enhance its utility and applicability in diverse music generation scenarios. As the technology evolves, focusing on these areas could lead to more nuanced and context-aware music generation systems that better serve the creative intentions of users.
+
+</p><p class="ewa-h1">3. Datasets</p><p>
+
+The datasets used in this project include a mix of publicly available resources and proprietary data curated specifically for this research. The following datasets have been instrumental in training and validating our models:
+
+</p><ul>
+<li><strong>MusicNet Dataset:</strong> A comprehensive collection of labeled classical music recordings. Available at <a href="https://www.kaggle.com/datasets/imsparsh/musicnet-dataset?select=musicnet_metadata.csv">Kaggle - MusicNet</a>.</li>
+<li><strong>MusicCaps:</strong> A dataset from Hugging Face which pairs music recordings with captions, useful for understanding music context and content. Available at <a href="https://huggingface.co/datasets/google/MusicCaps">Hugging Face - MusicCaps</a>.</li>
+<li><strong>GTZAN Music Genre Dataset:</strong> A foundational dataset for music genre classification tasks. Available at <a href="https://www.kaggle.com/datasets/andradaolteanu/gtzan-dataset-music-genre-classification">Kaggle - GTZAN Genre Classification</a>.</li>
+<li><strong>Annotated Classical Music Dataset:</strong> Our self-crafted dataset consisting of classical music tracks with human annotations. The dataset can be accessed through our project's GitHub page at <a href="https://github.com/DavidHe0802/MusicMindMeld/blob/main/annotated_classical_music_dataset.csv">GitHub - Annotated Classical Music</a>.</li>
+<li><strong>Jay Chou's Music Dataset:</strong> Another proprietary dataset featuring instrumental tracks from Jay Chou, processed into WAV format to align with our analysis requirements.</li>
+</ul><p>
+
+These datasets provide a rich foundation for exploring the complex relationships between music genres, styles, and textual descriptions, enabling our models to generate high-fidelity audio outputs.
+
+</p><p class="ewa-h1">4. Method</p>
+<p class="ewa-h2">4.1. Music Classification</p>
+<ol>
+<li>Dataset Compilation
+
+In our study, we have developed a specialized dataset dedicated to Jay Chou's music, known as the Jay Chou Dataset, comprising 42 carefully selected instrumental tracks. This dataset was specifically curated to focus solely on the musical elements of the tracks, excluding vocals. To ensure compatibility with existing music classification frameworks, each track was processed into 30-second WAV format segments, mirroring the structure of the well-established GTZAN dataset. This preprocessing was accomplished through a systematic pipeline that converted the original MP3 files into the desired format, facilitating easier ingestion by our classification models.
+
+Subsequently, we integrated this custom dataset with the GTZAN dataset, which consists of 1,000 audio tracks, each lasting 30 seconds and evenly distributed across ten distinct musical genres. For our study, we introduced an eleventh category labeled 'JAY CHOU' to encompass the unique genre represented by the tracks in our custom dataset. This integration allows us to not only maintain the diversity of musical genres but also to enrich the dataset with a distinctive style embodied by Jay Chou's music.</li>
+<li>Baseline Comparison
+
+For our baseline model, we adopted the architecture from the study published two year ago, "Music Genre Classification using Machine Learning Techniques," which aimed at automating the organization of music libraries through genre classification. This study leveraged the extensive Audio set dataset, which includes over two million human-labeled sound clips from YouTube, classified into 632 audio event classes. Inspired by this work, we implemented a ResNet-50 model, known for its depth and efficiency in handling complex image classifications, adapted here for audio data. The model was configured with Cross-Entropy as the loss function and optimized using Adam with specified learning rates and weight decay parameters, all executed on Google Colab’s GPU environment.
+
+Our goal was to exceed the 65% accuracy benchmark set by the previous study, aiming for a 70% accuracy threshold. We successfully surpassed this target, achieving an average accuracy of 75% across the ten standard genres, further validated by a 79% accuracy on our extended test set that included the Jay Chou category. These results not only demonstrate the efficacy of the ResNet-50 model in handling diverse musical data but also underscore the potential of integrating distinctive musical styles into traditional genre classification frameworks.</li>
+<li>Model Implementation
+
+In our exploration, we implemented three different CNN architectures to refine our understanding of the most effective approaches for music genre classification:
+
+</li>
+<li>ResNet-50: Previously described, it forms the backbone of our comparative analysis.
+<figure>
+<img alt="figure 3" src="https://file.ewadirect.com/press/media/markdown/Resnet50 Arche.JPG"/>
+<figcaption>Figure 3. ResNet50 architecture</figcaption>
+</figure></li>
+<li>GoogleNet: Introduced in "Going Deeper with Convolutions", GoogleNet is a deeper network that uses inception modules to effectively capture complex patterns in the data, significantly enhancing the model's ability to discern nuanced differences between genres.
+<figure>
+<img alt="figure 4" src="https://file.ewadirect.com/press/media/markdown/GoogleNet Arche.JPG"/>
+<figcaption>Figure 4. GoogleNet architecture</figcaption>
+</figure></li>
+<li>VGG16: Known for its simplicity and depth, VGG16 was also adapted for our classification tasks, employing the same loss function and optimizer configurations as the other models.
+<figure>
+<img alt="figure 5" src="https://file.ewadirect.com/press/media/markdown/VGG16 Arche.JPG"/>
+<figcaption>Figure 5. VGG16 architecture</figcaption>
+</figure></li>
+</ol><p>
+
+ Model Improvement
+
+To fine-tune the models effectively, we adopted Cross-Entropy loss as our primary loss function due to its efficacy in handling multi-class classification problems, like those found in music genre classification. This choice is reinforced by the Adam Optimizer's ability to adaptively adjust learning rates based on the training data, providing a robust mechanism for model updates. Specifically, we set the learning rate to 0.0001 and applied a weight decay of 1e-4 to regularize the model and prevent overfitting. These parameters were chosen to balance the speed of convergence with the stability of the training process, ensuring that the models learn detailed features without memorizing the noise inherent in the training data.
+
+A critical component of our model tuning strategy was the implementation of the EarlyStopping technique. This method monitors the validation loss during training and halts the training process if there is no appreciable improvement in model performance over a predetermined number of epochs. This approach is particularly valuable for several reasons:
+
+</p><ol>
+<li>Prevention of Overfitting: 
+
+EarlyStopping is instrumental in preventing our models from overfitting. By monitoring performance on a validation set—not seen by the model during training—we can detect when the model starts to memorize rather than generalize from the training data. This is evidenced by good performance on the training set but poor performance on the validation set.</li>
+<li>Computational Efficiency: 
+
+Training deep neural networks is computationally intensive. By stopping the training early when no further improvements are observed, we save computational resources, which is crucial when working with large datasets and complex models.</li>
+<li>Hyperparameter Tuning: 
+
+During the hyperparameter tuning phase, EarlyStopping allows us to more efficiently explore the hyperparameter space. It reduces the time spent on less promising parameter combinations and redirects focus towards more potentially fruitful configurations. This not only accelerates the experimental process but also enhances the overall quality of the model tuning.</li>
+</ol><p>
+
+By integrating these strategic elements into our model tuning process, we ensure that our music classification models are not only accurate but also robust and efficient. This meticulous approach to model optimization underscores our commitment to developing a classification system that is both practical and scalable, capable of handling the complex nuances of diverse music genres.
+
+
+
+</p><p class="ewa-h2">4.2. Retrieval Augmented Generation</p>
+<ol>
+<li>Data Annotation \& Organization
+
+To construct a robust database for retrieval, we utilized a classical music dataset complete with unique identifiers (IDs), music titles, and descriptive keywords or comments. These annotations serve as the foundation for accurately matching classical music pieces to user queries based on semantic content.
+
+We employed a music classifier trained on advanced CNN architectures such as ResNet-50, GoogleNet, and VGG16. This classifier processes preprocessed audio data in the form of spectrograms to categorize the music by genres, artists, or styles. The classified pieces are then organized into specific databases, facilitating targeted retrieval that aligns with user preferences.
+
+The unique identifiers associated with each piece in the dataset are crucial for linking metadata to the actual audio files. These IDs ensure efficient location and retrieval of corresponding WAV files, streamlining the user experience in accessing selected music pieces.</li>
+<li>Retrieval Augmented Generation
+
+For efficient management and retrieval of music documents, we implemented a document store utilizing the FAISS library, known for its high-performance similarity search and clustering of dense vectors [14]. Each classical music piece's metadata is transformed into a structured document format, with descriptive comments as content and music titles and IDs as metadata. These documents are indexed in the store, enabling rapid and precise retrieval based on semantic similarity.
+
+<figure>
+<img alt="figure 6" src="https://file.ewadirect.com/press/media/markdown/Database Structure.JPG"/>
+<figcaption>Figure 6. Classified music database structure</figcaption>
+</figure>
+
+To retrieve the most relevant music piece from a user's text query, we utilized a dense passage retriever [15]. This tool, equipped with pre-trained encoder models, maps the text query and music descriptions into a shared embedding space. By calculating cosine similarity between the query embedding and document embeddings, it identifies the music piece that best matches the semantic content of the query. Upon retrieving the most relevant document, we extract the music ID from its metadata. This ID is used to locate and preprocess the corresponding WAV file from our classical music collection.
+
+For the music generation phase, we employed the MusicGen model from the Hugging Face Transformers library. MusicGen, a transformer-based autoregressive model, processes input audio and text descriptions, generating new music by predicting the next audio samples. The model attentively blends the audio and text inputs, allowing for the generation of music that reflects the characteristics of both the retrieved classical piece and the user's text description.
+
+The processed audio data and text query are fed into the MusicGen processor, which handles necessary preprocessing steps like tokenization and feature extraction. The model then generates a new piece of music that inherits the attributes of both the retrieved audio and the text query through the transformer's attention mechanism.
+
+<figure>
+<img alt="figure 7" src="https://file.ewadirect.com/press/media/markdown/Retrieval Augmented Generation Pipeline.JPG"/>
+<figcaption>Figure 7. Retrieval augmented generation pipeline</figcaption>
+</figure>
+
+This retrieval-augmented generation approach not only enhances the quality and coherence of the generated music but also creates a personalized audio experience that resonates with the user's preferences while maintaining the essence of the original classical music. The final output can be played directly within the environment or saved as a WAV file for further use and distribution, providing a seamless and enriching user experience.</li>
+</ol>
+<p class="ewa-h1">5. Results</p>
+<p class="ewa-h2">5.1. Music Classification</p><p>
+
+Upon testing, it was evident that the architectures exhibited significant variability in performance. Notably, the VGG16 model underperformed in comparison to its counterparts, achieving the lowest scores in both recall and F1-score. This could be attributed to VGG16's architecture potentially being less adept at capturing the nuanced features necessary for accurate music genre classification.
+
+In contrast, ResNet-50 emerged as the superior model, outperforming the other architectures across all tested metrics. The higher performance of ResNet-50 suggests that its deeper and more complex structure, characterized by residual connections, is more effective at processing the spectral complexities inherent in musical data. This capability makes it particularly suited for tasks where distinguishing subtle differences between genres is crucial.
+
+</p><figure>
+<img alt="figure 8" src="https://file.ewadirect.com/press/media/markdown/ResNet50 Training.JPG"/>
+<figcaption>Figure 8. ResNet50 training and validation loss</figcaption>
+</figure><p>
+
+GoogleNet, while not performing as poorly as VGG16, still lagged behind ResNet-50. Its intermediate results may reflect the trade-offs inherent in its inception modules, which, while reducing parameter count, might not capture as detailed features as the more straightforward, deeper approach of ResNet-50.
+
+</p><figure>
+<img alt="figure 9" src="https://file.ewadirect.com/press/media/markdown/GoogleNet Training.JPG"/>
+<figcaption>Figure 9. GoogleNet training and validation loss</figcaption>
+</figure>
+<p class="table-caption"><strong>Table 1:</strong> Results on testing data: performance comparison of different architectures</p>
+<table id="tab:results">
+<tr>
+<th style="text-align: center"><strong>Architecture</strong></th>
+<th style="text-align: center"><strong>F1-score</strong></th>
+<th style="text-align: center"><strong>Recall</strong></th>
+</tr>
+<tr>
+<td style="text-align: center">ResNet-50</td>
+<td style="text-align: center">0.81</td>
+<td style="text-align: center">0.77</td>
+</tr>
+<tr>
+<td style="text-align: center">GoogleNet</td>
+<td style="text-align: center">0.57</td>
+<td style="text-align: center">0.50</td>
+</tr>
+<tr>
+<td style="text-align: center">VGG16</td>
+<td style="text-align: center">0.44</td>
+<td style="text-align: center">0.18</td>
+</tr>
+</table>
+<p class="ewa-h2">5.2. Music Generation</p><p>
+
+We conducted a double-blind human evaluation between the outputs from the original MusicGen model and our enhanced model incorporating Retrieval-Augmented Generation (RAG) with a database specifically curated with Beethoven's music. The goal was to assess the effectiveness of each model in generating music that embodies Beethoven's stylistic elements.
+
+Each of three individual subjects was asked to blindly evaluate 20 music samples—10 generated by the original MusicGen model and 10 by our RAG-enhanced model. The subjects rated their confidence on a scale from 1 to 5, where 5 indicates strong confidence that the generated music piece contained Beethoven-like elements.
+
+The evaluation results are summarized in the table below:
+
+</p><p class="table-caption"><strong>Table 2:</strong> Average confidence scores of perceived Beethoven elements in music samples</p>
+<table id="tab:confidence_scores">
+<tr>
+<th style="text-align: center"><strong>Model</strong></th>
+<th style="text-align: center"><strong>Average Confidence Score</strong></th>
+</tr>
+<tr>
+<td style="text-align: center">Original MusicGen</td>
+<td style="text-align: center">2.4</td>
+</tr>
+<tr>
+<td style="text-align: center">RAG-enhanced MusicGen</td>
+<td style="text-align: center">4.2</td>
+</tr>
+</table><p>
+
+
+
+
+The data indicates a significant improvement in the ability of the RAG-enhanced MusicGen model to generate music that participants believe retains the characteristic elements of Beethoven's style. The average confidence score for the RAG model was notably higher, suggesting that the integration of a targeted retrieval mechanism effectively aligns the generated music with the specific stylistic attributes of Beethoven.
+
+</p><p class="ewa-h1">6. Discussion</p><p>
+
+This project represents a significant advancement in the fusion of deep learning and music generation, particularly through the innovative application of music classification and retrieval-augmented generation pipeline. The use of advanced models has proven crucial in developing a system that not only accurately identifies various musical elements but also tailors the music generation process to reflect the diverse inputs from users. Our implementation of retrieval-augmented generation represents a particularly notable advancement, enabling dynamic selection of music pieces that closely align with user-specified text. This method has shown great promise in personalizing the music generation process, thereby enhancing user engagement and satisfaction.
+
+Despite these advancements, the project also highlighted several challenges inherent in automated music generation. The variability of text descriptions and the subjective interpretation of music often complicate the generation process, making it difficult to produce universally satisfying musical outputs. Addressing these challenges will be crucial for further advancements in the field and will involve refining the models' ability to interpret and process complex textual inputs and subtle musical nuances.
+
+</p><p class="ewa-h1">7. Conclusion</p><p>
+
+This project has not only contributed valuable insights into the integration of technology and music but also laid a robust foundation for future innovations in automated music generation. The techniques developed through this project could revolutionize the way music is generated, offering more personalized and emotionally connected musical experiences through artificial intelligence.
+
+Looking forward, there are several exciting directions for further development:
+
+</p><ol>
+<li>Integration with Generative Models: 
+
+Integrating the classification-based retrieval system with advanced generative models like Generative Adversarial Networks (GANs) and Variational Autoencoders (VAEs) could enable the production of more nuanced and stylistically coherent music pieces. Leveraging genre-specific features identified by the music classifier could guide these generative models to produce music that captures the intricacies of different genres and styles effectively.</li>
+<li>Incorporation of User Feedback and Interaction: 
+
+Enhancing the system's adaptability to individual preferences through user feedback and interactive features could significantly improve the music generation process. Allowing users to provide feedback on the generated music and to interact with the generation process by adjusting parameters or selecting preferred music segments could lead to richer user engagement and better alignment with users' expectations.</li>
+</ol><p>
+
+By continuing to explore these avenues, the potential for creating more refined and user-responsive music generation systems becomes increasingly attainable, promising a future where AI-generated music can truly mimic the depth and dynamism of human composition.
+
+</p><p class="ewa-h1">Code and Resources</p><p>
+The source code for this project is available at <a href="https://github.com/DavidHe0802/MusicMindMeld">MusicMindMeld: Music Generation Enhanced By RAG and Classified Knowledge Base</a>.
+
+</p></div>
+                    </div>
+                    <hr style="margin-top: 40px">
+                    <h2 style="font-size: 32px;line-height: 48px;margin-top: 40px" class="ZT">References</h2>
+                    <div class="referencesMain">
+                        
+                        <p>[1]. Prafulla Dhariwal, Heewoo Jun, Christine Payne, Jong Wook Kim, Alec Radford, Ilya Sutskever, and Miles Brundage. Jukebox: A generative model for music. arXiv preprint arXiv:2005.00341, 2020.</p>
+                        
+                        <p>[2]. Jesse Engel, Lukas Hantrakul, Chenjie Gu, and Adam Roberts. Ddsp: Differentiable digital signal processing. arXiv preprint arXiv:2001.04643, 2020.</p>
+                        
+                        <p>[3]. Alexandre D´efossez, Julien Copet, Gabriel Synnaeve, and Yossi Adi. High fidelity neural audio compression. arXiv preprint arXiv:2210.13438, 2022.</p>
+                        
+                        <p>[4]. Andrea Agostinelli, Tilman I Denk, Zalan Borsos, Jesse Engel, Massimiliano Verzetti, Antoine Caillon, and Christian Frank. Musiclm: Generating music from text. arXiv preprit arXiv:2301.11325, 2023.</p>
+                        
+                        <p>[5]. Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, and Heinrich K¨uttler. Retrieval-augmented generation for knowledge-intensive nlp tasks. arXiv preprint arXiv:2005.11401, 2020.</p>
+                        
+                        <p>[6]. Kurt Shuster, Stephen Poff, Moya Chen, Douwe Kiela, and Jason Weston. Retrieval augmentation reduces hallucination in conversation. arXiv preprint arXiv:2104.07567, 2021.</p>
+                        
+                        <p>[7]. Lonce Wyse. Audio spectrogram representations for processing with convolutional neural networks. arXiv preprint arXiv:1706.09559, 2017.
+</p>
+                        
+                        <p>[8]. Karen Simonyan and Andrew Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014.</p>
+                        
+                        <p>[9]. Zhuang Liu, Hanzi Mao, Chao-Yuan Wu, Christoph Feichtenhofer, Trevor Darrell, and Saining Xie. A convnet for the 2020s. arXiv preprint arXiv:2201.03545, 2022.</p>
+                        
+                        <p>[10]. Mingxing Tan and Quoc V Le. Efficientnetv2: Smaller models and faster training. arXiv preprint arXiv:2104.00298, 2021.</p>
+                        
+                        <p>[11]. Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929, 2020.</p>
+                        
+                        <p>[12]. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. arXiv preprint arXiv:1706.03762, 2017.</p>
+                        
+                        <p>[13]. Yixuan Wu, Kevin Chen, Tong Zhang, Yu Hui, Taylor Berg-Kirkpatrick, and Shlomo Dubnov. Large-scale contrastive language-audio pretraining with feature fusion and keyword-to-caption augmentation. arXiv preprint arXiv:2302.07295, 2023.</p>
+                        
+                        <p>[14]. Jeff Johnson, Matthijs Douze, and Herve´ J´egou. Billion-scale similarity search with gpus. arXiv preprint arXiv:1702.08734, 2017.</p>
+                        
+                        <p>[15]. Vladimir Karpukhin, Barlas O˘guz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih. Dense passage retrieval for open-domain question answering. arXiv preprint arXiv:2004.04906, 2020.</p>
+                        
+                    </div>
+                </div>
+                <hr style="margin-top: 40px">
+
+                
+                <div class="row citeArticle">
+                    <h2 style="font-size: 32px;line-height: 48px;">Cite this article</h2>
+                    <p>He,R.;Zhu,J.;Wang,B.;Yin,Y. (2024). Enhancing text-audio generation by music classification and Retrieval-Augmented Generation. Applied and Computational Engineering,68,319-329.</p>
+                </div>
+                <div class="row dataAvailability">
+                    <h2 style="font-size: 32px;line-height: 48px;">Data availability</h2>
+                    <p>The datasets used and/or analyzed during the current study will be available from the authors upon reasonable request.</p>
+                </div>
+                
+                <div class="row">
+                    <h2 style="font-size: 32px;line-height: 48px;">Disclaimer/Publisher's Note</h2>
+                    <p>
+                        The statements, opinions and data contained in all publications are solely those of the individual author(s) and contributor(s)
+                        and not of EWA Publishing and/or the editor(s). EWA Publishing and/or the editor(s) disclaim responsibility for any injury to
+                        people or property resulting from any ideas, methods, instructions or products referred to in the content.
+                    </p>
+                </div>
+                <div class="row">
+                    <h2 style="font-size: 32px;line-height: 48px;">About volume</h2>
+                    
+                    <p><b>Volume title: Proceedings of the 6th International Conference on Computing and Data Science</b></p>
+                    <div class="flex-item">ISBN：978-1-83558-457-6(Print) / 978-1-83558-458-3(Online)</div>
+                    <div class="flex-item">Editor：Alan Wang, Roman Bauer</div>
+                    <div class="flex-item">Conference website: <a  style="color: #0d4aa6;font-weight: 700;" href="https://www.confcds.org/" target="_blank">https://www.confcds.org/</a></div>
+                    <div class="flex-item">Conference date: 12 September 2024</div>
+
+                    <div class="flex-item" style="margin-top: 20px"><b>Series: Applied and Computational Engineering</b></div>
+                    <div class="flex-item">Volume number: Vol.68</div>
+                    <div class="flex-item">ISSN：2755-2721(Print) / 2755-273X(Online)</div>
+                    
+                </div>
+                <div class="last" style="margin-top: 80px;">
+                    <p>
+                        © 2024 by the author(s). Licensee EWA Publishing, Oxford, UK. This article is an open access article distributed under the terms and
+                        conditions of the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution (CC BY)</a> license. Authors who
+                        publish this series agree to the following terms:<br>
+                        1. Authors retain copyright and grant the series right of first publication with the work simultaneously licensed under a Creative Commons
+                        Attribution License that allows others to share the work with an acknowledgment of the work's authorship and initial publication in this
+                        series.<br>
+                        2. Authors are able to enter into separate, additional contractual arrangements for the non-exclusive distribution of the series's published
+                        version of the work (e.g., post it to an institutional repository or publish it in a book), with an acknowledgment of its initial
+                        publication in this series.<br>
+                        3. Authors are permitted and encouraged to post their work online (e.g., in institutional repositories or on their website) prior to and
+                        during the submission process, as it can lead to productive exchanges, as well as earlier and greater citation of published work (See
+                        <a href="https://www.ewadirect.com/proceedings/ace/policies/open_access_policy">Open access policy</a> for details).
+                    </p>
+                </div>
+            </div>
+            <div style="width: 30%;">
+                <h2 style="font-size: 32px;line-height: 48px;margin-top: 40px" class="ZT">References</h2>
+                <div id="references" class="contItem">
+                    
+                    <p style="word-break: break-all;">[1]. Prafulla Dhariwal, Heewoo Jun, Christine Payne, Jong Wook Kim, Alec Radford, Ilya Sutskever, and Miles Brundage. Jukebox: A generative model for music. arXiv preprint arXiv:2005.00341, 2020.</p>
+                    
+                    <p style="word-break: break-all;">[2]. Jesse Engel, Lukas Hantrakul, Chenjie Gu, and Adam Roberts. Ddsp: Differentiable digital signal processing. arXiv preprint arXiv:2001.04643, 2020.</p>
+                    
+                    <p style="word-break: break-all;">[3]. Alexandre D´efossez, Julien Copet, Gabriel Synnaeve, and Yossi Adi. High fidelity neural audio compression. arXiv preprint arXiv:2210.13438, 2022.</p>
+                    
+                    <p style="word-break: break-all;">[4]. Andrea Agostinelli, Tilman I Denk, Zalan Borsos, Jesse Engel, Massimiliano Verzetti, Antoine Caillon, and Christian Frank. Musiclm: Generating music from text. arXiv preprit arXiv:2301.11325, 2023.</p>
+                    
+                    <p style="word-break: break-all;">[5]. Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, and Heinrich K¨uttler. Retrieval-augmented generation for knowledge-intensive nlp tasks. arXiv preprint arXiv:2005.11401, 2020.</p>
+                    
+                    <p style="word-break: break-all;">[6]. Kurt Shuster, Stephen Poff, Moya Chen, Douwe Kiela, and Jason Weston. Retrieval augmentation reduces hallucination in conversation. arXiv preprint arXiv:2104.07567, 2021.</p>
+                    
+                    <p style="word-break: break-all;">[7]. Lonce Wyse. Audio spectrogram representations for processing with convolutional neural networks. arXiv preprint arXiv:1706.09559, 2017.
+</p>
+                    
+                    <p style="word-break: break-all;">[8]. Karen Simonyan and Andrew Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014.</p>
+                    
+                    <p style="word-break: break-all;">[9]. Zhuang Liu, Hanzi Mao, Chao-Yuan Wu, Christoph Feichtenhofer, Trevor Darrell, and Saining Xie. A convnet for the 2020s. arXiv preprint arXiv:2201.03545, 2022.</p>
+                    
+                    <p style="word-break: break-all;">[10]. Mingxing Tan and Quoc V Le. Efficientnetv2: Smaller models and faster training. arXiv preprint arXiv:2104.00298, 2021.</p>
+                    
+                    <p style="word-break: break-all;">[11]. Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et al. An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929, 2020.</p>
+                    
+                    <p style="word-break: break-all;">[12]. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. arXiv preprint arXiv:1706.03762, 2017.</p>
+                    
+                    <p style="word-break: break-all;">[13]. Yixuan Wu, Kevin Chen, Tong Zhang, Yu Hui, Taylor Berg-Kirkpatrick, and Shlomo Dubnov. Large-scale contrastive language-audio pretraining with feature fusion and keyword-to-caption augmentation. arXiv preprint arXiv:2302.07295, 2023.</p>
+                    
+                    <p style="word-break: break-all;">[14]. Jeff Johnson, Matthijs Douze, and Herve´ J´egou. Billion-scale similarity search with gpus. arXiv preprint arXiv:1702.08734, 2017.</p>
+                    
+                    <p style="word-break: break-all;">[15]. Vladimir Karpukhin, Barlas O˘guz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih. Dense passage retrieval for open-domain question answering. arXiv preprint arXiv:2004.04906, 2020.</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="footer">
+    <div class="carBox">
+        <div class="carItem">
+            <div class="itemTitle">For authors</div>
+            <div class="line"></div>
+            <a href="https://www.ewadirect.com/proceedings/ace/guide_for_authors/index">Guide for authors</a>
+            
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_authors">Policies for authors</a>
+            <a href="https://www.ewadirect.com/proceedings/ace/about/aims_and_scope">Aims and scope</a>
+            <a href="https://www.ewadirect.com/proceedings/ace/about/subscription">Subscription</a>
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/open_access_policy">Open access policy</a>
+        </div>
+        <div class="carItem">
+            <div class="itemTitle">For editors</div>
+            <div class="line"></div>
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_editors">Policies for editors</a>
+            <a href="https://www.ewadirect.com/proceedings/ace/about/editorial_board">Editorial board</a>
+        </div>
+        <div class="carItem">
+            <div class="itemTitle">For reviewers</div>
+            <div class="line"></div>
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/for_reviewers">Policies for reviewers</a>
+            <a href="https://www.ewadirect.com/proceedings/ace/policies/privacy_policy">Privacy policy</a>
+        </div>
+    </div>
+    <div class="footerBottom">
+        <img src="https://www.ewadirect.com/web/static/img/logo.svg" alt="">
+        <p>Cookies are used by this site. <br/>
+            Copyright © 2024 EWA Publishing, its licensors, and contributors. All rights reserved, including text and data mining, AI training, and similar technologies. 
+        </p>
+    </div>
+</div>
+
+</div>
+</body>
+<script src="https://www.ewadirect.com/web/static/js/journal_vue.js"></script>
+
+<script>
+    
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 700 || document.documentElement.scrollTop > 700) {
+            document.getElementById("ceiling").style.display = "flex";
+            document.getElementById("backTop").style.display = "block";
+        } else {
+            document.getElementById("ceiling").style.display = "none";
+            document.getElementById("backTop").style.display = "none";
+        }
+    }
+
+    var modal = document.getElementsByClassName("modal");
+    var content = document.getElementsByClassName("content");
+
+    
+    const showModal = (e) => {
+        modal[e].style.display = "flex";
+    }
+    
+    const closeModal = () => {
+        for (var i = 0; i < modal.length; i++) {
+            modal[i].style.display = 'none';
+        }
+    }
+    window.onclick = function(event) {
+        if (event.target == content[0]) {
+            closeModal();
+        }
+    }
+    
+    const getText = (copyText) => {
+        
+        var tempTextarea = document.createElement('textarea');
+        tempTextarea.value = copyText;
+
+        
+        tempTextarea.style.position = 'fixed';
+        tempTextarea.style.top = 0;
+        tempTextarea.style.left = 0;
+        tempTextarea.style.opacity = 0;
+        document.body.appendChild(tempTextarea);
+
+        
+        tempTextarea.select();
+
+        try {
+            
+            var successful = document.execCommand('copy');
+            if(successful){
+                ELEMENT.Message.success('成功复制文本到剪贴板');  
+            }else{
+                ELEMENT.Message.error('复制文本到剪贴板失败');  
+            }
+        } catch (err) {
+            ELEMENT.Message.error('复制文本时发生错误');  
+        }
+
+        
+        document.body.removeChild(tempTextarea);
+    }
+
+    function downloadPdf() {
+        
+        const fullDomain = "https:\/\/www.ewadirect.com";
+        const category = "proceedings";
+        const journalName = "ace";
+        const customId = "14090";
+
+        const pdfUrl = `${fullDomain}/${category}/${journalName}/article/view/${customId}/pdf`;
+
+        
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = ''; 
+        link.style.display = 'none';
+
+        
+        document.body.appendChild(link);
+        link.click();
+
+        
+        document.body.removeChild(link);
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.getElementById('toggle-button');
+        const row5 = document.querySelector('.row-5');
+        toggleButton.addEventListener('click', () => {
+            
+            row5.classList.toggle('expanded');
+            row5.classList.toggle('collapsed');
+
+            
+            toggleButton.classList.toggle('rotated');
+        });
+
+
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var keyword = "";
+        if (!keyword) return;
+
+        function highlightKeyword(element, keyword) {
+            if (element.nodeType === Node.TEXT_NODE) {
+                var text = element.textContent;
+                var keywords = keyword.split('|').map(function(word) {
+                    return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                });
+                var regex = new RegExp(`(${keywords.join('|')})`, 'gi');
+
+                if (regex.test(text)) {
+                    var wrapper = document.createElement('span'); 
+                    wrapper.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+                    
+                    while (wrapper.firstChild) {
+                        element.parentNode.insertBefore(wrapper.firstChild, element);
+                    }
+                    element.parentNode.removeChild(element);
+                }
+                return;
+            }
+
+            var childNodes = Array.from(element.childNodes);
+            childNodes.forEach(child => {
+                highlightKeyword(child, keyword);
+            });
+        }
+
+        
+        var elementsToHighlight = [
+            document.querySelector('.row-3 h2'),
+            document.querySelector('.ceiling h2'),
+            document.querySelector('.view > div > div'),
+            document.querySelector('.referencesMain'),
+            document.querySelector('#references'),
+            document.querySelector('.citeArticle p'),
+            document.querySelector('.dataAvailability p'),
+            document.querySelector('.authorInfo'),
+            document.querySelector('.authorAffiliation ul')
+        ];
+
+        elementsToHighlight.forEach(element => {
+            if (element) {
+                highlightKeyword(element, keyword);
+            }
+        });
+    });
+
+</script>
+</html>

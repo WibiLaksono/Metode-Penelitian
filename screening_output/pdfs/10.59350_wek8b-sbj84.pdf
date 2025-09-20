@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	data-color-scheme="system"
+	data-sidebar-collapsed="false"
+>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models</title>
+
+	<script>
+	// Set color scheme from local storage.
+	(function() {
+		const colorScheme = localStorage.getItem('color-scheme');
+
+		if (colorScheme) {
+			document.documentElement.setAttribute('data-color-scheme', colorScheme);
+		}
+	})();
+</script>
+
+	<script>
+		// Set sidebar collapsed from local storage.
+		(function() {
+			const hasCollapsed = localStorage.getItem('sidebar-collapsed');
+
+			if (hasCollapsed !== null) {
+				document.documentElement.setAttribute('data-sidebar-collapsed', hasCollapsed);
+			}
+		})();
+	</script>
+
+	<link rel="preload" as="style" href="https://hub.researchgraph.org/assets/built/index.css?v=41151ff485">
+	<link rel="preload" as="script" href="https://hub.researchgraph.org/assets/vendors/pvs.min.js?v=41151ff485">
+	<link rel="preload" as="script" href="https://hub.researchgraph.org/assets/built/index.js?v=41151ff485">
+
+	<link
+		rel="preload"
+		href="https://hub.researchgraph.org/assets/vendors/Geist-Variable.woff2?v=41151ff485"
+		as="font"
+		type="font/woff2"
+		crossorigin
+	/>
+
+	<style>
+		@font-face {
+			font-family: 'Geist';
+			font-display: swap;
+			src: url(https://hub.researchgraph.org/assets/vendors/Geist-Variable.woff2?v=41151ff485) format("woff2");
+		}
+
+		:root {
+			--color-dark-accent: #ffffff;
+			--color-accent-foreground: #ffffff;
+			--color-dark-accent-foreground: #000000;
+			--featured-image--aspect-ratio: 21/9;
+			--copy-code--content: "Copied";
+		}
+	</style>
+
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/pvs.min.css?v=41151ff485">
+
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/built/index.css?v=41151ff485">
+
+	<script src="https://hub.researchgraph.org/assets/vendors/ivent.min.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/vendors/pvs.min.js?v=41151ff485"></script>
+
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/swiper/swiper.min.css?v=41151ff485">
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/swiper/effect-creative.min.css?v=41151ff485">
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/swiper/free-mode.min.css?v=41151ff485">
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/swiper/mousewheel.min.css?v=41151ff485">
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/swiper/navigation.min.css?v=41151ff485">
+
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/vendors/tippy.css?v=41151ff485">
+
+	<link rel="stylesheet" type="text/css" href="https://hub.researchgraph.org/assets/custom.css?v=41151ff485">
+
+	<meta name="description" content="Improving the performance and application of Large Language Models">
+    <link rel="icon" href="https://hub.researchgraph.org/content/images/size/w256h256/2025/05/ResearchIcon512x512_orange.png" type="image/png">
+    <link rel="canonical" href="https://doi.org/10.59350/wek8b-sbj84">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Research Graph">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models">
+    <meta property="og:description" content="Improving the performance and application of Large Language Models">
+    <meta property="og:url" content="https://doi.org/10.59350/wek8b-sbj84">
+    <meta property="og:image" content="https://hub.researchgraph.org/content/images/size/w1200/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png">
+    <meta property="article:published_time" content="2024-02-26T13:00:00.000Z">
+    <meta property="article:modified_time" content="2025-06-13T15:01:09.000Z">
+    <meta property="article:tag" content="Artificial Intelligence">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models">
+    <meta name="twitter:description" content="Improving the performance and application of Large Language Models">
+    <meta name="twitter:url" content="https://doi.org/10.59350/wek8b-sbj84">
+    <meta name="twitter:image" content="https://hub.researchgraph.org/content/images/size/w1200/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Amanda Kau">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="Artificial Intelligence">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="566">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Research Graph",
+        "url": "https://hub.researchgraph.org/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://hub.researchgraph.org/content/images/2025/05/ResearchIconMedium.png"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Amanda Kau",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://hub.researchgraph.org/content/images/2025/06/IMG_7117.jpeg",
+            "width": 769,
+            "height": 785
+        },
+        "url": "https://hub.researchgraph.org/author/amanda/",
+        "sameAs": []
+    },
+    "headline": "Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models",
+    "url": "https://hub.researchgraph.org/understanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models/",
+    "datePublished": "2024-02-26T13:00:00.000Z",
+    "dateModified": "2025-06-13T15:01:09.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://hub.researchgraph.org/content/images/size/w1200/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png",
+        "width": 1200,
+        "height": 566
+    },
+    "keywords": "Artificial Intelligence",
+    "description": "Improving the performance and application of Large Language Models",
+    "mainEntityOfPage": "https://hub.researchgraph.org/understanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 6.0">
+    <link rel="alternate" type="application/rss+xml" title="Research Graph" href="https://hub.researchgraph.org/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.53/umd/portal.min.js" data-i18n="true" data-ghost="https://hub.researchgraph.org/" data-key="a7698daf4490de0efd4354c41f" data-api="https://researchgraph.ghost.io/ghost/api/content/" data-locale="en" data-members-signin-otc="false" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/sodo-search.min.js" data-key="a7698daf4490de0efd4354c41f" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.8/umd/main.css" data-sodo-search="https://researchgraph.ghost.io/" data-locale="en" crossorigin="anonymous"></script>
+    
+    <link href="https://hub.researchgraph.org/webmentions/receive/" rel="webmention">
+    <script defer src="/public/cards.min.js?v=41151ff485"></script>
+    <link rel="stylesheet" type="text/css" href="/public/cards.min.css?v=41151ff485">
+    <script defer src="/public/member-attribution.min.js?v=41151ff485"></script>
+    <script defer src="/public/ghost-stats.min.js?v=41151ff485" data-stringify-payload="false" data-datasource="analytics_events" data-storage="localStorage" data-host="https://hub.researchgraph.org/.ghost/analytics/api/v1/page_hit"  tb_site_uuid="c4889077-7b45-4248-87f7-096b505f4bf2" tb_post_uuid="60c0753e-9c94-4c6d-aaf1-713b1678eed1" tb_post_type="post" tb_member_uuid="undefined" tb_member_status="undefined"></script><style>:root {--ghost-accent-color: #000000;}</style>
+</head>
+
+<body class="post-template tag-artificial-intelligence tag-hash-toc layout-default post-template-image post-has-sidebar">
+	<a href="#sidebar" class="button screen-reader-text">Skip to Sidebar</a>
+	<a href="#content" class="button screen-reader-text">Skip to Content</a>
+
+	<main class="main">
+		<div class="navbar">
+			<div>
+				<button
+					class="toggle-sidebar button button-icon button-transparent button-rounded"
+					aria-label="Collapse Sidebar"
+					aria-expanded="true"
+				>
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.27271 10H15.7272M4.27271 4H15.7272M4.27271 16H15.7272" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				</button>
+
+				<button class="toggle-popup button button-icon button-transparent button-rounded" data-popup-toggle="#popup-navigation" aria-expanded="false" aria-label="Open a popup with navigation">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.27271 10H15.7272M4.27271 4H15.7272M4.27271 16H15.7272" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				</button>
+
+				<a class="logo" href="https://hub.researchgraph.org" aria-label="Research Graph">
+		<img class="logo-light" src="https://hub.researchgraph.org/content/images/2025/05/ResearchIconMedium.png" alt="Research Graph">
+
+		<img class="logo-dark" src="https://hub.researchgraph.org/content/images/2025/05/ResearchLogoMediumWhite.png" alt="Research Graph">
+</a>			</div>
+
+			<button class="search-toggle" data-ghost-search>
+				<svg class="icon icon-search" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.5 17.5L13.875 13.875M15.8333 9.16667C15.8333 12.8486 12.8486 15.8333 9.16667 15.8333C5.48477 15.8333 2.5 12.8486 2.5 9.16667C2.5 5.48477 5.48477 2.5 9.16667 2.5C12.8486 2.5 15.8333 5.48477 15.8333 9.16667Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+Search
+				<svg class="icon-slash" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect width="16" height="16" rx="3" fill="#808080" /> 
+					<path d="M6.33331 11.3333L9.66665 4.66667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</button>
+
+			<nav aria-label="User Navigation">
+				<button class="dropdown-toggle" aria-expanded="false" aria-label="Show user navigation">
+							<span class="avatar">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.5 16.6667C4.44649 14.6022 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6022 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+	</span>
+				</button>
+				<div class="dropdown dropdown-user">
+					<div class="dropdown-user-head">
+							<span class="avatar">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.5 16.6667C4.44649 14.6022 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6022 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+	</span>
+						<span class="dropdown-user-name">Anonymous</span>
+					</div>
+					<hr>
+					<ul>
+						<li>
+							<button class="nav-link toggle-color-scheme-button" value="dark-light-system" aria-label="Toggle color scheme">
+	<svg class="icon icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18.2957 10.797C17.1482 12.8098 14.9826 14.1668 12.5 14.1668C8.81808 14.1668 5.83333 11.182 5.83333 7.50007C5.83333 5.01727 7.19056 2.85146 9.20358 1.7041C4.97479 2.10506 1.66666 5.66613 1.66666 9.99983C1.66666 14.6023 5.39762 18.3332 10 18.3332C14.3335 18.3332 17.8944 15.0254 18.2957 10.797Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+	<span class="label label-light">Theme: Light</span>
+	<span class="label label-system">Theme: System</span>
+	<span class="label label-dark">Theme: Dark</span>
+	<span class="icon-wrapper"><svg class="icon icon-sun" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.9999 13.3334C11.8409 13.3334 13.3333 11.841 13.3333 10C13.3333 8.15907 11.8409 6.66669 9.9999 6.66669C8.15895 6.66669 6.66656 8.15907 6.66656 10C6.66656 11.841 8.15895 13.3334 9.9999 13.3334Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9.9999 1.66669V3.33336M9.9999 16.6666V18.3334M4.10824 4.10836L5.28324 5.28336M14.7166 14.7166L15.8916 15.8916M1.66656 10H3.33324M16.6666 10H18.3333M5.28324 14.7166L4.10824 15.8916M15.8916 4.10836L14.7166 5.28336" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<svg class="icon icon-circle-half" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 14.6666C11.6819 14.6666 14.6667 11.6819 14.6667 7.99998C14.6667 4.31808 11.6819 1.33331 8 1.33331C4.3181 1.33331 1.33333 4.31808 1.33333 7.99998C1.33333 11.6819 4.3181 14.6666 8 14.6666Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M8 14.6666C4.3181 14.6666 1.33333 11.6819 1.33333 7.99998C1.33333 4.31808 4.3181 1.33331 8 1.33331V14.6666Z" fill="currentColor"></path>
+</svg><svg class="icon icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18.2957 10.797C17.1482 12.8098 14.9826 14.1668 12.5 14.1668C8.81808 14.1668 5.83333 11.182 5.83333 7.50007C5.83333 5.01727 7.19056 2.85146 9.20358 1.7041C4.97479 2.10506 1.66666 5.66613 1.66666 9.99983C1.66666 14.6023 5.39762 18.3332 10 18.3332C14.3335 18.3332 17.8944 15.0254 18.2957 10.797Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</span>
+</button>
+						</li>
+						<li>
+							<a href="/signin/" class="nav-link">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.5 2.5H13.5C14.9002 2.5 15.6002 2.5 16.135 2.77248C16.6054 3.01217 16.9878 3.39462 17.2275 3.86503C17.5 4.3998 17.5 5.09988 17.5 6.5V13.5C17.5 14.9002 17.5 15.6002 17.2275 16.135C16.9878 16.6054 16.6054 16.9878 16.135 17.2275C15.6002 17.5 14.9002 17.5 13.5 17.5H12.5M8.33333 5.83333L12.5 10M12.5 10L8.33333 14.1667M12.5 10H2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+								Sign in
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+		<aside class="sidebar" id="sidebar">
+			<nav class="navigation navigation-has-current sidebar-navigation" aria-label="Sidebar Primary Navigation">
+				<ul>
+		<li>
+				<a
+		href="/"
+	class="nav-link nav-link-home"
+		data-tippy-content="Home"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.5 17.4999V11.3332C7.5 10.8665 7.5 10.6331 7.59082 10.4549C7.67072 10.298 7.79821 10.1706 7.95501 10.0907C8.13327 9.99988 8.36658 9.99988 8.83333 9.99988H11.1667C11.6334 9.99988 11.8668 9.99988 12.045 10.0907C12.2018 10.1706 12.3292 10.298 12.4092 10.4549C12.5 10.6331 12.5 10.8665 12.5 11.3332V17.4999M9.18142 2.30321L3.52949 6.69915C3.15168 6.993 2.96278 7.13993 2.82669 7.32393C2.70614 7.48691 2.61633 7.67053 2.56169 7.86575C2.5 8.08615 2.5 8.32546 2.5 8.80413V14.8332C2.5 15.7666 2.5 16.2333 2.68166 16.5899C2.84144 16.9035 3.09641 17.1585 3.41002 17.3182C3.76653 17.4999 4.23324 17.4999 5.16667 17.4999H14.8333C15.7667 17.4999 16.2335 17.4999 16.59 17.3182C16.9036 17.1585 17.1586 16.9035 17.3183 16.5899C17.5 16.2333 17.5 15.7666 17.5 14.8332V8.80413C17.5 8.32546 17.5 8.08615 17.4383 7.86575C17.3837 7.67053 17.2938 7.48691 17.1733 7.32393C17.0372 7.13993 16.8483 6.993 16.4705 6.69915L10.8186 2.30321C10.5258 2.0755 10.3794 1.96165 10.2177 1.91788C10.0752 1.87926 9.92483 1.87926 9.78225 1.91788C9.62058 1.96165 9.47417 2.0755 9.18142 2.30321Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Home</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/about/"
+	class="nav-link nav-link-about"
+		data-tippy-content="About"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.5 16.6667C4.44649 14.6022 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6022 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+	<span class="label">About</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/schema/"
+	class="nav-link nav-link-schema"
+		data-tippy-content="Schema"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.6667 1.89136V5.33347C11.6667 5.80018 11.6667 6.03354 11.7575 6.2118C11.8374 6.3686 11.9648 6.49608 12.1217 6.57598C12.2999 6.66681 12.5332 6.66681 13 6.66681H16.4421M13.3333 10.8334H6.66666M13.3333 14.1667H6.66666M8.33333 7.50008H6.66666M11.6667 1.66675H7.33333C5.93319 1.66675 5.23313 1.66675 4.69835 1.93923C4.22794 2.17891 3.8455 2.56136 3.60581 3.03177C3.33333 3.56655 3.33333 4.26661 3.33333 5.66675V14.3334C3.33333 15.7336 3.33333 16.4336 3.60581 16.9684C3.8455 17.4388 4.22794 17.8212 4.69835 18.0609C5.23313 18.3334 5.93319 18.3334 7.33333 18.3334H12.6667C14.0668 18.3334 14.7668 18.3334 15.3017 18.0609C15.7721 17.8212 16.1545 17.4388 16.3942 16.9684C16.6667 16.4336 16.6667 15.7336 16.6667 14.3334V6.66675L11.6667 1.66675Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Schema</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/contact/"
+	class="nav-link nav-link-contact"
+		data-tippy-content="Contact"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66667 5.83325L8.47075 10.5961C9.02175 10.9818 9.29726 11.1747 9.59692 11.2493C9.86159 11.3153 10.1384 11.3153 10.4031 11.2493C10.7028 11.1747 10.9783 10.9818 11.5293 10.5961L18.3333 5.83325M5.66667 16.6666H14.3333C15.7335 16.6666 16.4335 16.6666 16.9683 16.3941C17.4388 16.1544 17.8212 15.772 18.0608 15.3016C18.3333 14.7668 18.3333 14.0668 18.3333 12.6666V7.33325C18.3333 5.93312 18.3333 5.23305 18.0608 4.69828C17.8212 4.22787 17.4388 3.84542 16.9683 3.60574C16.4335 3.33325 15.7335 3.33325 14.3333 3.33325H5.66667C4.26654 3.33325 3.56647 3.33325 3.0317 3.60574C2.56129 3.84542 2.17884 4.22787 1.93916 4.69828C1.66667 5.23305 1.66667 5.93312 1.66667 7.33325V12.6666C1.66667 14.0668 1.66667 14.7668 1.93916 15.3016C2.17884 15.772 2.56129 16.1544 3.0317 16.3941C3.56647 16.6666 4.26654 16.6666 5.66667 16.6666Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Contact</span>
+
+</a>
+		</li>
+</ul>
+
+			</nav>
+
+
+								<nav class="navigation navigation-tags" aria-label="Sidebar Tags Navigation">
+						<a
+		href="/tags/"
+	class="nav-link nav-link-tags nav-category"
+		data-tippy-content="Tags"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.66667 6.66675H6.675M1.66667 4.33341V8.06217C1.66667 8.46983 1.66667 8.67366 1.71272 8.8655C1.75354 9.0355 1.82088 9.19808 1.91227 9.34725C2.01533 9.51541 2.15946 9.65958 2.44772 9.94783L8.83825 16.3383C9.82825 17.3283 10.3233 17.8234 10.8941 18.0088C11.3963 18.172 11.9371 18.172 12.4392 18.0088C13.01 17.8234 13.5051 17.3283 14.4951 16.3383L16.3383 14.4952C17.3283 13.5052 17.8233 13.0101 18.0088 12.4392C18.1719 11.9372 18.1719 11.3963 18.0088 10.8942C17.8233 10.3234 17.3283 9.82833 16.3383 8.83833L9.94775 2.4478C9.6595 2.15954 9.51533 2.01541 9.34717 1.91235C9.198 1.82096 9.03542 1.75362 8.86542 1.7128C8.67358 1.66675 8.46975 1.66675 8.0621 1.66675H4.33333C3.39992 1.66675 2.9332 1.66675 2.57668 1.84841C2.26308 2.00819 2.00811 2.26316 1.84833 2.57676C1.66667 2.93328 1.66667 3.39999 1.66667 4.33341ZM7.08333 6.66675C7.08333 6.89686 6.89678 7.08341 6.66667 7.08341C6.43655 7.08341 6.25 6.89686 6.25 6.66675C6.25 6.43663 6.43655 6.25008 6.66667 6.25008C6.89678 6.25008 7.08333 6.43663 7.08333 6.66675Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Tags</span>
+
+			<svg class="icon icon-arrow-right" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 6.16675L16.8333 10.0001L13 13.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.16669 10H16.8333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</a>
+						<ul>
+							<li>
+								<a
+		href="/tag/artificial-intelligence/"
+	class="nav-link nav-link-artificial-intelligence"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Artificial Intelligence</span>
+
+</a>
+							</li>
+							<li>
+								<a
+		href="/tag/knowledge-graph/"
+	class="nav-link nav-link-knowledge-graph"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Knowledge Graph</span>
+
+</a>
+							</li>
+							<li>
+								<a
+		href="/tag/ai-in-health/"
+	class="nav-link nav-link-ai-in-health"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Ai in Health</span>
+
+</a>
+							</li>
+							<li>
+								<a
+		href="/tag/persistent-identifiers/"
+	class="nav-link nav-link-persistent-identifiers"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Persistent Identifiers</span>
+
+</a>
+							</li>
+						</ul>
+					</nav>
+
+
+			<footer class="footer">
+	<nav class="navigation" aria-label="Footer Socials Navigation">
+		<ul class="social-links">
+  <li>
+		<a href="https://x.com/ghost" class="social-link" target="_blank" rel="noopener noreferrer">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M18.2437 2.25H21.5531L14.325 10.5094L22.8281 21.75H16.1719L10.9547 14.9344L4.99216 21.75H1.6781L9.40779 12.9141L1.25623 2.25H8.08123L12.7922 8.47969L18.2437 2.25ZM17.0812 19.7719H18.914L7.08279 4.125H5.11404L17.0812 19.7719Z" fill="currentColor"/>
+</svg>
+      <span>X</span>
+		</a>
+  </li>
+  <li>
+		<a href="https://www.facebook.com/ghost" class="social-link" target="_blank" rel="noopener noreferrer">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M24 12C24 5.37188 18.6281 0 12 0C5.37188 0 0 5.37188 0 12C0 17.625 3.87656 22.35 9.10312 23.6484V15.6656H6.62812V12H9.10312V10.4203C9.10312 6.3375 10.95 4.44375 14.9625 4.44375C15.7219 4.44375 17.0344 4.59375 17.5734 4.74375V8.0625C17.2922 8.03437 16.8 8.01562 16.1859 8.01562C14.2172 8.01562 13.4578 8.76094 13.4578 10.6969V12H17.3766L16.7016 15.6656H13.4531V23.9109C19.3969 23.1938 24 18.1359 24 12Z" fill="currentColor"/>
+</svg>
+      <span>Facebook</span>
+		</a>
+  </li>
+</ul>
+	</nav>
+
+	<nav class="navigation navigation-secondary" aria-label="Footer Secondary Navigation">
+		<ul>
+		<li>
+				<a
+		href="#/portal/"
+	class="nav-link nav-link-sign-up"
+>
+
+
+	<span class="label">Sign up</span>
+
+</a>
+		</li>
+</ul>
+
+	</nav>
+
+	<div class="footer-copyright">&copy; 2025 Research Graph<span> - Published with <a href='https://ghost.org/' target='_blank' rel='noopener'>Ghost</a> & <a href='https://www.priority.vision/themes/aspect/' target='_blank' rel='noopener'>Aspect</a></span></div>
+</footer>		</aside>
+
+		<article id="content" class="content post">
+			
+
+
+
+<div class="post-featured">	<figure class="post-featured-image">
+		
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 300w,
+		/content/images/size/w400/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 400w,
+		/content/images/size/w600/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 600w,
+		/content/images/size/w1200/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 1200w,
+		/content/images/size/w1600/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 1600w,
+		/content/images/size/w2000/format/webp/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png"
+		srcset="/content/images/size/w300/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 300w,
+		/content/images/size/w400/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 400w,
+		/content/images/size/w600/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 600w,
+		/content/images/size/w1200/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 1200w,
+		/content/images/size/w1600/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 1600w,
+		/content/images/size/w2000/2025/06/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--9-.png 2000w"
+		width="1340"
+		height="530"
+		alt="Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>			<figcaption><span style="white-space: pre-wrap;">Image generated with Google’s Gemini, 24 February 2024.</span></figcaption>
+	</figure>
+</div>
+<div class="post-content-grid">
+	<header class="post-header container">
+		<nav class="post-tags" aria-label="Post Tags Navigation">
+	<ul>
+			<li>
+				<a class="post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+			</li>
+	</ul>
+</nav>
+
+		<h1 class="post-title">Understanding Retrieval Pitfalls: Challenges Faced by Retrieval Augmented Generation (RAG) models</h1>
+
+			<p class="post-excerpt">Improving the performance and application of Large Language Models</p>
+
+		<div class="post-header-info">
+			<ul class="post-meta">
+					<li>
+	<div class="post-meta-author">
+		<a href="/author/amanda/" class="post-meta-author-image" tabindex="-1" aria-label="Amanda Kau" data-tooltip-custom="author">
+					
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/format/webp/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/format/webp/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/format/webp/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/format/webp/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/format/webp/2025/06/IMG_7117.jpeg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/06/IMG_7117.jpeg"
+		srcset="/content/images/size/w300/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/2025/06/IMG_7117.jpeg 2000w"
+		width="1340"
+		height="530"
+		alt="Amanda Kau"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>		</a>
+		by <a href=https://hub.researchgraph.org/author/amanda/ data-tooltip-custom='author'>Amanda Kau</a>
+		<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/amanda/" class="tooltip-avatar" aria-label="Amanda Kau" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/format/webp/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/format/webp/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/format/webp/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/format/webp/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/format/webp/2025/06/IMG_7117.jpeg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/06/IMG_7117.jpeg"
+		srcset="/content/images/size/w300/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/2025/06/IMG_7117.jpeg 2000w"
+		width="1340"
+		height="530"
+		alt="Amanda Kau"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/amanda/" class="tooltip-title">Amanda Kau</a>
+	<div>AI Engineer | ANU Master’s Graduate in Machine Learning &amp; Computer Vision</div>
+	<ul class="tooltip-icons"></ul></div>	</div>
+
+</li>				<li>
+					<time class="post-meta-date" datetime="2024-02-27">February 27, 2024</time>
+				</li>
+				<li class="separator">&bull;</li>
+				<li>
+					<span class="post-meta-time">7 min read</span>
+				</li>
+			</ul>
+
+			<div class="post-header-buttons">
+								<div class="post-button-share navigation">
+	<button class="button button-background-200 button-sm dropdown-toggle" aria-expanded="false">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.5 10V13.5C17.5 14.9002 17.5 15.6002 17.2275 16.135C16.9878 16.6054 16.6054 16.9878 16.135 17.2275C15.6002 17.5 14.9002 17.5 13.5 17.5H6.5C5.09987 17.5 4.3998 17.5 3.86503 17.2275C3.39462 16.9878 3.01217 16.6054 2.77248 16.135C2.5 15.6002 2.5 14.9002 2.5 13.5V10M13.3333 5.83333L10 2.5M10 2.5L6.66667 5.83333M10 2.5V12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+		<span class="label">Share</span>
+	</button>
+	<div class="dropdown dropdown-share">
+		<ul><li>
+	<a class="nav-link" href="https://x.com/intent/tweet?url=https%3A%2F%2Fhub.researchgraph.org%2Funderstanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models%2F&text=Understanding%20Retrieval%20Pitfalls%3A%20Challenges%20Faced%20by%20Retrieval%20Augmented%20Generation%20(RAG)%20models" rel="noopener" target="_blank">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M18.2437 2.25H21.5531L14.325 10.5094L22.8281 21.75H16.1719L10.9547 14.9344L4.99216 21.75H1.6781L9.40779 12.9141L1.25623 2.25H8.08123L12.7922 8.47969L18.2437 2.25ZM17.0812 19.7719H18.914L7.08279 4.125H5.11404L17.0812 19.7719Z" fill="currentColor"/>
+</svg>
+		<span class="label">Share on X</span>
+	</a>
+</li>
+
+<li>
+	<a class="nav-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhub.researchgraph.org%2Funderstanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models%2F&quote=Understanding%20Retrieval%20Pitfalls%3A%20Challenges%20Faced%20by%20Retrieval%20Augmented%20Generation%20(RAG)%20models" rel="noopener" target="_blank">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M24 12C24 5.37188 18.6281 0 12 0C5.37188 0 0 5.37188 0 12C0 17.625 3.87656 22.35 9.10312 23.6484V15.6656H6.62812V12H9.10312V10.4203C9.10312 6.3375 10.95 4.44375 14.9625 4.44375C15.7219 4.44375 17.0344 4.59375 17.5734 4.74375V8.0625C17.2922 8.03437 16.8 8.01562 16.1859 8.01562C14.2172 8.01562 13.4578 8.76094 13.4578 10.6969V12H17.3766L16.7016 15.6656H13.4531V23.9109C19.3969 23.1938 24 18.1359 24 12Z" fill="currentColor"/>
+</svg>
+		<span class="label">Share on Facebook</span>
+	</a>
+</li>
+
+<li>
+	<a class="nav-link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhub.researchgraph.org%2Funderstanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models%2F&summary=Understanding%20Retrieval%20Pitfalls%3A%20Challenges%20Faced%20by%20Retrieval%20Augmented%20Generation%20(RAG)%20models" rel="noopener" target="_blank">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 1.5H2.99531C2.17031 1.5 1.5 2.17969 1.5 3.01406V20.9859C1.5 21.8203 2.17031 22.5 2.99531 22.5H21C21.825 22.5 22.5 21.8203 22.5 20.9859V3.01406C22.5 2.17969 21.825 1.5 21 1.5ZM7.84687 19.5H4.73438V9.47812H7.85156V19.5H7.84687ZM6.29062 8.10938C5.29219 8.10938 4.48594 7.29844 4.48594 6.30469C4.48594 5.31094 5.29219 4.5 6.29062 4.5C7.28437 4.5 8.09531 5.31094 8.09531 6.30469C8.09531 7.30312 7.28906 8.10938 6.29062 8.10938ZM19.5141 19.5H16.4016V14.625C16.4016 13.4625 16.3781 11.9672 14.7844 11.9672C13.1625 11.9672 12.9141 13.2328 12.9141 14.5406V19.5H9.80156V9.47812H12.7875V10.8469H12.8297C13.2469 10.0594 14.2641 9.22969 15.7781 9.22969C18.9281 9.22969 19.5141 11.3062 19.5141 14.0062V19.5Z" fill="currentColor"/>
+</svg>		<span class="label">Share on LinkedIn</span>
+	</a>
+</li>
+
+<li>
+	<a class="nav-link" href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fhub.researchgraph.org%2Funderstanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models%2F&description=Understanding%20Retrieval%20Pitfalls%3A%20Challenges%20Faced%20by%20Retrieval%20Augmented%20Generation%20(RAG)%20models" rel="noopener" target="_blank">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M23.625 12C23.625 18.4218 18.4218 23.625 12 23.625C10.8 23.625 9.64688 23.4422 8.55938 23.1047C9.03282 22.3312 9.74062 21.0655 10.0031 20.0578C10.1437 19.5141 10.725 17.2922 10.725 17.2922C11.1047 18.0141 12.2109 18.6281 13.3875 18.6281C16.8938 18.6281 19.4204 15.4032 19.4204 11.3953C19.4204 7.55625 16.2843 4.68282 12.2531 4.68282C7.2375 4.68282 4.57032 8.04843 4.57032 11.7188C4.57032 13.425 5.4797 15.5484 6.92813 16.2234C7.14845 16.3266 7.26562 16.2796 7.31719 16.0687C7.35469 15.9093 7.55157 15.1172 7.64062 14.7516C7.66875 14.6344 7.65469 14.5313 7.56094 14.4188C7.0875 13.8328 6.70312 12.7641 6.70312 11.7656C6.70312 9.20155 8.64375 6.72187 11.9531 6.72187C14.8078 6.72187 16.8094 8.66719 16.8094 11.4516C16.8094 14.5969 15.2204 16.7766 13.1531 16.7766C12.0141 16.7766 11.1563 15.8344 11.4328 14.6766C11.7609 13.2937 12.3937 11.8031 12.3937 10.8047C12.3937 9.91407 11.9156 9.16875 10.9219 9.16875C9.7547 9.16875 8.81719 10.3734 8.81719 11.9906C8.81719 13.0219 9.16407 13.7156 9.16407 13.7156C9.16407 13.7156 8.01563 18.5813 7.80468 19.4906C7.57032 20.4938 7.66407 21.9093 7.7625 22.8282C3.44063 21.1359 0.375 16.9266 0.375 12C0.375 5.57812 5.57812 0.375 12 0.375C18.4218 0.375 23.625 5.57812 23.625 12Z" fill="currentColor"/>
+</svg>
+		<span class="label">Share on Pinterest</span>
+	</a>
+</li>
+
+<li>
+	<a class="nav-link" href="mailto:?subject=Understanding%20Retrieval%20Pitfalls%3A%20Challenges%20Faced%20by%20Retrieval%20Augmented%20Generation%20(RAG)%20models&body=https%3A%2F%2Fhub.researchgraph.org%2Funderstanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models%2F" rel="noopener" target="_blank">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66667 5.83325L8.47075 10.5961C9.02175 10.9818 9.29725 11.1747 9.59692 11.2493C9.86158 11.3153 10.1384 11.3153 10.4031 11.2493C10.7028 11.1747 10.9783 10.9818 11.5293 10.5961L18.3333 5.83325M5.66667 16.6666H14.3333C15.7335 16.6666 16.4335 16.6666 16.9683 16.3941C17.4388 16.1544 17.8212 15.772 18.0608 15.3016C18.3333 14.7668 18.3333 14.0668 18.3333 12.6666V7.33325C18.3333 5.93312 18.3333 5.23305 18.0608 4.69828C17.8212 4.22787 17.4388 3.84542 16.9683 3.60574C16.4335 3.33325 15.7335 3.33325 14.3333 3.33325H5.66667C4.26653 3.33325 3.56647 3.33325 3.03169 3.60574C2.56128 3.84542 2.17883 4.22787 1.93915 4.69828C1.66667 5.23305 1.66667 5.93312 1.66667 7.33325V12.6666C1.66667 14.0668 1.66667 14.7668 1.93915 15.3016C2.17883 15.772 2.56128 16.1544 3.03169 16.3941C3.56647 16.6666 4.26653 16.6666 5.66667 16.6666Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+		<span class="label">Email</span>
+	</a>
+</li>
+
+<li>
+	<button class="nav-link" data-clipboard-text="https://hub.researchgraph.org/understanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models/">
+		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.33332 10.8332C8.69117 11.3117 9.14775 11.7075 9.67208 11.994C10.1964 12.2805 10.7762 12.4508 11.3722 12.4935C11.9682 12.5362 12.5663 12.4502 13.1261 12.2413C13.6859 12.0326 14.1942 11.7057 14.6167 11.2832L17.1167 8.78325C17.8757 7.99737 18.2956 6.94486 18.2862 5.85238C18.2767 4.7599 17.8384 3.71484 17.0659 2.94231C16.2933 2.16977 15.2483 1.73157 14.1558 1.72208C13.0633 1.71258 12.0108 2.13256 11.225 2.89156L9.79167 4.31656M11.6667 9.16658C11.3087 8.68808 10.8522 8.29223 10.3278 8.00577C9.8035 7.71931 9.22375 7.54896 8.62775 7.50627C8.03182 7.46359 7.43367 7.54958 6.87387 7.7584C6.31407 7.96722 5.80572 8.294 5.38332 8.71658L2.88332 11.2166C2.12433 12.0024 1.70435 13.0549 1.71385 14.1474C1.72334 15.2399 2.16154 16.2849 2.93407 17.0575C3.70661 17.83 4.75167 18.2682 5.84415 18.2777C6.93663 18.2872 7.98914 17.8672 8.775 17.1082L10.2 15.6832" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+		<span class="label">Copy link</span>
+	</button>
+</li></ul>
+	</div>
+</div>			</div>
+		</div>
+	</header>
+
+	
+
+		<div class="post-content-wrapper">
+
+			<div class="post-content">
+				<h1 id="introduction">Introduction</h1><p>Large language models (LLMs) like GPT-4, the engine of products like ChatGPT, have taken centre stage in recent years due to their astonishing capabilities. Yet, they are far from perfect. Many of us have since learnt — perhaps when asking ChatGPT a question or employing it to write our reports — that LLMs can hallucinate. This happens when the LLM so eloquently expresses false knowledge that we might be fooled by it. This major flaw has spurred the popularity of Retrieval-Augmented Generation (RAG) techniques as a way to optimise an LLM’s responses.</p><p>To start off, this article will cover a brief overview of the key concept behind RAG.&nbsp;Subsequently, a review on several issues behind the retrieval step of RAG will be presented.&nbsp;In particular, this article will review ideas on when and what should be retrieved, the quantity of retrieved documents, effects of data quality, and RAG applied to different domains. Strategies proposed by the research community will also be briefly introduced for each challenge.</p><h1 id="a-brief-introduction-to-rag"><strong>A Brief Introduction To RAG</strong></h1><figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://miro.medium.com/v2/resize:fit:840/0*T6Zr0wCmrTOe83xp" class="kg-image" alt="" loading="lazy" width="700" height="320"><figcaption><span style="white-space: pre-wrap;">Simple diagram about RAG.</span></figcaption></figure><p>Using RAG is very much like performing Google searches while writing a report. When the LLM attempts to generate a sentence without the requisite knowledge, it needs to&nbsp;reference an external source to gain that knowledge. Particularly prevalent in tasks like&nbsp;<strong>open domain question answering</strong>&nbsp;(ODQA), the LLM may be enquired about a specific topic which requires in-depth knowledge.&nbsp;Although LLMs are trained with extensive amounts of diverse data, it is unreasonable to expect the LLM to have internalised every potential answer and to deliver a response that an expert might provide.</p><p>This is where RAG comes in handy. RAG comprises two components: the retriever and the generator. The retriever&nbsp;gathers a set of supporting documents from a given source based on an input query and passes them on to the generator or LLM. This allows the LLM to&nbsp;avoid hallucinations, thereby crafting more well-informed and relevant responses.</p><h1 id="addressing-retrieval-problems-and-strategies"><strong>Addressing Retrieval Problems and Strategies</strong></h1><h2 id="1-when-and-what-to-retrieve">1. When and What To Retrieve</h2><p>Many retrieval-augmented language models utilise a single retrieval process, which is particularly restrictive if the model is tasked to generate a long passage of text. It is akin to writing a report whilst only being permitted to reference documents once at the start. Conversely, models that attempt to do multiple retrievals might do so at fixed intervals. This seems illogical when we draw parallels to our report writing scenario. It is like doing an online search every two sentences we write. When the LLM is routinely bombarded by additional information it does not require, the LLM might be disoriented, resulting in it returning incoherent or irrelevant responses.</p><p>Some attempts to address this problem have been made, such as the&nbsp;<strong>Forward-Looking Active REtrieval</strong>&nbsp;(FLARE) augmented generation method. The premise of FLARE is simple:&nbsp;retrieve supporting information only when the LLM signals low confidence indicating a lack of knowledge.</p><p>The subsequent challenge revolves around what information to retrieve for the upcoming sentence. Imagine if you were tasked to find evidence for a friend who’s formulating an argument, but you must provide the evidence without knowing what their next sentence will be.&nbsp;FLARE targets this by prompting the LLM to generate a temporary potential sentence and using this to retrieve documents — essentially, asking the friend what they might want to say next before doing your search.</p><h2 id="2-quantity-of-retrieved-documents"><strong>2.&nbsp;Quantity&nbsp;of Retrieved Documents</strong></h2><p>The architectures of some RAG models confine them to retrieving&nbsp;a certain number of supporting documents. Picture writing a report whilst only having access to a fixed number of documents — your viewpoints and content would be largely based on that limited pool of knowledge. If that set of documents were replaced, your argument might undergo a drastic shift as your supporting information might change, resulting in a lack of consistency in responses. LLMs are vulnerable in a similar way and are sensitive to the quality of retrieved documents. That is,&nbsp;if retrieved documents prove irrelevant to the context, the LLM’s output suffers.</p><p>One attempt to mitigate this involves clustering the training data as in the case of&nbsp;<strong>MemGM</strong>, a memory-augmented generative model. This notion of memory-augmentation means the model internalises the characteristics of clusters of responses and uses them to aid response generation. To do this, the data, which consists of query and response example pairs, is grouped according to the similarity of queries. Subsequently,&nbsp;when MemGM retrieves information from this database, the cluster average representing the cluster’s characteristics is returned instead of a set of documents.&nbsp;This approach dilutes individual responses, hence decreasing the LLM’s sensitivity to individual documents. This also serves as a means to provide generalised support from a large number of documents to the LLM.</p><h2 id="3-quality-of-retrieved-documents">3.&nbsp;Quality&nbsp;of Retrieved Documents</h2><p><strong>Data Recency:&nbsp;</strong>The knowledge encapsulated within LLMs is frozen in time from when they were trained, preventing them from being able to provide up-to-the-minute information about the world. In fact, without taking corrective measures, LLMs become increasingly outdated and irrelevant over time. Nonetheless, they are still expected to interact with the ever changing world, so data recency is of critical importance.</p><p>One proposed solution is to harvest the power of the Internet. Not only does it contain the most current information, but years of refinement have enabled Internet search engines to properly rank results, navigate online safety and privacy concerns, and more. By allowing RAG models to access the Internet dynamically, LLM models would always have access to up-to-date information to craft accurate responses.</p><p><strong>Data Relevance:&nbsp;</strong>Another factor influencing quality is the relevance of the retrieved results to the context of the conversation or question posed to the LLM. Ideally, irrelevant retrieved data should not harm the LLM’s performance, but this is not the case. Instead,&nbsp;irrelevant data tends to mislead the LLM to either provide inaccurate answers or lose sight of the initial context. This error compounds in multi-hop question answering scenarios where successive questions cause the LLM to be misled further with each question.</p><p>A simple&nbsp;<strong>natural language inference</strong>&nbsp;(NLI) model can be employed on top of the LLM to circumvent this issue. Simply put,&nbsp;the NLI model identifies the relevance of the retrieved information to the conversational context. If the retrieved documents are deemed as irrelevant,&nbsp;the prompt is given directly to the LLM without additional documents to avoid confusing it. Additionally, if training the LLM is an available option, studies have shown that even with a relatively small dataset of 1,000 examples, LLMs can be trained to disregard irrelevant documents.</p><h2 id="4-problems-generalising-to-specific-domains">4. Problems Generalising to&nbsp;Specific Domains</h2><p>The final challenge discussed in this article occurs when we want the LLM to have expertise in specific&nbsp;domains, like healthcare or finance. It was briefly mentioned in the introduction to RAG that it contains a retriever component.&nbsp;The retriever in the original RAG model was trained on Wikipedia-based datasets.&nbsp;Therefore, RAG performs well when provided with domain-specific data that adheres to the Wikipedia article format, but fails with other data formats. A simple example is financial news, which is usually succinct in the form of news flashes or tweets, and does not provide additional context as it is assumed that the reader possesses the necessary background knowledge. This adds another&nbsp;disadvantage to the LLM as it will not have the necessary context to understand the content presented to it.</p><p>The RAG model can be further fine-tuned to be domain-specific to target this specific issue. In fact, a group of researchers proposed&nbsp;RAG-end2end which extends the original RAG by jointly training all of its components for a specific domain. However, this is very&nbsp;computationally expensive&nbsp;and unfeasible for someone who lacks access to multiple GPUs. Moreover, for broad topics like finance, it is key to incorporate macroeconomic information and other contextual information to give the LLM a well-rounded view of the situation, which remains an area of research.</p><h1 id="conclusion">Conclusion</h1><p>In summary, this article has offered insight into some challenges that may arise when employing RAG and some solutions proposed by the research community. It highlights the importance of understanding data sources and retrieval steps performed in RAG such that the retrieval segment may benefit the LLM instead of harm its performance. In particular, one should pay attention to when and what documents are retrieved, as well as the quantity and quality of retrieved documents. Most importantly, retrieved information should be relevant to the context and desired domain for the generation of optimal responses.</p><h1 id="references">References</h1><ul><li>Jiang, Z., Xu, F. F., Gao, L., Sun, Z., Liu, Q., Dwivedi-Yu, J., Yang, Y., Callan, J., &amp; Neubig, G. (2023). Active Retrieval Augmented Generation (Version 2). arXiv.&nbsp;<a href="https://doi.org/10.48550/ARXIV.2305.06983?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.48550/ARXIV.2305.06983</a></li><li>Tian, Z., Bi, W., Li, X., &amp; Zhang, N. L. (2019). Learning to Abstract for Memory-augmented Conversational Response Generation. In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics. Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics. Association for Computational Linguistics.&nbsp;<a href="https://doi.org/10.18653/v1/p19-1371?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.18653/v1/p19-1371</a></li><li>Komeili, M., Shuster, K., &amp; Weston, J. (2021). Internet-Augmented Dialogue Generation (Version 1). arXiv.&nbsp;<a href="https://doi.org/10.48550/ARXIV.2107.07566?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.48550/ARXIV.2107.07566</a></li><li>Yoran, O., Wolfson, T., Ram, O., &amp; Berant, J. (2023). Making Retrieval-Augmented Language Models Robust to Irrelevant Context (Version 1). arXiv.&nbsp;<a href="https://doi.org/10.48550/ARXIV.2310.01558?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.48550/ARXIV.2310.01558</a></li><li>Siriwardhana, S., Weerasekera, R., Wen, E., Kaluarachchi, T., Rana, R., &amp; Nanayakkara, S. (2023). Improving the Domain Adaptation of Retrieval Augmented Generation (RAG) Models for Open Domain Question Answering. In Transactions of the Association for Computational Linguistics (Vol. 11, pp. 1–17). MIT Press.&nbsp;<a href="https://doi.org/10.1162/tacl_a_00530?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.1162/tacl_a_00530</a></li><li>Zhang, B., Yang, H., Zhou, T., Ali Babar, M., &amp; Liu, X.-Y. (2023). Enhancing Financial Sentiment Analysis via Retrieval Augmented Large Language Models. In 4th ACM International Conference on AI in Finance. ICAIF ’23: 4th ACM International Conference on AI in Finance. ACM.&nbsp;<a href="https://doi.org/10.1145/3604237.3626866?ref=hub.researchgraph.org" rel="noopener ugc nofollow">https://doi.org/10.1145/3604237.3626866</a></li></ul><div class="kg-card kg-cta-card kg-cta-bg-grey kg-cta-minimal    " data-layout="minimal">
+            
+            <div class="kg-cta-content">
+                
+                
+                    <div class="kg-cta-content-inner">
+                    
+                        <div class="kg-cta-text">
+                            <p><span style="white-space: pre-wrap;">Catch the latest version of this article over on Medium.com. Hit the button below to join our readers there.</span></p>
+                        </div>
+                    
+                    
+                        <a href="https://medium.com/@researchgraph/understanding-retrieval-pitfalls-challenges-faced-by-retrieval-augmented-generation-rag-models-5bcc28a03842?ref=hub.researchgraph.org" class="kg-cta-button " style="background-color: #000000; color: #ffffff;">
+                            Learn more on Medium
+                        </a>
+                        
+                    </div>
+                
+            </div>
+        </div>
+			</div>
+
+
+			<div class="post-card-author">
+	<a href="/author/amanda/" class="post-card-author-image" aria-label="Amanda Kau" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/format/webp/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/format/webp/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/format/webp/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/format/webp/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/format/webp/2025/06/IMG_7117.jpeg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/06/IMG_7117.jpeg"
+		srcset="/content/images/size/w300/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/2025/06/IMG_7117.jpeg 2000w"
+		width="1340"
+		height="530"
+		alt="Amanda Kau"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+
+	<a href="/author/amanda/" class="post-card-author-name">Amanda Kau</a>
+
+		<div class="post-card-author-bio">AI Engineer | ANU Master’s Graduate in Machine Learning &amp; Computer Vision</div>
+
+	<ul class="post-card-author-socials"></ul></div>
+		</div>
+
+			<aside class="post-sidebar">
+	<div class="post-card-author">
+	<a href="/author/amanda/" class="post-card-author-image" aria-label="Amanda Kau" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/format/webp/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/format/webp/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/format/webp/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/format/webp/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/format/webp/2025/06/IMG_7117.jpeg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/06/IMG_7117.jpeg"
+		srcset="/content/images/size/w300/2025/06/IMG_7117.jpeg 300w,
+		/content/images/size/w400/2025/06/IMG_7117.jpeg 400w,
+		/content/images/size/w600/2025/06/IMG_7117.jpeg 600w,
+		/content/images/size/w1200/2025/06/IMG_7117.jpeg 1200w,
+		/content/images/size/w1600/2025/06/IMG_7117.jpeg 1600w,
+		/content/images/size/w2000/2025/06/IMG_7117.jpeg 2000w"
+		width="1340"
+		height="530"
+		alt="Amanda Kau"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+
+	<a href="/author/amanda/" class="post-card-author-name">Amanda Kau</a>
+
+		<div class="post-card-author-bio">AI Engineer | ANU Master’s Graduate in Machine Learning &amp; Computer Vision</div>
+
+	<ul class="post-card-author-socials"></ul></div>
+
+	<div class="post-sidebar-sticky toc-scroll">
+			<div class="toc toc-hidden">
+	<button class="toc-button button button-sm button-icon button-transparent button-rounded" aria-expanded="false" aria-label="Collapse table of contents">
+		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="1.25" y1="4.25" x2="10.75" y2="4.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="3.25" y1="8.25" x2="12.75" y2="8.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="5.25" y1="12.25" x2="14.75" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line></svg>
+	</button>
+	<div class="toc-title">
+		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="1.25" y1="4.25" x2="10.75" y2="4.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="3.25" y1="8.25" x2="12.75" y2="8.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="5.25" y1="12.25" x2="14.75" y2="12.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line></svg>
+
+		On this page
+	</div>
+	<div class="toc-unlock-link" style="display: none;">
+		<a href="#post-upgrade-cta">
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 11.3333C8.36819 11.3333 8.66667 11.0349 8.66667 10.6667C8.66667 10.2985 8.36819 10 8 10C7.63181 10 7.33333 10.2985 7.33333 10.6667C7.33333 11.0349 7.63181 11.3333 8 11.3333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.6667 6.66667H3.33333C2.59695 6.66667 2 7.26362 2 8V13.3333C2 14.0697 2.59695 14.6667 3.33333 14.6667H12.6667C13.403 14.6667 14 14.0697 14 13.3333V8C14 7.26362 13.403 6.66667 12.6667 6.66667Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.66667 6.66667V4.66667C4.6667 3.93291 4.90884 3.21967 5.35553 2.63756C5.80222 2.05544 6.42851 1.63698 7.13726 1.44706C7.84601 1.25715 8.59762 1.3064 9.27553 1.58718C9.95344 1.86796 10.5198 2.36457 10.8867 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			Unlock full content
+		</a>
+	</div>
+</div>
+					<form class="form-subscribe" data-members-form="subscribe">
+					<label for="subscribe-email">Subscribe to Newsletter</label>
+				<div>
+					<input type="email" id="subscribe-email" placeholder="Type your email..." required data-members-email>
+					<button class="button" type="submit">
+						<span class="label hide-when-loading hide-when-success">Subscribe</span>
+						<span class="label loading">Sending<svg class="icon icon-loader" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path opacity="0.1" d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z" stroke="currentColor" stroke-width="1.5"/>
+<path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+</span>
+						<span class="label success">Sent<svg class="icon icon-check" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.6667 5L7.5 14.1667L3.33334 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</span>
+					</button>
+				</div>
+				<span class="form-alert">
+					<span class="success">Please check your inbox and click the confirmation link.</span>
+					<span class="error" data-members-error></span>
+				</span>
+			</form>
+	</div>
+</aside>
+
+</div>
+
+	<section class="section section-read-next">
+		<h2 class="section-head">Read Next</h2>
+
+		<div class="swiper slider-cards slider-posts">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/data-and-analytics-with-ai/" aria-label="Data and Analytics with AI" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 300w,
+		/content/images/size/w400/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 400w,
+		/content/images/size/w600/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png"
+		srcset="/content/images/size/w300/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 300w,
+		/content/images/size/w400/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 400w,
+		/content/images/size/w600/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--43-.png 600w
+"
+		width="370"
+		height="210"
+		alt="Data and Analytics with AI"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">6 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/data-and-analytics-with-ai/">Data and Analytics with AI</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/aishwarya/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/format/webp/2025/05/IMG_6365-2.JPG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w36/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/2025/05/IMG_6365-2.JPG 72w
+"
+		width="36"
+		height="36"
+		alt="Aishwarya Nambissan"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/aishwarya/" class="card-post-author-name" data-tooltip-custom="author">
+						Aishwarya Nambissan
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/aishwarya/" class="tooltip-avatar" aria-label="Aishwarya Nambissan" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/format/webp/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/format/webp/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/format/webp/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/IMG_6365-2.JPG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w300/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/2025/05/IMG_6365-2.JPG 2000w"
+		width="1340"
+		height="530"
+		alt="Aishwarya Nambissan"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/aishwarya/" class="tooltip-title">Aishwarya Nambissan</a>
+	<div>Data Scientist at the Research Graph Foundation. Experienced in Artificial Intelligence, scholarly communication and open science.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0003-3823-6609" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-09-01">Sep 1, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/what-is-agentic-ai/" aria-label="What is Agentic AI?" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 300w,
+		/content/images/size/w400/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 400w,
+		/content/images/size/w600/format/webp/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png"
+		srcset="/content/images/size/w300/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 300w,
+		/content/images/size/w400/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 400w,
+		/content/images/size/w600/2025/08/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--42-.png 600w
+"
+		width="370"
+		height="210"
+		alt="What is Agentic AI?"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">5 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/what-is-agentic-ai/">What is Agentic AI?</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/aishwarya/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/format/webp/2025/05/IMG_6365-2.JPG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w36/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/2025/05/IMG_6365-2.JPG 72w
+"
+		width="36"
+		height="36"
+		alt="Aishwarya Nambissan"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/aishwarya/" class="card-post-author-name" data-tooltip-custom="author">
+						Aishwarya Nambissan
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/aishwarya/" class="tooltip-avatar" aria-label="Aishwarya Nambissan" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/format/webp/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/format/webp/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/format/webp/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/IMG_6365-2.JPG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w300/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/2025/05/IMG_6365-2.JPG 2000w"
+		width="1340"
+		height="530"
+		alt="Aishwarya Nambissan"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/aishwarya/" class="tooltip-title">Aishwarya Nambissan</a>
+	<div>Data Scientist at the Research Graph Foundation. Experienced in Artificial Intelligence, scholarly communication and open science.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0003-3823-6609" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-08-07">Aug 7, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/enhancing-local-government-operations-with-roboflow-powered-object-detection/" aria-label="Introduction to Roboflow and  Object Detection with AI" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 300w,
+		/content/images/size/w400/format/webp/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 400w,
+		/content/images/size/w600/format/webp/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png"
+		srcset="/content/images/size/w300/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 300w,
+		/content/images/size/w400/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 400w,
+		/content/images/size/w600/2025/07/Mistral-AI-Logo--Retrieved-from-Mistral-AI-Website--16--1.png 600w
+"
+		width="370"
+		height="210"
+		alt="Introduction to Roboflow and  Object Detection with AI"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">7 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/enhancing-local-government-operations-with-roboflow-powered-object-detection/">Introduction to Roboflow and  Object Detection with AI</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/aishwarya/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/format/webp/2025/05/IMG_6365-2.JPG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w36/2025/05/IMG_6365-2.JPG 36w,
+		/content/images/size/w72/2025/05/IMG_6365-2.JPG 72w
+"
+		width="36"
+		height="36"
+		alt="Aishwarya Nambissan"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/aishwarya/" class="card-post-author-name" data-tooltip-custom="author">
+						Aishwarya Nambissan
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/aishwarya/" class="tooltip-avatar" aria-label="Aishwarya Nambissan" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/format/webp/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/format/webp/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/format/webp/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/IMG_6365-2.JPG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_6365-2.JPG"
+		srcset="/content/images/size/w300/2025/05/IMG_6365-2.JPG 300w,
+		/content/images/size/w400/2025/05/IMG_6365-2.JPG 400w,
+		/content/images/size/w600/2025/05/IMG_6365-2.JPG 600w,
+		/content/images/size/w1200/2025/05/IMG_6365-2.JPG 1200w,
+		/content/images/size/w1600/2025/05/IMG_6365-2.JPG 1600w,
+		/content/images/size/w2000/2025/05/IMG_6365-2.JPG 2000w"
+		width="1340"
+		height="530"
+		alt="Aishwarya Nambissan"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/aishwarya/" class="tooltip-title">Aishwarya Nambissan</a>
+	<div>Data Scientist at the Research Graph Foundation. Experienced in Artificial Intelligence, scholarly communication and open science.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0003-3823-6609" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+					<div class="card-post-author">
+						<a href="/author/amiraryani/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+									
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/amir-profile.png 36w,
+		/content/images/size/w72/format/webp/2025/05/amir-profile.png 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/amir-profile.png"
+		srcset="/content/images/size/w36/2025/05/amir-profile.png 36w,
+		/content/images/size/w72/2025/05/amir-profile.png 72w
+"
+		width="36"
+		height="36"
+		alt="Amir Aryani"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>						</a>
+						<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/amiraryani/" class="tooltip-avatar" aria-label="Amir Aryani" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/amir-profile.png 300w,
+		/content/images/size/w400/format/webp/2025/05/amir-profile.png 400w,
+		/content/images/size/w600/format/webp/2025/05/amir-profile.png 600w,
+		/content/images/size/w1200/format/webp/2025/05/amir-profile.png 1200w,
+		/content/images/size/w1600/format/webp/2025/05/amir-profile.png 1600w,
+		/content/images/size/w2000/format/webp/2025/05/amir-profile.png 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/amir-profile.png"
+		srcset="/content/images/size/w300/2025/05/amir-profile.png 300w,
+		/content/images/size/w400/2025/05/amir-profile.png 400w,
+		/content/images/size/w600/2025/05/amir-profile.png 600w,
+		/content/images/size/w1200/2025/05/amir-profile.png 1200w,
+		/content/images/size/w1600/2025/05/amir-profile.png 1600w,
+		/content/images/size/w2000/2025/05/amir-profile.png 2000w"
+		width="1340"
+		height="530"
+		alt="Amir Aryani"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/amiraryani/" class="tooltip-title">Amir Aryani</a>
+	<div>Amir Aryani is the Head of the Social Data Analytics (SoDA) Lab in the Social Innovation Research Institute. </div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://x.com/amir_aryani" target="_blank" rel="noopener noreferrer" >
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M18.2437 2.25H21.5531L14.325 10.5094L22.8281 21.75H16.1719L10.9547 14.9344L4.99216 21.75H1.6781L9.40779 12.9141L1.25623 2.25H8.08123L12.7922 8.47969L18.2437 2.25ZM17.0812 19.7719H18.914L7.08279 4.125H5.11404L17.0812 19.7719Z" fill="currentColor"/>
+</svg>
+				<span class="screen-reader-text">X</span>
+			</a>
+		</li><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0000-0002-4259-9774" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>					</div>
+
+				<div class="card-post-authors-more">
+					<button aria-label="View all authors" data-tooltip-custom="authors">+1</button>
+					<div class="tooltip-custom tooltip-custom-authors" style="display:none;">
+	
+		<a href="/author/amiraryani/" class="tooltip-author">
+					
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/amir-profile.png 36w,
+		/content/images/size/w72/format/webp/2025/05/amir-profile.png 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/amir-profile.png"
+		srcset="/content/images/size/w36/2025/05/amir-profile.png 36w,
+		/content/images/size/w72/2025/05/amir-profile.png 72w
+"
+		width="36"
+		height="36"
+		alt="Amir Aryani"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>			Amir Aryani
+		</a>
+	
+</div>				</div>
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-07-29">Jul 29, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/how-ai-helps-business-owners-understand-their-businesses-needs-through-rag-and-automation/" aria-label="How AI Helps Business Owners Understand Their Businesses’ Needs Through RAG and Automation" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/title_image--1-.png 300w,
+		/content/images/size/w400/format/webp/2025/05/title_image--1-.png 400w,
+		/content/images/size/w600/format/webp/2025/05/title_image--1-.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/title_image--1-.png"
+		srcset="/content/images/size/w300/2025/05/title_image--1-.png 300w,
+		/content/images/size/w400/2025/05/title_image--1-.png 400w,
+		/content/images/size/w600/2025/05/title_image--1-.png 600w
+"
+		width="370"
+		height="210"
+		alt="How AI Helps Business Owners Understand Their Businesses’ Needs Through RAG and Automation"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">14 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/how-ai-helps-business-owners-understand-their-businesses-needs-through-rag-and-automation/">How AI Helps Business Owners Understand Their Businesses’ Needs Through RAG and Automation</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/alvaro-bhirawa/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 36w,
+		/content/images/size/w72/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg"
+		srcset="/content/images/size/w36/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 36w,
+		/content/images/size/w72/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 72w
+"
+		width="36"
+		height="36"
+		alt="Immanuel Alvaro Bhirawa"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/alvaro-bhirawa/" class="card-post-author-name" data-tooltip-custom="author">
+						Immanuel Alvaro Bhirawa
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/alvaro-bhirawa/" class="tooltip-avatar" aria-label="Immanuel Alvaro Bhirawa" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 300w,
+		/content/images/size/w400/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 400w,
+		/content/images/size/w600/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 600w,
+		/content/images/size/w1200/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 1200w,
+		/content/images/size/w1600/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 1600w,
+		/content/images/size/w2000/format/webp/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg"
+		srcset="/content/images/size/w300/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 300w,
+		/content/images/size/w400/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 400w,
+		/content/images/size/w600/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 600w,
+		/content/images/size/w1200/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 1200w,
+		/content/images/size/w1600/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 1600w,
+		/content/images/size/w2000/2025/05/WhatsApp-Image-2025-05-15-at-2.27.56-PM-2-1.jpeg 2000w"
+		width="1340"
+		height="530"
+		alt="Immanuel Alvaro Bhirawa"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/alvaro-bhirawa/" class="tooltip-title">Immanuel Alvaro Bhirawa</a>
+	<div>Currently a Bachelor of Advanced Computing (Honors) student at ANU. Passionate about Mathematics and Machine Learning. </div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0009-3354-7794" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-19">May 19, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/how-to-revolutionise-game-asset-creation-using-ai-image-generation-models/" aria-label="How to Revolutionise Game Asset Creation Using AI Image Generation Models" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 300w,
+		/content/images/size/w400/format/webp/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 400w,
+		/content/images/size/w600/format/webp/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png"
+		srcset="/content/images/size/w300/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 300w,
+		/content/images/size/w400/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 400w,
+		/content/images/size/w600/2025/05/Screenshot-2025-05-19-at-11.06.09-am-1.png 600w
+"
+		width="370"
+		height="210"
+		alt="How to Revolutionise Game Asset Creation Using AI Image Generation Models"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">6 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/how-to-revolutionise-game-asset-creation-using-ai-image-generation-models/">How to Revolutionise Game Asset Creation Using AI Image Generation Models</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/yao-chen/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w36/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		width="36"
+		height="36"
+		alt="Yao Chen"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/yao-chen/" class="card-post-author-name" data-tooltip-custom="author">
+						Yao Chen
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/yao-chen/" class="tooltip-avatar" aria-label="Yao Chen" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w300/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		width="1340"
+		height="530"
+		alt="Yao Chen"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/yao-chen/" class="tooltip-title">Yao Chen</a>
+	<div>Master’s student in Machine Learning and Computer Vision at ANU, with a strong interest in AI-driven art creation. Experienced in working with image generation models.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0007-1385-3343" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-19">May 19, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/how-ai-can-help-transform-developer-productivity-through-code-assistants/" aria-label="How AI Can Help Transform Developer Productivity Through Code Assistants" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/week11blog-3.png 300w,
+		/content/images/size/w400/format/webp/2025/05/week11blog-3.png 400w,
+		/content/images/size/w600/format/webp/2025/05/week11blog-3.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/week11blog-3.png"
+		srcset="/content/images/size/w300/2025/05/week11blog-3.png 300w,
+		/content/images/size/w400/2025/05/week11blog-3.png 400w,
+		/content/images/size/w600/2025/05/week11blog-3.png 600w
+"
+		width="370"
+		height="210"
+		alt="How AI Can Help Transform Developer Productivity Through Code Assistants"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">2 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/how-ai-can-help-transform-developer-productivity-through-code-assistants/">How AI Can Help Transform Developer Productivity Through Code Assistants</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/arora-aditya/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/DSC_8881--.jpg 36w,
+		/content/images/size/w72/format/webp/2025/05/DSC_8881--.jpg 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/DSC_8881--.jpg"
+		srcset="/content/images/size/w36/2025/05/DSC_8881--.jpg 36w,
+		/content/images/size/w72/2025/05/DSC_8881--.jpg 72w
+"
+		width="36"
+		height="36"
+		alt="Aditya Arora"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/arora-aditya/" class="card-post-author-name" data-tooltip-custom="author">
+						Aditya Arora
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/arora-aditya/" class="tooltip-avatar" aria-label="Aditya Arora" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/DSC_8881--.jpg 300w,
+		/content/images/size/w400/format/webp/2025/05/DSC_8881--.jpg 400w,
+		/content/images/size/w600/format/webp/2025/05/DSC_8881--.jpg 600w,
+		/content/images/size/w1200/format/webp/2025/05/DSC_8881--.jpg 1200w,
+		/content/images/size/w1600/format/webp/2025/05/DSC_8881--.jpg 1600w,
+		/content/images/size/w2000/format/webp/2025/05/DSC_8881--.jpg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/DSC_8881--.jpg"
+		srcset="/content/images/size/w300/2025/05/DSC_8881--.jpg 300w,
+		/content/images/size/w400/2025/05/DSC_8881--.jpg 400w,
+		/content/images/size/w600/2025/05/DSC_8881--.jpg 600w,
+		/content/images/size/w1200/2025/05/DSC_8881--.jpg 1200w,
+		/content/images/size/w1600/2025/05/DSC_8881--.jpg 1600w,
+		/content/images/size/w2000/2025/05/DSC_8881--.jpg 2000w"
+		width="1340"
+		height="530"
+		alt="Aditya Arora"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/arora-aditya/" class="tooltip-title">Aditya Arora</a>
+	<div>Master of Computing student at the Australian National University | Software Development Engineer</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://x.com/_AdiAr" target="_blank" rel="noopener noreferrer" >
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M18.2437 2.25H21.5531L14.325 10.5094L22.8281 21.75H16.1719L10.9547 14.9344L4.99216 21.75H1.6781L9.40779 12.9141L1.25623 2.25H8.08123L12.7922 8.47969L18.2437 2.25ZM17.0812 19.7719H18.914L7.08279 4.125H5.11404L17.0812 19.7719Z" fill="currentColor"/>
+</svg>
+				<span class="screen-reader-text">X</span>
+			</a>
+		</li><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0006-5800-1198" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-19">May 19, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/how-ai-transforms-mental-wellness-from-applications-to-essential-questions/" aria-label="How AI Transforms Mental Wellness: From Applications to Essential Questions" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/Screenshot-2025-05-19-154352-1-1.png 300w,
+		/content/images/size/w400/format/webp/2025/05/Screenshot-2025-05-19-154352-1-1.png 400w,
+		/content/images/size/w600/format/webp/2025/05/Screenshot-2025-05-19-154352-1-1.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/Screenshot-2025-05-19-154352-1-1.png"
+		srcset="/content/images/size/w300/2025/05/Screenshot-2025-05-19-154352-1-1.png 300w,
+		/content/images/size/w400/2025/05/Screenshot-2025-05-19-154352-1-1.png 400w,
+		/content/images/size/w600/2025/05/Screenshot-2025-05-19-154352-1-1.png 600w
+"
+		width="370"
+		height="210"
+		alt="How AI Transforms Mental Wellness: From Applications to Essential Questions"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">6 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/how-ai-transforms-mental-wellness-from-applications-to-essential-questions/">How AI Transforms Mental Wellness: From Applications to Essential Questions</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/yanran-luo/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 36w,
+		/content/images/size/w72/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/01_2021_08_20_4801-----1-.jpg"
+		srcset="/content/images/size/w36/2025/05/01_2021_08_20_4801-----1-.jpg 36w,
+		/content/images/size/w72/2025/05/01_2021_08_20_4801-----1-.jpg 72w
+"
+		width="36"
+		height="36"
+		alt="Yanran Luo"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/yanran-luo/" class="card-post-author-name" data-tooltip-custom="author">
+						Yanran Luo
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/yanran-luo/" class="tooltip-avatar" aria-label="Yanran Luo" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 300w,
+		/content/images/size/w400/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 400w,
+		/content/images/size/w600/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 600w,
+		/content/images/size/w1200/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 1200w,
+		/content/images/size/w1600/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 1600w,
+		/content/images/size/w2000/format/webp/2025/05/01_2021_08_20_4801-----1-.jpg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/01_2021_08_20_4801-----1-.jpg"
+		srcset="/content/images/size/w300/2025/05/01_2021_08_20_4801-----1-.jpg 300w,
+		/content/images/size/w400/2025/05/01_2021_08_20_4801-----1-.jpg 400w,
+		/content/images/size/w600/2025/05/01_2021_08_20_4801-----1-.jpg 600w,
+		/content/images/size/w1200/2025/05/01_2021_08_20_4801-----1-.jpg 1200w,
+		/content/images/size/w1600/2025/05/01_2021_08_20_4801-----1-.jpg 1600w,
+		/content/images/size/w2000/2025/05/01_2021_08_20_4801-----1-.jpg 2000w"
+		width="1340"
+		height="530"
+		alt="Yanran Luo"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/yanran-luo/" class="tooltip-title">Yanran Luo</a>
+	<div>Master of Computing student with an honor&#x27;s degree in Psychology. Interested in digital health and data analysis.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0003-5278-0491" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-19">May 19, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/ai-in-health/">Ai in Health</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/from-silicon-valley-to-the-global-south-whos-being-left-behind-in-the-ai-revolution/" aria-label="From Silicon Valley to the Global South: Who’s Being Left Behind in the AI Revolution?" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/ai.png 300w,
+		/content/images/size/w400/format/webp/2025/05/ai.png 400w,
+		/content/images/size/w600/format/webp/2025/05/ai.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/ai.png"
+		srcset="/content/images/size/w300/2025/05/ai.png 300w,
+		/content/images/size/w400/2025/05/ai.png 400w,
+		/content/images/size/w600/2025/05/ai.png 600w
+"
+		width="370"
+		height="210"
+		alt="From Silicon Valley to the Global South: Who’s Being Left Behind in the AI Revolution?"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">4 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/from-silicon-valley-to-the-global-south-whos-being-left-behind-in-the-ai-revolution/">From Silicon Valley to the Global South: Who’s Being Left Behind in the AI Revolution?</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/harshitha-thoram/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/IMG_1563--1-.jpg 36w,
+		/content/images/size/w72/format/webp/2025/05/IMG_1563--1-.jpg 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_1563--1-.jpg"
+		srcset="/content/images/size/w36/2025/05/IMG_1563--1-.jpg 36w,
+		/content/images/size/w72/2025/05/IMG_1563--1-.jpg 72w
+"
+		width="36"
+		height="36"
+		alt="Harshitha Thoram"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/harshitha-thoram/" class="card-post-author-name" data-tooltip-custom="author">
+						Harshitha Thoram
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/harshitha-thoram/" class="tooltip-avatar" aria-label="Harshitha Thoram" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/IMG_1563--1-.jpg 300w,
+		/content/images/size/w400/format/webp/2025/05/IMG_1563--1-.jpg 400w,
+		/content/images/size/w600/format/webp/2025/05/IMG_1563--1-.jpg 600w,
+		/content/images/size/w1200/format/webp/2025/05/IMG_1563--1-.jpg 1200w,
+		/content/images/size/w1600/format/webp/2025/05/IMG_1563--1-.jpg 1600w,
+		/content/images/size/w2000/format/webp/2025/05/IMG_1563--1-.jpg 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/IMG_1563--1-.jpg"
+		srcset="/content/images/size/w300/2025/05/IMG_1563--1-.jpg 300w,
+		/content/images/size/w400/2025/05/IMG_1563--1-.jpg 400w,
+		/content/images/size/w600/2025/05/IMG_1563--1-.jpg 600w,
+		/content/images/size/w1200/2025/05/IMG_1563--1-.jpg 1200w,
+		/content/images/size/w1600/2025/05/IMG_1563--1-.jpg 1600w,
+		/content/images/size/w2000/2025/05/IMG_1563--1-.jpg 2000w"
+		width="1340"
+		height="530"
+		alt="Harshitha Thoram"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/harshitha-thoram/" class="tooltip-title">Harshitha Thoram</a>
+	<div>A Bachelor of Advanced Computing student at the Australian National University. Passionate about Software Development and Machine Learning.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0007-4527-7926" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-19">May 19, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/code-generation-gpt-vs-llama-4-2/" aria-label="Code Generation: GPT vs Llama 4" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 300w,
+		/content/images/size/w400/format/webp/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 400w,
+		/content/images/size/w600/format/webp/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png"
+		srcset="/content/images/size/w300/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 300w,
+		/content/images/size/w400/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 400w,
+		/content/images/size/w600/2025/05/06c0db16-6310-47f2-8847-251601537d3f-1024x683-2.png 600w
+"
+		width="370"
+		height="210"
+		alt="Code Generation: GPT vs Llama 4"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">4 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/code-generation-gpt-vs-llama-4-2/">Code Generation: GPT vs Llama 4</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/yao-chen/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w36/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		width="36"
+		height="36"
+		alt="Yao Chen"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/yao-chen/" class="card-post-author-name" data-tooltip-custom="author">
+						Yao Chen
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/yao-chen/" class="tooltip-avatar" aria-label="Yao Chen" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w300/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		width="1340"
+		height="530"
+		alt="Yao Chen"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/yao-chen/" class="tooltip-title">Yao Chen</a>
+	<div>Master’s student in Machine Learning and Computer Vision at ANU, with a strong interest in AI-driven art creation. Experienced in working with image generation models.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0007-1385-3343" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-16">May 16, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="card card-post card-has-image card-has-author">
+	<a class="card-post-image" href="/from-zero-to-classifier-building-a-lightweight-llm-with-olmo-2-on-your-laptop/" aria-label="From Zero to Classifier: Building a Lightweight LLM with OLMo 2 on Your Laptop" tabindex="-1">
+			
+
+<picture>
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/olmo-logo-2.jpg 300w,
+		/content/images/size/w400/format/webp/2025/05/olmo-logo-2.jpg 400w,
+		/content/images/size/w600/format/webp/2025/05/olmo-logo-2.jpg 600w
+"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/olmo-logo-2.jpg"
+		srcset="/content/images/size/w300/2025/05/olmo-logo-2.jpg 300w,
+		/content/images/size/w400/2025/05/olmo-logo-2.jpg 400w,
+		/content/images/size/w600/2025/05/olmo-logo-2.jpg 600w
+"
+		width="370"
+		height="210"
+		alt="From Zero to Classifier: Building a Lightweight LLM with OLMo 2 on Your Laptop"
+		sizes="(max-width: 539.98px) 94vw, (max-width: 991.98px) 43vw, (max-width: 1574.98px) 25vw, 21vw"
+		loading="lazy"
+	>
+</picture>
+		<span class="card-post-image-badge">
+			<span class="card-post-time">6 min read</span>
+
+
+		</span>
+	</a>
+
+	<div class="card-post-content">
+		<h3 class="card-post-title"><a href="/from-zero-to-classifier-building-a-lightweight-llm-with-olmo-2-on-your-laptop/">From Zero to Classifier: Building a Lightweight LLM with OLMo 2 on Your Laptop</a></h3>
+
+		<div class="card-post-authors">
+				<div class="card-post-author">
+					<a href="/author/yao-chen/" class="card-post-author-image" data-tooltip-custom="author" tabindex="-1">
+								
+
+<picture class="avatar avatar-image">
+	<source
+		srcset="/content/images/size/w36/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		sizes="36px"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w36/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 36w,
+		/content/images/size/w72/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 72w
+"
+		width="36"
+		height="36"
+		alt="Yao Chen"
+		sizes="36px"
+		loading="eager"
+	>
+</picture>					</a>
+					<a href="/author/yao-chen/" class="card-post-author-name" data-tooltip-custom="author">
+						Yao Chen
+					</a>
+					<div class="tooltip-custom tooltip-custom-author" style="display:none;">
+	<a href="/author/yao-chen/" class="tooltip-avatar" aria-label="Yao Chen" tabindex="-1">
+				
+
+<picture class="avatar avatar-large avatar-image">
+	<source
+		srcset="/content/images/size/w300/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/format/webp/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		type="image/webp"
+	>
+	<img
+		src="/content/images/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG"
+		srcset="/content/images/size/w300/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 300w,
+		/content/images/size/w400/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 400w,
+		/content/images/size/w600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 600w,
+		/content/images/size/w1200/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1200w,
+		/content/images/size/w1600/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 1600w,
+		/content/images/size/w2000/2025/05/fcf9c01e7f01513313fbc6d6777359f5-1.PNG 2000w"
+		width="1340"
+		height="530"
+		alt="Yao Chen"
+		sizes="(max-width: 991.98px) 90vw, 40vw"
+		loading="eager"
+	>
+</picture>	</a>
+	<a href="/author/yao-chen/" class="tooltip-title">Yao Chen</a>
+	<div>Master’s student in Machine Learning and Computer Vision at ANU, with a strong interest in AI-driven art creation. Experienced in working with image generation models.</div>
+	<ul class="tooltip-icons"><li>
+			<a class="button button-icon button-sm button-background-200" href="https://orcid.org/0009-0007-1385-3343" target="_blank" rel="noopener noreferrer" >
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66666 10.0001H18.3333M1.66666 10.0001C1.66666 14.6024 5.39762 18.3334 10 18.3334M1.66666 10.0001C1.66666 5.39771 5.39762 1.66675 10 1.66675M18.3333 10.0001C18.3333 14.6024 14.6023 18.3334 10 18.3334M18.3333 10.0001C18.3333 5.39771 14.6023 1.66675 10 1.66675M10 18.3334C12.0844 16.0514 13.269 13.0901 13.3333 10.0001C13.269 6.91011 12.0844 3.94871 10 1.66675M10 18.3334C7.9156 16.0514 6.73104 13.0901 6.66666 10.0001C6.73104 6.91011 7.9156 3.94871 10 1.66675" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				<span class="screen-reader-text">Website</span>
+			</a>
+		</li></ul></div>				</div>
+
+		</div>
+
+		<div class="card-post-meta">
+			<time class="card-post-date" datetime="2025-05-15">May 15, 2025</time>
+				<span class="card-post-meta-divider">&bull;</span>
+				<a class="card-post-tag" href="/tag/artificial-intelligence/">Artificial Intelligence</a>
+		</div>
+	</div>
+</article>
+				</div>
+			</div>
+
+			<div class="slider-button-wrapper slider-button-wrapper-prev">
+				<div class="slider-button slider-button-prev swiper-button-disabled"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.8333 10.0001H4.16666M4.16666 10.0001L9 5.16675M4.16666 10.0001L9 14.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+			</div>
+			<div class="slider-button-wrapper slider-button-wrapper-next">
+				<div class="slider-button slider-button-next"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.16667 10.0001H15.8333M15.8333 10.0001L11 5.16675M15.8333 10.0001L11 14.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+			</div>
+		</div>
+	</section>
+
+			<section class="section section-subscription">
+				<div>
+					<h2>Subscribe to Newsletter</h2>
+					<p>Join me on this exciting journey as we explore the boundless world of web design together.</p>
+				</div>
+
+							<form class="form-subscribe" data-members-form="subscribe">
+				<div>
+					<input type="email" id="section-subscription-email" placeholder="Type your email..." required data-members-email>
+					<button class="button" type="submit">
+						<span class="label hide-when-loading hide-when-success">Subscribe</span>
+						<span class="label loading">Sending<svg class="icon icon-loader" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path opacity="0.1" d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z" stroke="currentColor" stroke-width="1.5"/>
+<path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+</span>
+						<span class="label success">Sent<svg class="icon icon-check" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.6667 5L7.5 14.1667L3.33334 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</span>
+					</button>
+				</div>
+				<span class="form-alert">
+					<span class="success">Please check your inbox and click the confirmation link.</span>
+					<span class="error" data-members-error></span>
+				</span>
+			</form>
+			</section>
+
+
+
+		</article>
+	</main>
+
+	<div class="popup popup-navigation" data-popup-id="popup-navigation" role="dialog" aria-modal="true" aria-hidden="true" aria-label="You can hide this popup with the ESC key">
+		<div class="popup-container">
+			<div class="popup-head">
+				<button class="popup-close button button-icon button-background-100 button-sm button-rounded" aria-label="Hide popup">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+				</button>
+				<a class="logo" href="https://hub.researchgraph.org" aria-label="Research Graph">
+		<img class="logo-light" src="https://hub.researchgraph.org/content/images/2025/05/ResearchIconMedium.png" alt="Research Graph">
+
+		<img class="logo-dark" src="https://hub.researchgraph.org/content/images/2025/05/ResearchLogoMediumWhite.png" alt="Research Graph">
+</a>			</div>
+
+			<div class="popup-body">
+				<nav class="navigation navigation-has-current sidebar-navigation" aria-label="Popup Primary Navigation">
+					<ul>
+		<li>
+				<a
+		href="/"
+	class="nav-link nav-link-home"
+		data-tippy-content="Home"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.5 17.4999V11.3332C7.5 10.8665 7.5 10.6331 7.59082 10.4549C7.67072 10.298 7.79821 10.1706 7.95501 10.0907C8.13327 9.99988 8.36658 9.99988 8.83333 9.99988H11.1667C11.6334 9.99988 11.8668 9.99988 12.045 10.0907C12.2018 10.1706 12.3292 10.298 12.4092 10.4549C12.5 10.6331 12.5 10.8665 12.5 11.3332V17.4999M9.18142 2.30321L3.52949 6.69915C3.15168 6.993 2.96278 7.13993 2.82669 7.32393C2.70614 7.48691 2.61633 7.67053 2.56169 7.86575C2.5 8.08615 2.5 8.32546 2.5 8.80413V14.8332C2.5 15.7666 2.5 16.2333 2.68166 16.5899C2.84144 16.9035 3.09641 17.1585 3.41002 17.3182C3.76653 17.4999 4.23324 17.4999 5.16667 17.4999H14.8333C15.7667 17.4999 16.2335 17.4999 16.59 17.3182C16.9036 17.1585 17.1586 16.9035 17.3183 16.5899C17.5 16.2333 17.5 15.7666 17.5 14.8332V8.80413C17.5 8.32546 17.5 8.08615 17.4383 7.86575C17.3837 7.67053 17.2938 7.48691 17.1733 7.32393C17.0372 7.13993 16.8483 6.993 16.4705 6.69915L10.8186 2.30321C10.5258 2.0755 10.3794 1.96165 10.2177 1.91788C10.0752 1.87926 9.92483 1.87926 9.78225 1.91788C9.62058 1.96165 9.47417 2.0755 9.18142 2.30321Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Home</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/about/"
+	class="nav-link nav-link-about"
+		data-tippy-content="About"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.5 16.6667C4.44649 14.6022 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6022 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+	<span class="label">About</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/schema/"
+	class="nav-link nav-link-schema"
+		data-tippy-content="Schema"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.6667 1.89136V5.33347C11.6667 5.80018 11.6667 6.03354 11.7575 6.2118C11.8374 6.3686 11.9648 6.49608 12.1217 6.57598C12.2999 6.66681 12.5332 6.66681 13 6.66681H16.4421M13.3333 10.8334H6.66666M13.3333 14.1667H6.66666M8.33333 7.50008H6.66666M11.6667 1.66675H7.33333C5.93319 1.66675 5.23313 1.66675 4.69835 1.93923C4.22794 2.17891 3.8455 2.56136 3.60581 3.03177C3.33333 3.56655 3.33333 4.26661 3.33333 5.66675V14.3334C3.33333 15.7336 3.33333 16.4336 3.60581 16.9684C3.8455 17.4388 4.22794 17.8212 4.69835 18.0609C5.23313 18.3334 5.93319 18.3334 7.33333 18.3334H12.6667C14.0668 18.3334 14.7668 18.3334 15.3017 18.0609C15.7721 17.8212 16.1545 17.4388 16.3942 16.9684C16.6667 16.4336 16.6667 15.7336 16.6667 14.3334V6.66675L11.6667 1.66675Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Schema</span>
+
+</a>
+		</li>
+		<li>
+				<a
+		href="/contact/"
+	class="nav-link nav-link-contact"
+		data-tippy-content="Contact"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.66667 5.83325L8.47075 10.5961C9.02175 10.9818 9.29726 11.1747 9.59692 11.2493C9.86159 11.3153 10.1384 11.3153 10.4031 11.2493C10.7028 11.1747 10.9783 10.9818 11.5293 10.5961L18.3333 5.83325M5.66667 16.6666H14.3333C15.7335 16.6666 16.4335 16.6666 16.9683 16.3941C17.4388 16.1544 17.8212 15.772 18.0608 15.3016C18.3333 14.7668 18.3333 14.0668 18.3333 12.6666V7.33325C18.3333 5.93312 18.3333 5.23305 18.0608 4.69828C17.8212 4.22787 17.4388 3.84542 16.9683 3.60574C16.4335 3.33325 15.7335 3.33325 14.3333 3.33325H5.66667C4.26654 3.33325 3.56647 3.33325 3.0317 3.60574C2.56129 3.84542 2.17884 4.22787 1.93916 4.69828C1.66667 5.23305 1.66667 5.93312 1.66667 7.33325V12.6666C1.66667 14.0668 1.66667 14.7668 1.93916 15.3016C2.17884 15.772 2.56129 16.1544 3.0317 16.3941C3.56647 16.6666 4.26654 16.6666 5.66667 16.6666Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Contact</span>
+
+</a>
+		</li>
+</ul>
+
+				</nav>
+
+
+									<nav class="navigation navigation-tags" aria-label="Popup Tags Navigation">
+							<a
+		href="/tags/"
+	class="nav-link nav-link-tags nav-category"
+		data-tippy-content="Tags"
+>
+			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.66667 6.66675H6.675M1.66667 4.33341V8.06217C1.66667 8.46983 1.66667 8.67366 1.71272 8.8655C1.75354 9.0355 1.82088 9.19808 1.91227 9.34725C2.01533 9.51541 2.15946 9.65958 2.44772 9.94783L8.83825 16.3383C9.82825 17.3283 10.3233 17.8234 10.8941 18.0088C11.3963 18.172 11.9371 18.172 12.4392 18.0088C13.01 17.8234 13.5051 17.3283 14.4951 16.3383L16.3383 14.4952C17.3283 13.5052 17.8233 13.0101 18.0088 12.4392C18.1719 11.9372 18.1719 11.3963 18.0088 10.8942C17.8233 10.3234 17.3283 9.82833 16.3383 8.83833L9.94775 2.4478C9.6595 2.15954 9.51533 2.01541 9.34717 1.91235C9.198 1.82096 9.03542 1.75362 8.86542 1.7128C8.67358 1.66675 8.46975 1.66675 8.0621 1.66675H4.33333C3.39992 1.66675 2.9332 1.66675 2.57668 1.84841C2.26308 2.00819 2.00811 2.26316 1.84833 2.57676C1.66667 2.93328 1.66667 3.39999 1.66667 4.33341ZM7.08333 6.66675C7.08333 6.89686 6.89678 7.08341 6.66667 7.08341C6.43655 7.08341 6.25 6.89686 6.25 6.66675C6.25 6.43663 6.43655 6.25008 6.66667 6.25008C6.89678 6.25008 7.08333 6.43663 7.08333 6.66675Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+
+	<span class="label">Tags</span>
+
+			<svg class="icon icon-arrow-right" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 6.16675L16.8333 10.0001L13 13.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.16669 10H16.8333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</a>
+							<ul>
+								<li>
+									<a
+		href="/tag/artificial-intelligence/"
+	class="nav-link nav-link-artificial-intelligence"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Artificial Intelligence</span>
+
+</a>
+								</li>
+								<li>
+									<a
+		href="/tag/knowledge-graph/"
+	class="nav-link nav-link-knowledge-graph"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Knowledge Graph</span>
+
+</a>
+								</li>
+								<li>
+									<a
+		href="/tag/ai-in-health/"
+	class="nav-link nav-link-ai-in-health"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Ai in Health</span>
+
+</a>
+								</li>
+								<li>
+									<a
+		href="/tag/persistent-identifiers/"
+	class="nav-link nav-link-persistent-identifiers"
+>
+
+		<span
+			class="nav-link-circle"
+		></span>
+
+	<span class="label">Persistent Identifiers</span>
+
+</a>
+								</li>
+							</ul>
+						</nav>
+
+
+				<footer class="footer">
+	<nav class="navigation" aria-label="Footer Socials Navigation">
+		<ul class="social-links">
+  <li>
+		<a href="https://x.com/ghost" class="social-link" target="_blank" rel="noopener noreferrer">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M18.2437 2.25H21.5531L14.325 10.5094L22.8281 21.75H16.1719L10.9547 14.9344L4.99216 21.75H1.6781L9.40779 12.9141L1.25623 2.25H8.08123L12.7922 8.47969L18.2437 2.25ZM17.0812 19.7719H18.914L7.08279 4.125H5.11404L17.0812 19.7719Z" fill="currentColor"/>
+</svg>
+      <span>X</span>
+		</a>
+  </li>
+  <li>
+		<a href="https://www.facebook.com/ghost" class="social-link" target="_blank" rel="noopener noreferrer">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<path d="M24 12C24 5.37188 18.6281 0 12 0C5.37188 0 0 5.37188 0 12C0 17.625 3.87656 22.35 9.10312 23.6484V15.6656H6.62812V12H9.10312V10.4203C9.10312 6.3375 10.95 4.44375 14.9625 4.44375C15.7219 4.44375 17.0344 4.59375 17.5734 4.74375V8.0625C17.2922 8.03437 16.8 8.01562 16.1859 8.01562C14.2172 8.01562 13.4578 8.76094 13.4578 10.6969V12H17.3766L16.7016 15.6656H13.4531V23.9109C19.3969 23.1938 24 18.1359 24 12Z" fill="currentColor"/>
+</svg>
+      <span>Facebook</span>
+		</a>
+  </li>
+</ul>
+	</nav>
+
+	<nav class="navigation navigation-secondary" aria-label="Footer Secondary Navigation">
+		<ul>
+		<li>
+				<a
+		href="#/portal/"
+	class="nav-link nav-link-sign-up"
+>
+
+
+	<span class="label">Sign up</span>
+
+</a>
+		</li>
+</ul>
+
+	</nav>
+
+	<div class="footer-copyright">&copy; 2025 Research Graph<span> - Published with <a href='https://ghost.org/' target='_blank' rel='noopener'>Ghost</a> & <a href='https://www.priority.vision/themes/aspect/' target='_blank' rel='noopener'>Aspect</a></span></div>
+</footer>			</div>
+		</div>
+
+		<button class="popup-overlay popup-close" aria-label="Hide popup" tabindex="-1"></button>
+	</div>
+
+	<script src="https://hub.researchgraph.org/assets/vendors/motion.min.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/built/swiper.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/vendors/popper.min.js?v=41151ff485"></script>
+	<script src="https://hub.researchgraph.org/assets/vendors/tippy.umd.min.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/built/index.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/built/announcement-bar.js?v=41151ff485"></script>
+
+	<script src="https://hub.researchgraph.org/assets/custom.js?v=41151ff485"></script>
+
+	<script>
+window.pvs?.initCodeHighlight?.({
+    clipboardButton: true,
+    lineNumbers: true,
+    languageBadge: true,
+});
+</script>
+</body>
+</html>
